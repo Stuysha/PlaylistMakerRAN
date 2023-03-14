@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".SearchActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tool_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/whiteToolbar"
+        android:foregroundTint="@color/whiteToolbar"
+        android:textColor="?attr/colorPrimaryVariant"
+        app:navigationIcon="@drawable/arrow"
+        app:title="@string/search" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/string_star_2_screen"
+        android:layout_marginEnd="@dimen/string_star_2_screen"
+        android:background="@drawable/background_search_edit_text"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginEnd="30dp"
+            android:background="@color/transparent"
+            android:drawableLeft="@drawable/magnifier"
+            android:drawablePadding="9dp"
+            android:foregroundTint="@color/serch_grey"
+            android:hint="@string/search"
+            android:imeOptions="flagNoEnterAction"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:shadowRadius="8"
+            android:textColorHint="@color/image"
+            android:textColor="@color/black_blue_background"
+            android:textCursorDrawable="@drawable/custom_cursor" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="14dp"
+            android:src="@drawable/clean"></ImageView>
+
+    </FrameLayout>
+</LinearLayout>

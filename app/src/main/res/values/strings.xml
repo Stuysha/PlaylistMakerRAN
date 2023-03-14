@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">Sprint 8</string>
+    <string name="app_name">Playlist maker</string>
+    <string name="search">Поиск</string>
+    <string name="media_library">Медиатека</string>
+    <string name="settings">Настройки</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="share_app">Поделиться приложением</string>
+    <string name="write_support">Написать в поддержку</string>
+    <string name="uUser_agreement">Пользовательское соглашение</string>
+    <string name="share_app_step2">https://practicum.yandex.ru/profile/android-developer</string>
+    <string name="text_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="topic_message">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="e_mail">riabikina5@gmail.com</string>
+    <string name="webesite">https://yandex.ru/legal/practicum_offer/</string>
+
+
 </resources>

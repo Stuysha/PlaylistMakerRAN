@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/arrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/whiteToolbar"
+        android:foregroundTint="@color/whiteToolbar"
+        android:textColor="?attr/colorPrimaryVariant"
+        app:navigationIcon="@drawable/arrow"
+        app:title="@string/settings">
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp">
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/dark_theme"
+            style= "@style/TextViewSettingScreen"
+            />
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/button_interval21"
+            android:layout_marginEnd="18dp"
+            android:thumbTint="@color/blue_background"
+            android:trackTint="@color/blue_background" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/share_app"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/button_interval21"
+            android:layout_marginEnd="@dimen/button_interval21"
+            android:src="@drawable/share_app"
+            app:tint="?attr/colorOnPrimary" />
+
+        <TextView
+
+            style="@style/TextViewSettingScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/share_app" />
+
+    </FrameLayout>
+
+    <FrameLayout
+
+        android:id="@+id/write_support"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/button_interval25"
+            android:layout_marginEnd="@dimen/button_interval25"
+            android:src="@drawable/write_support" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="@dimen/button_interval21"
+            android:src="@drawable/write_support2"
+            app:tint="?attr/colorOnPrimary" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/button_interval31"
+            android:layout_marginEnd="27dp"
+            android:src="@drawable/write_support3"
+            app:tint="?attr/colorOnPrimary" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/button_interval31"
+            android:layout_marginEnd="33dp"
+            android:src="@drawable/write_support3"
+            app:tint="?attr/colorOnPrimary" />
+
+        <TextView
+
+            style="@style/TextViewSettingScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/write_support" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/uUser_agreement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="23dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/uuser_agreement"
+            app:tint="?attr/colorOnPrimary" />
+
+
+        <TextView
+
+            style="@style/TextViewSettingScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/uUser_agreement" />
+
+
+    </FrameLayout>
+</LinearLayout>

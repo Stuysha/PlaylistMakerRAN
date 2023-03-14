@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_interval_fest_screen">10dp</dimen>
+    <dimen name="button_end_fest_screen">15dp</dimen>
+    <dimen name="string_star_2_screen">16dp</dimen>
+    <dimen name="button_star_fest_screen">17dp</dimen>
+    <dimen name="button_interval21">21dp</dimen>
+    <dimen name="button_interval25">25dp</dimen>
+    <dimen name="button_interval31">31dp</dimen>
+    <dimen name="string_end_2_screen">44dp</dimen>
+    <dimen name="string_text_size_2_screen">16sp</dimen>
+    <dimen name="button_text_size_fest_screen">22sp</dimen>
+
+
+</resources>
