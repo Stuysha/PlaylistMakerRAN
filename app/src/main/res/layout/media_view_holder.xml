@@ -21,12 +21,14 @@
     <TextView
         android:id="@+id/title"
         style="@style/TextViewInfo"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_8"
         android:layout_marginTop="@dimen/margin_14"
         android:singleLine="true"
+        app:layout_constrainedWidth="true"
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView" />
@@ -43,8 +45,9 @@
         <TextView
             android:id="@+id/author"
             style="@style/TextViewSubInfo"
-            android:layout_width="54dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:singleLine="true"
             tools:text=" TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView" />
 
