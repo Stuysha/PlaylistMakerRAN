@@ -31,7 +31,7 @@
             android:layout_height="36dp"
             android:layout_marginEnd="30dp"
             android:background="@color/transparent"
-            android:drawableLeft="@drawable/magnifier"
+            android:drawableLeft="@drawable/search_icon"
             android:drawablePadding="9dp"
             android:foregroundTint="@color/serch_grey"
             android:hint="@string/search"
@@ -54,4 +54,10 @@
             android:src="@drawable/clean"></ImageView>
 
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/media_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="24dp" />
 </LinearLayout>
