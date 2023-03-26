@@ -12,8 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.adapters.SearchMediaAdapter
+import com.example.sprint8.internet.RestProvider
 import com.example.sprint8.models.Track
+import com.example.sprint8.models.TunesResult
 import com.google.android.material.textfield.TextInputEditText
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
     var inputEditText: TextInputEditText? = null
@@ -70,6 +75,23 @@ class SearchActivity : AppCompatActivity() {
         val mediaList = findViewById<RecyclerView>(R.id.media_list)
         mediaList.adapter = SearchMediaAdapter(arrayTrack)
         mediaList.layoutManager = LinearLayoutManager(this)
+
+        RestProvider().api.search("misery").enqueue(object : Callback<TunesResult> {
+
+            override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
+
+                if (response.isSuccessful) {
+                    val hamsters = response.body()
+                    hamsters
+                } else {
+                    val errorJson = response.errorBody()?.string()
+                }
+            }
+
+            override fun onFailure(call: Call<TunesResult>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
     }
 
 
