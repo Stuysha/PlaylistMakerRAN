@@ -59,5 +59,55 @@
         android:id="@+id/media_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="24dp"
+        android:visibility="visible"
+        tools:visibility="gone" />
+
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="visible">
+
+        <ImageView
+            style="@style/SongPlugPicture"
+            app:srcCompat="@drawable/no_song" />
+
+        <TextView
+
+            style="@style/TextSongPlug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/nothing_was_found" />
+
+    </FrameLayout>
+
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+        <ImageView
+            style="@style/SongPlugPicture"
+            app:srcCompat="@drawable/no_internet" />
+
+        <TextView
+
+            style="@style/TextSongPlug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_internet_light"
+            android:textAlignment="center" />
+
+        <Button
+            style="@style/ButtonApd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Обновить"
+            app:cornerRadius="54dp" />
+
+    </FrameLayout>
 </LinearLayout>

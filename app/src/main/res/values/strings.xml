@@ -12,6 +12,8 @@
     <string name="topic_message">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="e_mail">riabikina5@gmail.com</string>
     <string name="webesite">https://yandex.ru/legal/practicum_offer/</string>
+    <string name="nothing_was_found">Ничего не нашлось</string>
+    <string name="no_internet_light">Проблемы со связью \n\n Загрузка не удалась. Проверьте подключение к интернету </string>
 
 
 </resources>
