@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +22,10 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SearchActivity : AppCompatActivity() {
+
     var inputEditText: TextInputEditText? = null
     var inputSearchText = ""
+    val adapter: SearchMediaAdapter = SearchMediaAdapter()
 
     companion object {
         const val SEARCH_TEXT = "searchText"
@@ -73,27 +76,55 @@ class SearchActivity : AppCompatActivity() {
         inputEditText?.addTextChangedListener(simpleTextWatcher)
 
         val mediaList = findViewById<RecyclerView>(R.id.media_list)
-        mediaList.adapter = SearchMediaAdapter(arrayTrack)
+        mediaList.adapter = adapter
         mediaList.layoutManager = LinearLayoutManager(this)
 
-        RestProvider().api.search("misery").enqueue(object : Callback<TunesResult> {
-
-            override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
-
-                if (response.isSuccessful) {
-                    val hamsters = response.body()
-                    hamsters
-                } else {
-                    val errorJson = response.errorBody()?.string()
-                }
+        inputEditText?.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                loadSearch()
+                true
             }
+            false
+        }
 
-            override fun onFailure(call: Call<TunesResult>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
+
     }
 
+    fun loadSearch() {
+        RestProvider().api.search(inputEditText?.text?.toString() ?: return).enqueue(
+            object : Callback<TunesResult> {
+
+                override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
+
+                    if (response.isSuccessful) {
+                        val result = response.body() ?: return
+                        val tracks = convertToTracks(result)
+                        adapter.setItems(tracks)
+                    } else {
+                        val errorJson = response.errorBody()?.string()
+                    }
+                }
+
+                override fun onFailure(call: Call<TunesResult>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            })
+    }
+
+    fun convertToTracks(tunes: TunesResult): MutableList<Track> {
+        val tracList = mutableListOf<Track>()
+        tunes.results?.forEach {
+            tracList.add(
+                Track(
+                    trackName = it?.trackName ?: "",
+                    artistName = it?.artistName ?: "",
+                    trackTime = it?.trackTimeMillis.toString(),
+                    artworkUrl100 = it?.artworkUrl100 ?: ""
+                )
+            )
+        }
+        return tracList
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

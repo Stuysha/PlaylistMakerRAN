@@ -35,14 +35,15 @@
             android:drawablePadding="9dp"
             android:foregroundTint="@color/serch_grey"
             android:hint="@string/search"
-            android:imeOptions="flagNoEnterAction"
+            android:imeOptions="actionDone|flagNoEnterAction"
             android:inputType="text"
             android:maxLines="1"
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:shadowRadius="8"
-            android:textColorHint="@color/image"
+            android:singleLine="true"
             android:textColor="@color/black_blue_background"
+            android:textColorHint="@color/image"
             android:textCursorDrawable="@drawable/custom_cursor" />
 
         <ImageView
