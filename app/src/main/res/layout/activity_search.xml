@@ -35,7 +35,7 @@
             android:drawablePadding="9dp"
             android:foregroundTint="@color/serch_grey"
             android:hint="@string/search"
-            android:imeOptions="actionDone|flagNoEnterAction"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
             android:paddingLeft="14dp"
@@ -66,6 +66,7 @@
 
     <FrameLayout
 
+        android:id="@+id/nocontent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:visibility="visible">
@@ -86,6 +87,7 @@
 
     <FrameLayout
 
+        android:id="@+id/nointernet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:visibility="gone">
@@ -103,11 +105,12 @@
             android:textAlignment="center" />
 
         <Button
+            android:id="@+id/buttonApd"
             style="@style/ButtonApd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Обновить"
+            android:text="@string/buttonApd"
             app:cornerRadius="54dp" />
 
     </FrameLayout>

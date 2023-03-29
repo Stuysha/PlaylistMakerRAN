@@ -8,6 +8,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +22,8 @@ import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SearchActivity : AppCompatActivity() {
 
@@ -48,9 +52,15 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputEditText?.setText("")
+            adapter.setItems(listOf())
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText?.windowToken, 0)
+        }
+        val buttonApd = findViewById<Button>(R.id.buttonApd)
+        buttonApd.setOnClickListener {
+            setStatusMediaList()
+            loadSearch()
         }
 
         clearButton.visibility = View.GONE
@@ -86,8 +96,6 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-
-
     }
 
     fun loadSearch() {
@@ -97,18 +105,51 @@ class SearchActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
 
                     if (response.isSuccessful) {
-                        val result = response.body() ?: return
-                        val tracks = convertToTracks(result)
-                        adapter.setItems(tracks)
+                        val result = response.body()
+                        if (result== null || result?.results.isNullOrEmpty()) {
+                             setStatusNoContent()
+                        } else {
+                            setStatusMediaList()
+                            val tracks = convertToTracks(result)
+                            adapter.setItems(tracks)
+                        }
                     } else {
+                        setStatusNoInternet()
                         val errorJson = response.errorBody()?.string()
                     }
                 }
 
                 override fun onFailure(call: Call<TunesResult>, t: Throwable) {
                     t.printStackTrace()
+                    setStatusNoInternet()
                 }
             })
+    }
+
+    fun setStatusNoContent (){
+        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
+        noContentBox.visibility = View.VISIBLE
+        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
+        noInternet.visibility = View.GONE
+        val mediaList = findViewById<RecyclerView>(R.id.media_list)
+        mediaList.visibility = View.GONE
+    }
+
+    fun setStatusNoInternet(){
+        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
+        noContentBox.visibility = View.GONE
+        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
+        noInternet.visibility = View.VISIBLE
+        val mediaList = findViewById<RecyclerView>(R.id.media_list)
+        mediaList.visibility = View.GONE
+    }
+    fun setStatusMediaList (){
+        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
+        noContentBox.visibility = View.GONE
+        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
+        noInternet.visibility = View.GONE
+        val mediaList = findViewById<RecyclerView>(R.id.media_list)
+        mediaList.visibility = View.VISIBLE
     }
 
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
@@ -118,7 +159,7 @@ class SearchActivity : AppCompatActivity() {
                 Track(
                     trackName = it?.trackName ?: "",
                     artistName = it?.artistName ?: "",
-                    trackTime = it?.trackTimeMillis.toString(),
+                    trackTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(it?.trackTimeMillis),
                     artworkUrl100 = it?.artworkUrl100 ?: ""
                 )
             )
@@ -137,47 +178,3 @@ class SearchActivity : AppCompatActivity() {
     }
 }
 
-val arrayTrack = listOf(
-    Track(
-        //Трек 1:
-        trackName = "Smells Like Teen Spirit",
-        artistName = "Nirvana",
-        trackTime = "5:01",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music115/v4/7b/58/c2/7b58c21a-2b51-2bb2-e59a-9bb9b96ad8c3/00602567924166.rgb.jpg/100x100bb.jpg"
-    ),
-    Track(
-        //Трек 2:
-        trackName = "Billie Jean",
-        artistName = "Michael Jackson",
-        trackTime = "4:35",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/827969428726.jpg/100x100bb.jpg"
-    ),
-    Track(
-        //Трек 3:
-        trackName = "Stayin' Alive",
-        artistName = "Bee Gees",
-        trackTime = "4:10",
-        artworkUrl100 = "https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/1f/80/1f/1f801fc1-8c0f-ea3e-d3e5-387c6619619e/16UMGIM86640.rgb.jpg/100x100bb.jpg"
-    ),
-    Track(
-        //Трек 4:
-        trackName = "Whole Lotta Love",
-        artistName = "Led Zeppelin",
-        trackTime = "5:33",
-        artworkUrl100 = "https://is2-ssl.mzstatic.com/image/thumb/Music62/v4/7e/17/e3/7e17e33f-2efa-2a36-e916-7f808576cf6b/mzm.fyigqcbs.jpg/100x100bb.jpg"
-    ),
-    Track(
-        //Трек 5:
-        trackName = "Sweet Child O'Mine",
-        artistName = "Guns N' Roses",
-        trackTime = "5:03",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-    ),
-    Track(
-        //Трек 6:
-        trackName = "Sweet Child O'Mine Sweet Child O'Mine Sweet Child O'Mine Sweet Child O'Mine",
-        artistName = "Guns N' Roses Sweet Child O'Mine Sweet Child O'Mine Sweet Child O'Mine Sweet Child O'Mine",
-        trackTime = "5:03",
-        artworkUrl100 = "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg"
-    ),
-)
