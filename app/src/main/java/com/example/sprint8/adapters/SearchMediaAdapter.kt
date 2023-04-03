@@ -8,7 +8,7 @@ import com.example.sprint8.models.Track
 import com.example.sprint8.viewholders.MediaViewHolder
 
 class SearchMediaAdapter(
-    private val tracks: List<Track>
+    private var tracks: List<Track> = listOf()
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -23,6 +23,11 @@ class SearchMediaAdapter(
 
     override fun getItemCount(): Int {
         return tracks.size
+    }
+
+    fun setItems(tracks: List<Track>) {
+        this.tracks = tracks
+        notifyDataSetChanged()
     }
 
 }

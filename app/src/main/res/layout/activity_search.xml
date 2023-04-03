@@ -35,14 +35,15 @@
             android:drawablePadding="9dp"
             android:foregroundTint="@color/serch_grey"
             android:hint="@string/search"
-            android:imeOptions="flagNoEnterAction"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:shadowRadius="8"
-            android:textColorHint="@color/image"
+            android:singleLine="true"
             android:textColor="@color/black_blue_background"
+            android:textColorHint="@color/image"
             android:textCursorDrawable="@drawable/custom_cursor" />
 
         <ImageView
@@ -59,5 +60,58 @@
         android:id="@+id/media_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="24dp"
+        android:visibility="visible"
+        tools:visibility="gone" />
+
+    <FrameLayout
+
+        android:id="@+id/nocontent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="visible">
+
+        <ImageView
+            style="@style/SongPlugPicture"
+            app:srcCompat="@drawable/no_song" />
+
+        <TextView
+
+            style="@style/TextSongPlug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/nothing_was_found" />
+
+    </FrameLayout>
+
+    <FrameLayout
+
+        android:id="@+id/nointernet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+        <ImageView
+            style="@style/SongPlugPicture"
+            app:srcCompat="@drawable/no_internet" />
+
+        <TextView
+
+            style="@style/TextSongPlug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_internet_light"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/buttonApd"
+            style="@style/ButtonApd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/buttonApd"
+            app:cornerRadius="54dp" />
+
+    </FrameLayout>
 </LinearLayout>

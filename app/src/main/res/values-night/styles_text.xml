@@ -6,4 +6,13 @@
         <item name="android:textSize">@dimen/string_text_size_2_screen</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
     </style>
+    <style name="ButtonApd">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/black_blue_background</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:backgroundTint">@color/whiteToolbar</item>
+        <item name="android:layout_marginTop">358dp</item>
+
+    </style>
 </resources>
