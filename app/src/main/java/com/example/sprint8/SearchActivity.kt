@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -96,6 +97,7 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+        setStatusHistory()
     }
 
     fun loadSearch() {
@@ -106,8 +108,8 @@ class SearchActivity : AppCompatActivity() {
 
                     if (response.isSuccessful) {
                         val result = response.body()
-                        if (result== null || result?.results.isNullOrEmpty()) {
-                             setStatusNoContent()
+                        if (result == null || result?.results.isNullOrEmpty()) {
+                            setStatusNoContent()
                         } else {
                             setStatusMediaList()
                             val tracks = convertToTracks(result)
@@ -126,30 +128,48 @@ class SearchActivity : AppCompatActivity() {
             })
     }
 
-    fun setStatusNoContent (){
+    fun setStatusNoContent() {
         val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
         noContentBox.visibility = View.VISIBLE
         val noInternet = findViewById<FrameLayout>(R.id.nointernet)
         noInternet.visibility = View.GONE
         val mediaList = findViewById<RecyclerView>(R.id.media_list)
         mediaList.visibility = View.GONE
+        val clearHistiry = findViewById<LinearLayout>(R.id.searchHistory)
+        clearHistiry.visibility = View.GONE
     }
 
-    fun setStatusNoInternet(){
+    fun setStatusHistory() {
+        val clearHistiry = findViewById<LinearLayout>(R.id.searchHistory)
+        clearHistiry.visibility = View.VISIBLE
+        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
+        noContentBox.visibility = View.GONE
+        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
+        noInternet.visibility = View.GONE
+        val mediaList = findViewById<RecyclerView>(R.id.media_list)
+        mediaList.visibility = View.GONE
+    }
+
+    fun setStatusNoInternet() {
         val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
         noContentBox.visibility = View.GONE
         val noInternet = findViewById<FrameLayout>(R.id.nointernet)
         noInternet.visibility = View.VISIBLE
         val mediaList = findViewById<RecyclerView>(R.id.media_list)
         mediaList.visibility = View.GONE
+        val clearHistiry = findViewById<LinearLayout>(R.id.searchHistory)
+        clearHistiry.visibility = View.GONE
     }
-    fun setStatusMediaList (){
+
+    fun setStatusMediaList() {
         val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
         noContentBox.visibility = View.GONE
         val noInternet = findViewById<FrameLayout>(R.id.nointernet)
         noInternet.visibility = View.GONE
         val mediaList = findViewById<RecyclerView>(R.id.media_list)
         mediaList.visibility = View.VISIBLE
+        val clearHistiry = findViewById<LinearLayout>(R.id.searchHistory)
+        clearHistiry.visibility = View.GONE
     }
 
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
@@ -159,7 +179,10 @@ class SearchActivity : AppCompatActivity() {
                 Track(
                     trackName = it?.trackName ?: "",
                     artistName = it?.artistName ?: "",
-                    trackTime = SimpleDateFormat("mm:ss", Locale.getDefault()).format(it?.trackTimeMillis),
+                    trackTime = SimpleDateFormat(
+                        "mm:ss",
+                        Locale.getDefault()
+                    ).format(it?.trackTimeMillis),
                     artworkUrl100 = it?.artworkUrl100 ?: ""
                 )
             )
