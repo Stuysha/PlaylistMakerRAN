@@ -8,10 +8,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +16,7 @@ import com.example.sprint8.adapters.SearchMediaAdapter
 import com.example.sprint8.internet.RestProvider
 import com.example.sprint8.models.Track
 import com.example.sprint8.models.TunesResult
+import com.example.sprint8.viewholders.HistoryControl
 import com.google.android.material.textfield.TextInputEditText
 import retrofit2.Call
 import retrofit2.Callback
@@ -90,6 +88,11 @@ class SearchActivity : AppCompatActivity() {
         mediaList.adapter = adapter
         mediaList.layoutManager = LinearLayoutManager(this)
 
+        adapter.click = {
+            HistoryControl.addTrack(it, this)
+        }
+
+
         inputEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 loadSearch()
@@ -98,6 +101,11 @@ class SearchActivity : AppCompatActivity() {
             false
         }
         setStatusHistory()
+        setHistory()
+    }
+    fun setHistory (){
+        val hihistory = HistoryControl.getHistori(this)
+        adapter.setItems(hihistory.toList())
     }
 
     fun loadSearch() {
@@ -148,6 +156,10 @@ class SearchActivity : AppCompatActivity() {
         noInternet.visibility = View.GONE
         val mediaList = findViewById<RecyclerView>(R.id.media_list)
         mediaList.visibility = View.GONE
+        mediaList.adapter = null
+        val historyList = findViewById<RecyclerView>(R.id.histiry)
+        historyList.layoutManager = LinearLayoutManager(this)
+        historyList.adapter = adapter
     }
 
     fun setStatusNoInternet() {
@@ -170,6 +182,9 @@ class SearchActivity : AppCompatActivity() {
         mediaList.visibility = View.VISIBLE
         val clearHistiry = findViewById<LinearLayout>(R.id.searchHistory)
         clearHistiry.visibility = View.GONE
+        mediaList.adapter = adapter
+        val historyList = findViewById<RecyclerView>(R.id.histiry)
+        historyList.adapter = null
     }
 
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
@@ -177,6 +192,7 @@ class SearchActivity : AppCompatActivity() {
         tunes.results?.forEach {
             tracList.add(
                 Track(
+                    trackId = it?.trackId ?: 0L,
                     trackName = it?.trackName ?: "",
                     artistName = it?.artistName ?: "",
                     trackTime = SimpleDateFormat(

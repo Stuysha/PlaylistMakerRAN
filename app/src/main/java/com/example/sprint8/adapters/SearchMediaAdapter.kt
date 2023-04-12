@@ -19,6 +19,9 @@ class SearchMediaAdapter(
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
         holder.bind(tracks[position])
+        holder.itemView.setOnClickListener {
+            click?.invoke(tracks[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -30,4 +33,5 @@ class SearchMediaAdapter(
         notifyDataSetChanged()
     }
 
+    var click: ((Track) -> Unit)? = null
 }
