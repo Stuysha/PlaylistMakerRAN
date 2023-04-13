@@ -7,12 +7,12 @@ import com.google.gson.Gson
 
 object HistoryControl {
 
-    fun getHistori (context: Context) : Array<Track> {
+    fun getHistori(context: Context): Array<Track> {
         val sharedPreferences = context.getSharedPreferences("HISTORI_SONG", MODE_PRIVATE)
-        val historyTrack  = sharedPreferences.getString("key_history", null)
+        val historyTrack = sharedPreferences.getString("key_history", null)
         val historyTrackList = try {
             createFactsListFromJson(historyTrack!!)
-        }catch (e: Exception){
+        } catch (e: Exception) {
             arrayOf()
         }
         return historyTrackList
@@ -21,35 +21,42 @@ object HistoryControl {
     fun createJsonFromFactsList(track: Array<Track>): String {
         return Gson().toJson(track)
     }
-    fun addTrack (track: Track, context: Context) {
+
+    fun addTrack(track: Track, context: Context) {
         val sharedPreferences = context.getSharedPreferences("HISTORI_SONG", MODE_PRIVATE)
-        val historyTrack  = sharedPreferences.getString("key_history", null)
+        val historyTrack = sharedPreferences.getString("key_history", null)
         val historyTrackList = try {
             createFactsListFromJson(historyTrack!!).toMutableList()
-        }catch (e: Exception){
+        } catch (e: Exception) {
             mutableListOf()
         }
 
-        for(item in historyTrackList){
+        for (item in historyTrackList) {
             if (item.trackId == track.trackId) {
                 historyTrackList.remove(item)
                 break
             }
         }
 
-        historyTrackList.add(0,track)
+        historyTrackList.add(0, track)
 
 
-        if (historyTrackList.count()>10) {
+        if (historyTrackList.count() > 10) {
             historyTrackList.remove(historyTrackList.last())
         }
         val historyTracks = createJsonFromFactsList(historyTrackList.toTypedArray())
-         sharedPreferences.edit()
-             .putString("key_history", historyTracks)
-             .apply()
+        sharedPreferences.edit()
+            .putString("key_history", historyTracks)
+            .apply()
     }
-     fun createFactsListFromJson(json: String): Array<Track> {
+
+    fun createFactsListFromJson(json: String): Array<Track> {
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
+    fun historyDelete(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("HISTORI_SONG", MODE_PRIVATE)
+        sharedPreferences.edit().remove("key_history").apply()
+
+    }
 }
