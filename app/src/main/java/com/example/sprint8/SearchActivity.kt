@@ -30,6 +30,11 @@ class SearchActivity : AppCompatActivity() {
     var inputEditText: TextInputEditText? = null
     var inputSearchText = ""
     val adapter: SearchMediaAdapter = SearchMediaAdapter()
+    var noContentBox: FrameLayout? = null
+    var noInternet: FrameLayout? = null
+    var mediaList: RecyclerView? = null
+    var clearHistiry: NestedScrollView? = null
+    var historyList : RecyclerView? = null
 
     companion object {
         const val SEARCH_TEXT = "searchText"
@@ -44,6 +49,12 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.search)
         val clearButton = findViewById<ImageView>(R.id.close)
         val clearHistory = findViewById<Button>(R.id.clearHistory)
+        noContentBox = findViewById<FrameLayout>(R.id.nocontent)
+        noInternet = findViewById<FrameLayout>(R.id.nointernet)
+        mediaList = findViewById<RecyclerView>(R.id.media_list)
+        clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
+        historyList = findViewById<RecyclerView>(R.id.histiry)
+        historyList?.layoutManager = LinearLayoutManager(this)
 
         toolbar.setNavigationOnClickListener {
             finish()
@@ -83,9 +94,9 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     clearButton.visibility = View.VISIBLE
                 }
-                if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()){
+                if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()) {
                     setHistory()
-                }else setStatusMediaList()
+                } else setStatusMediaList()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -120,7 +131,7 @@ class SearchActivity : AppCompatActivity() {
 
     fun setHistory() {
         val hihistory = HistoryControl.getHistori(this)
-        if (!hihistory.isNullOrEmpty()){
+        if (!hihistory.isNullOrEmpty()) {
             setStatusHistory()
             adapter.setItems(hihistory.toList())
         }
@@ -155,55 +166,39 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun setStatusNoContent() {
-        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
-        noContentBox.visibility = View.VISIBLE
-        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
-        noInternet.visibility = View.GONE
-        val mediaList = findViewById<RecyclerView>(R.id.media_list)
-        mediaList.visibility = View.GONE
-        val clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
-        clearHistiry.visibility = View.GONE
+
+        noContentBox?.visibility = View.VISIBLE
+        noInternet?.visibility = View.GONE
+        mediaList?.visibility = View.GONE
+        clearHistiry?.visibility = View.GONE
     }
 
     fun setStatusHistory() {
-        val clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
-        clearHistiry.visibility = View.VISIBLE
-        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
-        noContentBox.visibility = View.GONE
-        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
-        noInternet.visibility = View.GONE
-        val mediaList = findViewById<RecyclerView>(R.id.media_list)
-        mediaList.visibility = View.GONE
-        mediaList.adapter = null
-        val historyList = findViewById<RecyclerView>(R.id.histiry)
-        historyList.layoutManager = LinearLayoutManager(this)
-        historyList.adapter = adapter
+        clearHistiry?.visibility = View.VISIBLE
+        noContentBox?.visibility = View.GONE
+        noInternet?.visibility = View.GONE
+        mediaList?.visibility = View.GONE
+        mediaList?.adapter = null
+
+        historyList?.adapter = adapter
     }
 
     fun setStatusNoInternet() {
-        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
-        noContentBox.visibility = View.GONE
-        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
-        noInternet.visibility = View.VISIBLE
-        val mediaList = findViewById<RecyclerView>(R.id.media_list)
-        mediaList.visibility = View.GONE
-        val clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
-        clearHistiry.visibility = View.GONE
+
+        noContentBox?.visibility = View.GONE
+        noInternet?.visibility = View.VISIBLE
+        mediaList?.visibility = View.GONE
+        clearHistiry?.visibility = View.GONE
     }
 
     fun setStatusMediaList() {
         adapter.setItems(listOf())
-        val noContentBox = findViewById<FrameLayout>(R.id.nocontent)
-        noContentBox.visibility = View.GONE
-        val noInternet = findViewById<FrameLayout>(R.id.nointernet)
-        noInternet.visibility = View.GONE
-        val mediaList = findViewById<RecyclerView>(R.id.media_list)
-        mediaList.visibility = View.VISIBLE
-        val clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
-        clearHistiry.visibility = View.GONE
-        mediaList.adapter = adapter
-        val historyList = findViewById<RecyclerView>(R.id.histiry)
-        historyList.adapter = null
+        noContentBox?.visibility = View.GONE
+        noInternet?.visibility = View.GONE
+        mediaList?.visibility = View.VISIBLE
+        clearHistiry?.visibility = View.GONE
+        mediaList?.adapter = adapter
+        historyList?.adapter = null
     }
 
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
