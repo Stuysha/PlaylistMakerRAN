@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class Result(
     @SerializedName("artistName")
     val artistName: String?,
+    @SerializedName("trackId")
+    val trackId: Long?,
     @SerializedName("artworkUrl100")
     val artworkUrl100: String?,
     @SerializedName("trackName")

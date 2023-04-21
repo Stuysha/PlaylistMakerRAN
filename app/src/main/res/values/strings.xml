@@ -15,6 +15,8 @@
     <string name="nothing_was_found">Ничего не нашлось</string>
     <string name="no_internet_light">Проблемы со связью \n\n Загрузка не удалась. Проверьте подключение к интернету </string>
     <string name="buttonApd">Обновить</string>
+    <string name="clearHistory">Очистить историю</string>
 
+    <string name="history"> Вы искали </string>
 
 </resources>
