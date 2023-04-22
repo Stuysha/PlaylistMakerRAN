@@ -2,6 +2,7 @@ package com.example.sprint8
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +20,7 @@ import com.example.sprint8.models.Track
 import com.example.sprint8.models.TunesResult
 import com.example.sprint8.viewholders.HistoryControl
 import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,8 +38,11 @@ class SearchActivity : AppCompatActivity() {
     var clearHistiry: NestedScrollView? = null
     var historyList : RecyclerView? = null
 
+
     companion object {
         const val SEARCH_TEXT = "searchText"
+        const val TRACK = "track"
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -117,6 +122,10 @@ class SearchActivity : AppCompatActivity() {
 
         adapter.click = {
             HistoryControl.addTrack(it, this)
+            val intent = Intent(this, MediaActivity::class.java)
+            intent.putExtra(TRACK, Gson().toJson(it))
+            startActivity(intent)
+
         }
 
 
@@ -213,7 +222,11 @@ class SearchActivity : AppCompatActivity() {
                         "mm:ss",
                         Locale.getDefault()
                     ).format(it?.trackTimeMillis),
-                    artworkUrl100 = it?.artworkUrl100 ?: ""
+                    artworkUrl100 = it?.artworkUrl100 ?: "" ,
+                    collectionName = it?.collectionName ?: "",
+                    releaseDate = it?.releaseDate ?: "",
+                    primaryGenreName = it?.primaryGenreName ?: "",
+                    country = it?.country ?: "",
                 )
             )
         }

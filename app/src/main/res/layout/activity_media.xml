@@ -35,7 +35,7 @@
 
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imageCover"
                 android:layout_width="0dp"
                 android:layout_height="312dp"
                 android:layout_marginStart="24dp"
@@ -48,7 +48,7 @@
                 app:srcCompat="@drawable/background_search_edit_text" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/trackName"
                 style="@style/TextSongPlug"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -58,10 +58,10 @@
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+                app:layout_constraintTop_toBottomOf="@+id/imageCover" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/artistName"
                 style="@style/TextSongArtist"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -71,10 +71,10 @@
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/trackName" />
 
             <ImageView
-                android:id="@+id/floatingActionButton3"
+                android:id="@+id/addInPlaylist"
                 android:layout_width="51dp"
                 android:layout_height="51dp"
                 android:layout_marginStart="24dp"
@@ -82,37 +82,37 @@
                 android:clickable="true"
                 android:foregroundGravity="center"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/artistName"
                 app:srcCompat="@drawable/button_add" />
 
             <ImageView
-                android:id="@+id/floatingActionButton4"
+                android:id="@+id/likeTrack"
                 android:layout_width="51dp"
                 android:layout_height="51dp"
                 android:layout_marginTop="54dp"
                 android:layout_marginEnd="24dp"
                 android:clickable="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
+                app:layout_constraintTop_toBottomOf="@+id/artistName"
                 app:srcCompat="@drawable/like" />
 
             <ImageView
-                android:id="@+id/floatingActionButton6"
+                android:id="@+id/playback"
                 android:layout_width="83dp"
                 android:layout_height="83dp"
                 android:layout_marginTop="36dp"
                 android:clickable="true"
                 android:foregroundGravity="center"
                 app:fabCustomSize="85dp"
-                app:layout_constraintEnd_toStartOf="@+id/floatingActionButton4"
+                app:layout_constraintEnd_toStartOf="@+id/likeTrack"
                 app:layout_constraintHorizontal_bias="0.502"
-                app:layout_constraintStart_toEndOf="@+id/floatingActionButton3"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                app:srcCompat="@drawable/play"
-                app:maxImageSize="50dp"/>
+                app:layout_constraintStart_toEndOf="@+id/addInPlaylist"
+                app:layout_constraintTop_toBottomOf="@+id/artistName"
+                app:maxImageSize="50dp"
+                app:srcCompat="@drawable/play" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/timeTrack"
                 style="@style/TextSongArtist"
                 android:layout_width="wrap_content"
                 android:layout_height="16dp"
@@ -120,7 +120,7 @@
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/floatingActionButton6" />
+                app:layout_constraintTop_toBottomOf="@+id/playback" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -131,7 +131,7 @@
                 android:layout_marginTop="39dp"
                 android:text="@string/duration_media"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/timeTrack" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -178,7 +178,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/trackTimeMills"
                 style="@style/TextPlay_Black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -186,10 +186,10 @@
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/timeTrack" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/collectionName"
                 style="@style/TextPlay_Black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -197,10 +197,10 @@
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView9" />
+                app:layout_constraintTop_toBottomOf="@+id/trackTimeMills" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/releaseDate"
                 style="@style/TextPlay_Black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -208,10 +208,10 @@
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintTop_toBottomOf="@+id/collectionName" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/primaryGenreName"
                 style="@style/TextPlay_Black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -219,9 +219,10 @@
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                app:layout_constraintTop_toBottomOf="@+id/releaseDate" />
+
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/country"
                 style="@style/TextPlay_Black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -229,7 +230,7 @@
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                app:layout_constraintTop_toBottomOf="@+id/primaryGenreName" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

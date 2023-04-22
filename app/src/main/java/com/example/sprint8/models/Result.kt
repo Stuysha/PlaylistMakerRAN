@@ -13,5 +13,15 @@ data class Result(
     @SerializedName("trackName")
     val trackName: String?,
     @SerializedName("trackTimeMillis")
-    val trackTimeMillis: Int?
+    val trackTimeMillis: Int?,
+
+    @SerializedName("collectionName")
+    val collectionName: String?,
+    @SerializedName("releaseDate")
+    val releaseDate: String?,
+    @SerializedName("primaryGenreName")
+    val primaryGenreName: String?,
+    @SerializedName("country")
+    val country: String?,
+
 )
