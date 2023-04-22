@@ -6,6 +6,7 @@
     <dimen name="button_star_fest_screen">17dp</dimen>
     <dimen name="button_interval21">21dp</dimen>
     <dimen name="margin_24">24dp</dimen>
+    <dimen name="margin_28">28dp</dimen>
     <dimen name="button_interval25">25dp</dimen>
     <dimen name="button_interval31">31dp</dimen>
     <dimen name="string_end_2_screen">44dp</dimen>

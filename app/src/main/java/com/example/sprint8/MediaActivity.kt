@@ -9,20 +9,22 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.SearchActivity.Companion.TRACK
 import com.example.sprint8.models.Track
 import com.google.gson.Gson
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MediaActivity : AppCompatActivity() {
-    var cover : ImageView? = null
-    var trackName : TextView? = null
-    var artistName : TextView? = null
-    var timeTrack : TextView? = null
-    var collectionName : TextView? = null
-    var releaseDate : TextView? = null
-    var primaryGenreName : TextView? = null
-    var country : TextView? = null
-    var trackTimeMills : TextView? = null
-    var addInPlaylist : ImageView? = null
-    var playback : ImageView? = null
-    var likeTrack : ImageView? = null
+    var cover: ImageView? = null
+    var trackName: TextView? = null
+    var artistName: TextView? = null
+    var timeTrack: TextView? = null
+    var collectionName: TextView? = null
+    var releaseDate: TextView? = null
+    var primaryGenreName: TextView? = null
+    var country: TextView? = null
+    var trackTimeMills: TextView? = null
+    var addInPlaylist: ImageView? = null
+    var playback: ImageView? = null
+    var likeTrack: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +35,10 @@ class MediaActivity : AppCompatActivity() {
         }
         cover = findViewById<ImageView>(R.id.imageCover)
         trackName = findViewById<TextView>(R.id.trackName)
-        artistName = findViewById<TextView>(R.id.trackName)
+        artistName = findViewById<TextView>(R.id.artistName)
         timeTrack = findViewById<TextView>(R.id.timeTrack)
         collectionName = findViewById<TextView>(R.id.collectionName)
-        releaseDate = findViewById<TextView>(R.id.trackName)
+        releaseDate = findViewById<TextView>(R.id.releaseDate)
         primaryGenreName = findViewById<TextView>(R.id.primaryGenreName)
         country = findViewById<TextView>(R.id.country)
         trackTimeMills = findViewById<TextView>(R.id.trackTimeMills)
@@ -45,13 +47,15 @@ class MediaActivity : AppCompatActivity() {
         likeTrack = findViewById<ImageView>(R.id.likeTrack)
 
         val trackJson = intent.getStringExtra(TRACK)
-        val track = Gson().fromJson<Track>(trackJson,Track::class.java)
+        val track = Gson().fromJson<Track>(trackJson, Track::class.java)
         trackName?.setText(track.trackName)
         artistName?.setText(track.artistName)
         collectionName?.setText(track.collectionName)
-        releaseDate?.setText(track.releaseDate)
+
         primaryGenreName?.setText(track.primaryGenreName)
         country?.setText(track.country)
+        trackTimeMills?.setText(track.trackTime)
+        timeTrack?.setText("00:00")
 
         val round = this.resources.getDimensionPixelSize(R.dimen.round_image_media8)
 
@@ -60,5 +64,18 @@ class MediaActivity : AppCompatActivity() {
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(round))
             .into(cover!!)
+
+
+        val date = SimpleDateFormat(
+            "yyyy-MM-dd'T'hh:mm:ss'Z'",
+            Locale.getDefault()
+        ).parse(track?.releaseDate)
+
+        val year = SimpleDateFormat(
+            "yyyy",
+            Locale.getDefault()
+        ).format(date)
+        releaseDate?.setText(year)
+
     }
 }
