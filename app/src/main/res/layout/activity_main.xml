@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="14dp"
             android:text="@string/app_name"
             android:textColor="@color/white"
@@ -52,17 +53,19 @@
             app:iconTint="@color/black_button_font"
             app:iconPadding="@dimen/button_interval_fest_screen"
             style = "@style/ButtonStyle"/>
+
         <Button
             android:id="@+id/setting"
+            style="@style/ButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/margin_28"
             android:text="@string/settings"
             app:cornerRadius="16dp"
             app:icon="@drawable/settings"
             app:iconGravity="textStart"
-            app:iconTint="@color/black_button_font"
             app:iconPadding="@dimen/button_interval_fest_screen"
-            style = "@style/ButtonStyle"/>
+            app:iconTint="@color/black_button_font" />
 
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
