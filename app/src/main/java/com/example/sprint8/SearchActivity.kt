@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -102,6 +104,8 @@ class SearchActivity : AppCompatActivity() {
                 if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()) {
                     setHistory()
                 } else setStatusMediaList()
+                searchDebounce()
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -241,6 +245,13 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
+    }
+    private val searchRunnable = Runnable { loadSearch() }
+    private val handler = Handler(Looper.getMainLooper())
+    private fun searchDebounce() {
+
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, 2000L)
     }
 }
 
