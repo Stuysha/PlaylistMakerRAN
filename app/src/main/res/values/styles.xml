@@ -48,6 +48,28 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
 
     </style>
+    <style name="TextSongArtist">
+        <item name="android:layout_marginStart">@dimen/margin_24</item>
+        <item name="android:layout_marginTop">@dimen/margin_246</item>
+        <item name="android:layout_marginEnd">@dimen/margin_24</item>
+        <item name="android:layout_marginBottom">@dimen/button_interval21</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+
+    </style>
+    <style name="TextPlay">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/margin_start_13</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
+    <style name="TextPlay_Black">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">?attr/colorPrimaryVariant</item>
+        <item name="android:textSize">@dimen/margin_start_13</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+    </style>
 
     <style name="History">
     <item name="android:textColor">?attr/colorPrimaryVariant</item>
