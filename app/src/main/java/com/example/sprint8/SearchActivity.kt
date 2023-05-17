@@ -39,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     var mediaList: RecyclerView? = null
     var clearHistiry: NestedScrollView? = null
     var historyList : RecyclerView? = null
+    var progressBar : FrameLayout? = null
 
 
     companion object {
@@ -62,6 +63,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
         historyList = findViewById<RecyclerView>(R.id.histiry)
         historyList?.layoutManager = LinearLayoutManager(this)
+        progressBar = findViewById<FrameLayout>(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
             finish()
@@ -97,14 +99,16 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 inputSearchText = s?.toString() ?: ""
                 if (s.isNullOrEmpty()) {
+                    handler.removeCallbacks(searchRunnable)
                     clearButton.visibility = View.GONE
                 } else {
+                    searchDebounce()
                     clearButton.visibility = View.VISIBLE
                 }
                 if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()) {
                     setHistory()
                 } else setStatusMediaList()
-                searchDebounce()
+
 
             }
 
@@ -151,6 +155,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun loadSearch() {
+        setStatusProgressBar()
         RestProvider().api.search(inputEditText?.text?.toString() ?: return).enqueue(
             object : Callback<TunesResult> {
 
@@ -184,6 +189,7 @@ class SearchActivity : AppCompatActivity() {
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
         clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
 
     fun setStatusHistory() {
@@ -191,6 +197,7 @@ class SearchActivity : AppCompatActivity() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
         mediaList?.adapter = null
 
         historyList?.adapter = adapter
@@ -202,6 +209,7 @@ class SearchActivity : AppCompatActivity() {
         noInternet?.visibility = View.VISIBLE
         mediaList?.visibility = View.GONE
         clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
 
     fun setStatusMediaList() {
@@ -210,8 +218,17 @@ class SearchActivity : AppCompatActivity() {
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.VISIBLE
         clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
         mediaList?.adapter = adapter
         historyList?.adapter = null
+    }
+    fun setStatusProgressBar () {
+        noContentBox?.visibility = View.GONE
+        noInternet?.visibility = View.GONE
+        mediaList?.visibility = View.GONE
+        clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.VISIBLE
+
     }
 
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
