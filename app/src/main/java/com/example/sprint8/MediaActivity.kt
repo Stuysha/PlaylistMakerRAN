@@ -1,6 +1,8 @@
 package com.example.sprint8
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -79,11 +81,11 @@ class MediaActivity : AppCompatActivity() {
         ).format(date)
         releaseDate?.setText(year)
 
-        preparePlayer( track.previewUrl)
+        preparePlayer(track.previewUrl)
 
         playback?.setOnClickListener {
 
-          playbackControl()
+            playbackControl()
         }
 
     }
@@ -98,6 +100,7 @@ class MediaActivity : AppCompatActivity() {
         super.onDestroy()
         mediaPlayer.release()
     }
+
     companion object {
         private const val STATE_DEFAULT = 0
         private const val STATE_PREPARED = 1
@@ -108,7 +111,7 @@ class MediaActivity : AppCompatActivity() {
     var playerState = STATE_DEFAULT
 
     var mediaPlayer = android.media.MediaPlayer()
-    fun preparePlayer( url : String) {
+    fun preparePlayer(url: String) {
         mediaPlayer.setDataSource(url)
         mediaPlayer.prepareAsync()
         mediaPlayer.setOnPreparedListener {
@@ -118,21 +121,27 @@ class MediaActivity : AppCompatActivity() {
         mediaPlayer.setOnCompletionListener {
             pause()
             playerState = STATE_PREPARED
+            handler.removeCallbacks(searchRunnable)
         }
     }
+
     fun startPlayer() {
+        seconds=0
+        searchDebounce()
         mediaPlayer.start()
-        pause ()
+        pause()
         playerState = STATE_PLAYING
     }
 
     fun pausePlayer() {
+        handler.removeCallbacks(searchRunnable)
         mediaPlayer.pause()
         play()
         playerState = STATE_PAUSED
     }
+
     fun playbackControl() {
-        when(playerState) {
+        when (playerState) {
             STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -141,7 +150,8 @@ class MediaActivity : AppCompatActivity() {
             }
         }
     }
-    fun play (){
+
+    fun play() {
         playback?.setImageDrawable(
             ContextCompat.getDrawable(
                 applicationContext,
@@ -149,12 +159,28 @@ class MediaActivity : AppCompatActivity() {
             )
         )
     }
-    fun pause (){
+
+    fun pause() {
         playback?.setImageDrawable(
             ContextCompat.getDrawable(
                 applicationContext,
                 R.drawable.pause
             )
         )
+    }
+
+    var seconds = 0
+    private val searchRunnable = object : Runnable {
+        override fun run() {
+            seconds += 1
+            timeTrack?.text = String.format("%d:%02d", seconds / 60, seconds % 60)
+            handler.postDelayed(this, 1000L)
+        }
+    }
+    private val handler = Handler(Looper.getMainLooper())
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, 1000L)
     }
 }

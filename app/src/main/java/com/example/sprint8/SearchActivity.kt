@@ -271,5 +271,6 @@ class SearchActivity : AppCompatActivity() {
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, 2000L)
     }
+
 }
 
