@@ -23,5 +23,7 @@ data class Result(
     val primaryGenreName: String?,
     @SerializedName("country")
     val country: String?,
+    @SerializedName("previewUrl")
+    val previewUrl: String?,
 
 )
