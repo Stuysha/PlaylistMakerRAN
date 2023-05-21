@@ -119,14 +119,19 @@ class MediaActivity : AppCompatActivity() {
             playerState = STATE_PREPARED
         }
         mediaPlayer.setOnCompletionListener {
-            pause()
+            play()
             playerState = STATE_PREPARED
             handler.removeCallbacks(searchRunnable)
+            seconds=0
+            setTime()
         }
     }
 
     fun startPlayer() {
-        seconds=0
+        if (playerState != STATE_PAUSED){
+            seconds = 0
+            timeTrack?.text = String.format("%02d:%02d", seconds / 60, seconds % 60)
+        }
         searchDebounce()
         mediaPlayer.start()
         pause()
@@ -173,9 +178,12 @@ class MediaActivity : AppCompatActivity() {
     private val searchRunnable = object : Runnable {
         override fun run() {
             seconds += 1
-            timeTrack?.text = String.format("%d:%02d", seconds / 60, seconds % 60)
+            setTime()
             handler.postDelayed(this, 1000L)
         }
+    }
+    fun setTime (){
+        timeTrack?.text = String.format("%02d:%02d", seconds / 60, seconds % 60)
     }
     private val handler = Handler(Looper.getMainLooper())
 
