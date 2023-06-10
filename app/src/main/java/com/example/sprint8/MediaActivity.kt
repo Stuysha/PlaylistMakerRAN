@@ -1,9 +1,12 @@
 package com.example.sprint8
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.SearchActivity.Companion.TRACK
@@ -25,6 +28,7 @@ class MediaActivity : AppCompatActivity() {
     var addInPlaylist: ImageView? = null
     var playback: ImageView? = null
     var likeTrack: ImageView? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,5 +81,114 @@ class MediaActivity : AppCompatActivity() {
         ).format(date)
         releaseDate?.setText(year)
 
+        preparePlayer(track.previewUrl)
+
+        playback?.setOnClickListener {
+
+            playbackControl()
+        }
+
+    }
+
+    override fun onPause() {
+
+        super.onPause()
+        pausePlayer()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
+
+    companion object {
+        private const val STATE_DEFAULT = 0
+        private const val STATE_PREPARED = 1
+        private const val STATE_PLAYING = 2
+        private const val STATE_PAUSED = 3
+    }
+
+    var playerState = STATE_DEFAULT
+
+    var mediaPlayer = android.media.MediaPlayer()
+    fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            playback?.isEnabled = true
+            playerState = STATE_PREPARED
+        }
+        mediaPlayer.setOnCompletionListener {
+            play()
+            playerState = STATE_PREPARED
+            handler.removeCallbacks(searchRunnable)
+            seconds=0
+            setTime()
+        }
+    }
+
+    fun startPlayer() {
+        if (playerState != STATE_PAUSED){
+            seconds = 0
+            timeTrack?.text = String.format("%02d:%02d", seconds / 60, seconds % 60)
+        }
+        searchDebounce()
+        mediaPlayer.start()
+        pause()
+        playerState = STATE_PLAYING
+    }
+
+    fun pausePlayer() {
+        handler.removeCallbacks(searchRunnable)
+        mediaPlayer.pause()
+        play()
+        playerState = STATE_PAUSED
+    }
+
+    fun playbackControl() {
+        when (playerState) {
+            STATE_PLAYING -> {
+                pausePlayer()
+            }
+            STATE_PREPARED, STATE_PAUSED -> {
+                startPlayer()
+            }
+        }
+    }
+
+    fun play() {
+        playback?.setImageDrawable(
+            ContextCompat.getDrawable(
+                applicationContext,
+                R.drawable.play
+            )
+        )
+    }
+
+    fun pause() {
+        playback?.setImageDrawable(
+            ContextCompat.getDrawable(
+                applicationContext,
+                R.drawable.pause
+            )
+        )
+    }
+
+    var seconds = 0
+    private val searchRunnable = object : Runnable {
+        override fun run() {
+            seconds += 1
+            setTime()
+            handler.postDelayed(this, 1000L)
+        }
+    }
+    fun setTime (){
+        timeTrack?.text = String.format("%02d:%02d", seconds / 60, seconds % 60)
+    }
+    private val handler = Handler(Looper.getMainLooper())
+
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, 1000L)
     }
 }

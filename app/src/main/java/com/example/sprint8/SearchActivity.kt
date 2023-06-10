@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -37,6 +39,7 @@ class SearchActivity : AppCompatActivity() {
     var mediaList: RecyclerView? = null
     var clearHistiry: NestedScrollView? = null
     var historyList : RecyclerView? = null
+    var progressBar : FrameLayout? = null
 
 
     companion object {
@@ -60,6 +63,7 @@ class SearchActivity : AppCompatActivity() {
         clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
         historyList = findViewById<RecyclerView>(R.id.histiry)
         historyList?.layoutManager = LinearLayoutManager(this)
+        progressBar = findViewById<FrameLayout>(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
             finish()
@@ -95,13 +99,17 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 inputSearchText = s?.toString() ?: ""
                 if (s.isNullOrEmpty()) {
+                    handler.removeCallbacks(searchRunnable)
                     clearButton.visibility = View.GONE
                 } else {
+                    searchDebounce()
                     clearButton.visibility = View.VISIBLE
                 }
                 if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()) {
                     setHistory()
                 } else setStatusMediaList()
+
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -147,6 +155,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun loadSearch() {
+        setStatusProgressBar()
         RestProvider().api.search(inputEditText?.text?.toString() ?: return).enqueue(
             object : Callback<TunesResult> {
 
@@ -180,6 +189,7 @@ class SearchActivity : AppCompatActivity() {
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
         clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
 
     fun setStatusHistory() {
@@ -187,6 +197,7 @@ class SearchActivity : AppCompatActivity() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
         mediaList?.adapter = null
 
         historyList?.adapter = adapter
@@ -198,6 +209,7 @@ class SearchActivity : AppCompatActivity() {
         noInternet?.visibility = View.VISIBLE
         mediaList?.visibility = View.GONE
         clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
     }
 
     fun setStatusMediaList() {
@@ -206,8 +218,17 @@ class SearchActivity : AppCompatActivity() {
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.VISIBLE
         clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
         mediaList?.adapter = adapter
         historyList?.adapter = null
+    }
+    fun setStatusProgressBar () {
+        noContentBox?.visibility = View.GONE
+        noInternet?.visibility = View.GONE
+        mediaList?.visibility = View.GONE
+        clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.VISIBLE
+
     }
 
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
@@ -227,6 +248,7 @@ class SearchActivity : AppCompatActivity() {
                     releaseDate = it?.releaseDate ?: "",
                     primaryGenreName = it?.primaryGenreName ?: "",
                     country = it?.country ?: "",
+                    previewUrl = it?.previewUrl ?: "",
                 )
             )
         }
@@ -242,5 +264,13 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
     }
+    private val searchRunnable = Runnable { loadSearch() }
+    private val handler = Handler(Looper.getMainLooper())
+    private fun searchDebounce() {
+
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, 2000L)
+    }
+
 }
 
