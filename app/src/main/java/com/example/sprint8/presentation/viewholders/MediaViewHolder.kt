@@ -1,4 +1,4 @@
-package com.example.sprint8.viewholders
+package com.example.sprint8.presentation.viewholders
 
 import android.view.View
 import android.widget.TextView
@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.R
-import com.example.sprint8.models.Track
+import com.example.sprint8.domain.models.Track
+
 
 
 class MediaViewHolder(parentView: View) : ViewHolder(parentView) {
