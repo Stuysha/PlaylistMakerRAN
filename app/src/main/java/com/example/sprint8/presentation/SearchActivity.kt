@@ -17,11 +17,11 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
-import com.example.sprint8.adapters.SearchMediaAdapter
 import com.example.sprint8.data.dto.TunesResult
 import com.example.sprint8.data.internet.RestProvider
 import com.example.sprint8.data.preferences.HistoryControl
 import com.example.sprint8.domain.models.Track
+import com.example.sprint8.presentation.adapters.SearchMediaAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import retrofit2.Call

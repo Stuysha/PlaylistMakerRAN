@@ -1,4 +1,4 @@
-package com.example.sprint8.adapters
+package com.example.sprint8.presentation.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -9,8 +9,8 @@ import retrofit2.create
 
 class RestProvider : NetworkClient {
 
-    val url = "https://itunes.apple.com"
-    lateinit var api: Api
+    private val url = "https://itunes.apple.com"
+    val api: Api
 
     init {
         val retrofit = Retrofit.Builder()
