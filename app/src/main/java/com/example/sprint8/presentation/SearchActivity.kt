@@ -1,4 +1,4 @@
-package com.example.sprint8
+package com.example.sprint8.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -16,11 +16,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sprint8.adapters.SearchMediaAdapter
-import com.example.sprint8.internet.RestProvider
-import com.example.sprint8.models.Track
-import com.example.sprint8.models.TunesResult
-import com.example.sprint8.viewholders.HistoryControl
+import com.example.sprint8.R
+import com.example.sprint8.data.dto.TunesResult
+import com.example.sprint8.data.internet.RestProvider
+import com.example.sprint8.data.preferences.HistoryControl
+import com.example.sprint8.domain.models.Track
+import com.example.sprint8.presentation.adapters.SearchMediaAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import retrofit2.Call
@@ -40,6 +41,7 @@ class SearchActivity : AppCompatActivity() {
     var clearHistiry: NestedScrollView? = null
     var historyList : RecyclerView? = null
     var progressBar : FrameLayout? = null
+    val historyControl = HistoryControl()
 
 
     companion object {
@@ -72,7 +74,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText?.setText(inputSearchText)
 
         clearHistory.setOnClickListener {
-            HistoryControl.historyDelete(this)
+            historyControl.historyDelete(this)
             setStatusMediaList()
         }
 
@@ -129,7 +131,7 @@ class SearchActivity : AppCompatActivity() {
         mediaList.layoutManager = LinearLayoutManager(this)
 
         adapter.click = {
-            HistoryControl.addTrack(it, this)
+            historyControl.addTrack(it, this)
             val intent = Intent(this, MediaActivity::class.java)
             intent.putExtra(TRACK, Gson().toJson(it))
             startActivity(intent)
@@ -147,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun setHistory() {
-        val hihistory = HistoryControl.getHistori(this)
+        val hihistory = historyControl.getHistori(this)
         if (!hihistory.isNullOrEmpty()) {
             setStatusHistory()
             adapter.setItems(hihistory.toList())

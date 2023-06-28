@@ -1,4 +1,4 @@
-package com.example.sprint8
+package com.example.sprint8.presentation
 
 import android.os.Bundle
 import android.os.Handler
@@ -9,8 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.sprint8.SearchActivity.Companion.TRACK
-import com.example.sprint8.models.Track
+import com.example.sprint8.R
+import com.example.sprint8.domain.models.Track
+import com.example.sprint8.presentation.SearchActivity.Companion.TRACK
 import com.google.gson.Gson
 import java.text.SimpleDateFormat
 import java.util.*

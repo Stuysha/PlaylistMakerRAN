@@ -1,10 +1,11 @@
-package com.example.sprint8
+package com.example.sprint8.presentation
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.sprint8.R
 
 
 class MainActivity : AppCompatActivity() {

@@ -1,4 +1,4 @@
-package com.example.sprint8
+package com.example.sprint8.presentation
 
 
 import android.content.Intent
@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.example.sprint8.App
+import com.example.sprint8.R
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {

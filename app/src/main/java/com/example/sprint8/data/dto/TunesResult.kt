@@ -1,6 +1,7 @@
-package com.example.sprint8.models
+package com.example.sprint8.data.dto
 
 
+import com.example.sprint8.domain.models.Result
 import com.google.gson.annotations.SerializedName
 
 data class TunesResult(

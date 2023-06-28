@@ -1,4 +1,4 @@
-package com.example.sprint8.models
+package com.example.sprint8.domain.models
 
 data class Track(
     val trackName: String, // Название композиции
