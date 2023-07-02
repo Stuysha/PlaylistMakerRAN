@@ -1,4 +1,4 @@
-package com.example.sprint8.presentation
+package com.example.sprint8.UI.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,21 +17,19 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
+import com.example.sprint8.UI.adapters.SearchMediaAdapter
+import com.example.sprint8.UI.viewmodel.SearchViewModel
+import com.example.sprint8.UI.viewmodel.StateVeiw
 import com.example.sprint8.data.dto.TunesResult
-import com.example.sprint8.data.internet.RestProvider
 import com.example.sprint8.data.preferences.HistoryControl
 import com.example.sprint8.domain.models.Track
-import com.example.sprint8.presentation.adapters.SearchMediaAdapter
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.*
 
 class SearchActivity : AppCompatActivity() {
-
+    private lateinit var viewModel: SearchViewModel
     var inputEditText: TextInputEditText? = null
     var inputSearchText = ""
     val adapter: SearchMediaAdapter = SearchMediaAdapter()
@@ -39,8 +37,8 @@ class SearchActivity : AppCompatActivity() {
     var noInternet: FrameLayout? = null
     var mediaList: RecyclerView? = null
     var clearHistiry: NestedScrollView? = null
-    var historyList : RecyclerView? = null
-    var progressBar : FrameLayout? = null
+    var historyList: RecyclerView? = null
+    var progressBar: FrameLayout? = null
     val historyControl = HistoryControl()
 
 
@@ -54,6 +52,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        viewModel = defaultViewModelProviderFactory.create(SearchViewModel::class.java)
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.tool_search)
         inputEditText = findViewById(R.id.search)
@@ -89,7 +88,7 @@ class SearchActivity : AppCompatActivity() {
         val buttonApd = findViewById<Button>(R.id.buttonApd)
         buttonApd.setOnClickListener {
             setStatusMediaList()
-            loadSearch()
+            viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
         }
 
         clearButton.visibility = View.GONE
@@ -141,10 +140,23 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loadSearch()
+                viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
                 true
             }
             false
+        }
+        viewModel.getStateLiveData().observe(this) { stateView ->
+            stateView.stateVeiw
+            when (stateView.stateVeiw) {
+                StateVeiw.IN_PROGRESS -> setStatusProgressBar()
+                StateVeiw.NO_INTERNET -> setStatusNoInternet()
+                StateVeiw.NO_CONTENT -> setStatusNoContent()
+                StateVeiw.SHOW_CONTENT -> {
+                    setStatusMediaList()
+                    adapter.setItems(stateView.listTrack ?: listOf())
+                }
+                StateVeiw.SHOW_HISTORY -> TODO()
+            }
         }
     }
 
@@ -156,34 +168,34 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun loadSearch() {
-        setStatusProgressBar()
-        RestProvider().api.search(inputEditText?.text?.toString() ?: return).enqueue(
-            object : Callback<TunesResult> {
-
-                override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
-
-                    if (response.isSuccessful) {
-                        val result = response.body()
-                        if (result == null || result?.results.isNullOrEmpty()) {
-                            setStatusNoContent()
-                        } else {
-                            setStatusMediaList()
-                            val tracks = convertToTracks(result)
-                            adapter.setItems(tracks)
-                        }
-                    } else {
-                        setStatusNoInternet()
-                        val errorJson = response.errorBody()?.string()
-                    }
-                }
-
-                override fun onFailure(call: Call<TunesResult>, t: Throwable) {
-                    t.printStackTrace()
-                    setStatusNoInternet()
-                }
-            })
-    }
+//    fun loadSearch() {
+//        setStatusProgressBar()
+//        RestProvider().api.search(inputEditText?.text?.toString() ?: return).enqueue(
+//            object : Callback<TunesResult> {
+//
+//                override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
+//
+//                    if (response.isSuccessful) {
+//                        val result = response.body()
+//                        if (result == null || result?.results.isNullOrEmpty()) {
+//                            setStatusNoContent()
+//                        } else {
+//                            setStatusMediaList()
+//                            val tracks = convertToTracks(result)
+//                            adapter.setItems(tracks)
+//                        }
+//                    } else {
+//                        setStatusNoInternet()
+//                        val errorJson = response.errorBody()?.string()
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<TunesResult>, t: Throwable) {
+//                    t.printStackTrace()
+//                    setStatusNoInternet()
+//                }
+//            })
+//    }
 
     fun setStatusNoContent() {
 
@@ -224,7 +236,8 @@ class SearchActivity : AppCompatActivity() {
         mediaList?.adapter = adapter
         historyList?.adapter = null
     }
-    fun setStatusProgressBar () {
+
+    fun setStatusProgressBar() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
@@ -245,7 +258,7 @@ class SearchActivity : AppCompatActivity() {
                         "mm:ss",
                         Locale.getDefault()
                     ).format(it?.trackTimeMillis),
-                    artworkUrl100 = it?.artworkUrl100 ?: "" ,
+                    artworkUrl100 = it?.artworkUrl100 ?: "",
                     collectionName = it?.collectionName ?: "",
                     releaseDate = it?.releaseDate ?: "",
                     primaryGenreName = it?.primaryGenreName ?: "",
@@ -266,7 +279,9 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
     }
-    private val searchRunnable = Runnable { loadSearch() }
+
+    private val searchRunnable =
+        Runnable { viewModel.loadSearch(inputEditText?.text?.toString() ?: "") }
     private val handler = Handler(Looper.getMainLooper())
     private fun searchDebounce() {
 

@@ -1,4 +1,4 @@
-package com.example.sprint8.presentation.viewholders
+package com.example.sprint8.UI.viewholders
 
 import android.view.View
 import android.widget.TextView

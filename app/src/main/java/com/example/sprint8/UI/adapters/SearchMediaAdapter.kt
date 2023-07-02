@@ -1,11 +1,11 @@
-package com.example.sprint8.presentation.adapters
+package com.example.sprint8.UI.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
+import com.example.sprint8.UI.viewholders.MediaViewHolder
 import com.example.sprint8.domain.models.Track
-import com.example.sprint8.presentation.viewholders.MediaViewHolder
 
 class SearchMediaAdapter(
     private var tracks: List<Track> = listOf()

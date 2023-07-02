@@ -1,4 +1,4 @@
-package com.example.sprint8.presentation
+package com.example.sprint8.UI.activity
 
 
 import android.content.Intent
@@ -9,12 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.sprint8.App
 import com.example.sprint8.R
+import com.example.sprint8.UI.viewmodel.SettingsViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var viewModel: SettingsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_screen)
+        viewModel = defaultViewModelProviderFactory.create(SettingsViewModel::class.java)
         val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setOnClickListener {
             onBackPressed()
@@ -47,12 +50,12 @@ class SettingsActivity : AppCompatActivity() {
             val webesite = getString(R.string.webesite)
             val webpage: Uri = Uri.parse(webesite)
             val intent = Intent(Intent.ACTION_VIEW, webpage)
-                startActivity(intent)
+            startActivity(intent)
         }
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch1)
-themeSwitcher.isChecked = (applicationContext as App).darkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked  ->
-            val settings = getSharedPreferences("setting" , MODE_PRIVATE)
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            val settings = getSharedPreferences("setting", MODE_PRIVATE)
             val edit = settings.edit()
             edit.putBoolean("darkTheme", checked)
             edit.commit()
