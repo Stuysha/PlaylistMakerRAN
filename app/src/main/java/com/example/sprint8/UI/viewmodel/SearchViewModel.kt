@@ -1,10 +1,12 @@
 package com.example.sprint8.UI.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.sprint8.data.dto.TunesResult
 import com.example.sprint8.data.internet.RestProvider
+import com.example.sprint8.data.preferences.HistoryControl
 import com.example.sprint8.domain.models.Track
 import retrofit2.Call
 import retrofit2.Callback
@@ -13,12 +15,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SearchViewModel : ViewModel() {
-    private var stateLiveData = MutableLiveData(StateSearchVeiw(null, StateVeiw.IN_PROGRESS))
-
+    private var stateLiveData = MutableLiveData(StateSearchVeiw(null, StateVeiw.EMPTY_VIEW))
+    val historyControl = HistoryControl()
     fun getStateLiveData(): LiveData<StateSearchVeiw> = stateLiveData
 
     fun loadSearch(searchText: String) {
-        // setStatusProgressBar()
         stateLiveData.value = stateLiveData.value?.copy(stateVeiw = StateVeiw.IN_PROGRESS)
         RestProvider().api.search(searchText).enqueue(
             object : Callback<TunesResult> {
@@ -28,19 +29,15 @@ class SearchViewModel : ViewModel() {
                     if (response.isSuccessful) {
                         val result = response.body()
                         if (result == null || result.results.isNullOrEmpty()) {
-                           // setStatusNoContent()
                             stateLiveData.value = stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_CONTENT)
                         } else {
-                            //setStatusMediaList()
                             val tracks = convertToTracks(result)
-                            //adapter.setItems(tracks)
                             stateLiveData.value = stateLiveData.value
                                 ?.copy(
                                     listTrack = tracks,
                                     stateVeiw = StateVeiw.SHOW_CONTENT)
                         }
                     } else {
-                        //setStatusNoInternet()
                         stateLiveData.value = stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_INTERNET)
                         val errorJson = response.errorBody()?.string()
                     }
@@ -48,12 +45,20 @@ class SearchViewModel : ViewModel() {
 
                 override fun onFailure(call: Call<TunesResult>, t: Throwable) {
                     t.printStackTrace()
-                   // setStatusNoInternet()
                     stateLiveData.value = stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_INTERNET)
                 }
             })
     }
 
+    fun setHistory(context: Context) {
+        val hihistory = historyControl.getHistori(context)
+        if (!hihistory.isNullOrEmpty()) {
+            stateLiveData.value = stateLiveData.value
+                ?.copy(
+                    listTrack = hihistory.toList(),
+                    stateVeiw = StateVeiw.SHOW_HISTORY)
+        }
+    }
     fun convertToTracks(tunes: TunesResult): MutableList<Track> {
         val tracList = mutableListOf<Track>()
         tunes.results?.forEach {
@@ -89,7 +94,8 @@ enum class StateVeiw {
     NO_INTERNET,
     NO_CONTENT,
     SHOW_CONTENT,
-    SHOW_HISTORY
+    SHOW_HISTORY,
+    EMPTY_VIEW
 }
 
 

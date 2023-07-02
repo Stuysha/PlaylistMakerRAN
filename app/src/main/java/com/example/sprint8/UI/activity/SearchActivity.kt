@@ -107,7 +107,7 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                 }
                 if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()) {
-                    setHistory()
+                    viewModel.setHistory(this@SearchActivity)
                 } else setStatusMediaList()
 
 
@@ -121,7 +121,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText?.addTextChangedListener(simpleTextWatcher)
         inputEditText?.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus == true && inputEditText?.text.isNullOrEmpty()) {
-                setHistory()
+                viewModel.setHistory(this@SearchActivity)
             } else setStatusMediaList()
         }
 
@@ -147,6 +147,7 @@ class SearchActivity : AppCompatActivity() {
         }
         viewModel.getStateLiveData().observe(this) { stateView ->
             stateView.stateVeiw
+
             when (stateView.stateVeiw) {
                 StateVeiw.IN_PROGRESS -> setStatusProgressBar()
                 StateVeiw.NO_INTERNET -> setStatusNoInternet()
@@ -155,47 +156,23 @@ class SearchActivity : AppCompatActivity() {
                     setStatusMediaList()
                     adapter.setItems(stateView.listTrack ?: listOf())
                 }
-                StateVeiw.SHOW_HISTORY -> TODO()
+                StateVeiw.SHOW_HISTORY -> {
+                    setStatusHistory()
+                    adapter.setItems(stateView.listTrack ?: listOf())
+                }
+                StateVeiw.EMPTY_VIEW -> setStatusEmptyContent()
             }
         }
     }
 
-    fun setHistory() {
-        val hihistory = historyControl.getHistori(this)
-        if (!hihistory.isNullOrEmpty()) {
-            setStatusHistory()
-            adapter.setItems(hihistory.toList())
-        }
-    }
+    fun setStatusEmptyContent() {
 
-//    fun loadSearch() {
-//        setStatusProgressBar()
-//        RestProvider().api.search(inputEditText?.text?.toString() ?: return).enqueue(
-//            object : Callback<TunesResult> {
-//
-//                override fun onResponse(call: Call<TunesResult>, response: Response<TunesResult>) {
-//
-//                    if (response.isSuccessful) {
-//                        val result = response.body()
-//                        if (result == null || result?.results.isNullOrEmpty()) {
-//                            setStatusNoContent()
-//                        } else {
-//                            setStatusMediaList()
-//                            val tracks = convertToTracks(result)
-//                            adapter.setItems(tracks)
-//                        }
-//                    } else {
-//                        setStatusNoInternet()
-//                        val errorJson = response.errorBody()?.string()
-//                    }
-//                }
-//
-//                override fun onFailure(call: Call<TunesResult>, t: Throwable) {
-//                    t.printStackTrace()
-//                    setStatusNoInternet()
-//                }
-//            })
-//    }
+        noContentBox?.visibility = View.GONE
+        noInternet?.visibility = View.GONE
+        mediaList?.visibility = View.GONE
+        clearHistiry?.visibility = View.GONE
+        progressBar?.visibility = View.GONE
+    }
 
     fun setStatusNoContent() {
 
