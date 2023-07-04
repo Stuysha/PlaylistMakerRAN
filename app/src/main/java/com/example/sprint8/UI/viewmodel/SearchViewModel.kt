@@ -16,8 +16,8 @@ import java.util.*
 
 class SearchViewModel : ViewModel() {
     private var stateLiveData = MutableLiveData(StateSearchVeiw(null, StateVeiw.EMPTY_VIEW))
-    val historyControl = HistoryControl()
     fun getStateLiveData(): LiveData<StateSearchVeiw> = stateLiveData
+    val historyControl = HistoryControl()
 
     fun loadSearch(searchText: String) {
         stateLiveData.value = stateLiveData.value?.copy(stateVeiw = StateVeiw.IN_PROGRESS)
