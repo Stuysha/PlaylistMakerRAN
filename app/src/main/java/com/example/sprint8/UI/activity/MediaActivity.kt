@@ -35,7 +35,7 @@ class MediaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media)
         val trackJson = intent.getStringExtra(TRACK)
-        val trackR = Gson().fromJson<Track>(trackJson, Track::class.java)
+        val trackR = Gson().fromJson(trackJson, Track::class.java)
         viewModel = ViewModelProvider(
             this,
             MediaViewModel.getViewModelFactory(trackR)
@@ -44,22 +44,21 @@ class MediaActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             finish()
         }
-        cover = findViewById<ImageView>(R.id.imageCover)
-        trackName = findViewById<TextView>(R.id.trackName)
-        artistName = findViewById<TextView>(R.id.artistName)
-        timeTrack = findViewById<TextView>(R.id.timeTrack)
-        collectionName = findViewById<TextView>(R.id.collectionName)
-        releaseDate = findViewById<TextView>(R.id.releaseDate)
-        primaryGenreName = findViewById<TextView>(R.id.primaryGenreName)
-        country = findViewById<TextView>(R.id.country)
-        trackTimeMills = findViewById<TextView>(R.id.trackTimeMills)
-        addInPlaylist = findViewById<ImageView>(R.id.addInPlaylist)
-        playback = findViewById<ImageView>(R.id.playback)
-        likeTrack = findViewById<ImageView>(R.id.likeTrack)
+        cover = findViewById(R.id.imageCover)
+        trackName = findViewById(R.id.trackName)
+        artistName = findViewById(R.id.artistName)
+        timeTrack = findViewById(R.id.timeTrack)
+        collectionName = findViewById(R.id.collectionName)
+        releaseDate = findViewById(R.id.releaseDate)
+        primaryGenreName = findViewById(R.id.primaryGenreName)
+        country = findViewById(R.id.country)
+        trackTimeMills = findViewById(R.id.trackTimeMills)
+        addInPlaylist = findViewById(R.id.addInPlaylist)
+        playback = findViewById(R.id.playback)
+        likeTrack = findViewById(R.id.likeTrack)
 
-
-
-        timeTrack?.setText("00:00")
+        timeTrack?.text = "00:00"
+        playback?.isEnabled = false
 
         playback?.setOnClickListener {
             viewModel.playbackControl()
@@ -68,9 +67,11 @@ class MediaActivity : AppCompatActivity() {
         viewModel.getStateLiveData().observe(this) {
             when (it.playerState) {
                 StateMediaPlayer.STATE_DEFAULT -> {
-                    preparePlayer(it.urlTrack ?: "")
                 }
-                StateMediaPlayer.STATE_PREPARED -> {}
+                StateMediaPlayer.STATE_PREPARED -> {
+                    playback?.isEnabled = true
+                    setPlayView()
+                }
                 StateMediaPlayer.STATE_PLAYING -> startPlayer()
                 StateMediaPlayer.STATE_PAUSED -> pausePlayer()
             }
@@ -79,14 +80,14 @@ class MediaActivity : AppCompatActivity() {
             timeTrack?.text = it ?: ""
         }
         viewModel.getstaticContentMedia().observe(this){
-            releaseDate?.setText(it.dateTrack ?: "")
-            trackName?.setText(it.trackName)
-            artistName?.setText(it.artistName)
-            collectionName?.setText(it.collectionName)
+            releaseDate?.text = it.dateTrack ?: ""
+            trackName?.text = it.trackName
+            artistName?.text = it.artistName
+            collectionName?.text = it.collectionName
 
-            primaryGenreName?.setText(it.primaryGenreName)
-            country?.setText(it.country)
-            trackTimeMills?.setText(it.trackTime)
+            primaryGenreName?.text = it.primaryGenreName
+            country?.text = it.country
+            trackTimeMills?.text = it.trackTime
             val round = this.resources.getDimensionPixelSize(R.dimen.round_image_media8)
 
             Glide.with(this)
@@ -101,41 +102,20 @@ class MediaActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        viewModel.pausePlayer()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
-    }
-
-    var mediaPlayer = android.media.MediaPlayer()
-    fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playback?.isEnabled = true
-            viewModel.changeState(StateMediaPlayer.STATE_PREPARED)
-        }
-        mediaPlayer.setOnCompletionListener {
-            setPlayView()
-            viewModel.changeState(StateMediaPlayer.STATE_PREPARED)
-            viewModel.stopTimer()
-            viewModel.resetTime()
-        }
+        viewModel.mediaPlayerRelease()
     }
 
     fun startPlayer() {
-        viewModel.searchDebounce()
-        mediaPlayer.start()
         setViewPause()
-        viewModel.changeState(StateMediaPlayer.STATE_PLAYING)
     }
 
     fun pausePlayer() {
-        mediaPlayer.pause()
         setPlayView()
-        viewModel.changeState(StateMediaPlayer.STATE_PLAYING)
     }
 
     fun setPlayView() {

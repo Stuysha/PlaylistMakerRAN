@@ -29,6 +29,8 @@ class MediaViewModel(private val track: Track) : ViewModel() {
         )
     )
 
+    private var mediaPlayer = android.media.MediaPlayer()
+
     fun getStateLiveData(): LiveData<StateMediaView> = stateLiveData
 
     private var timeTrack = MutableLiveData("00:00")
@@ -56,23 +58,39 @@ class MediaViewModel(private val track: Track) : ViewModel() {
             country = track.country,
             trackTime = track.trackTime,
             artTrack = track.artworkUrl100.replace("100x100", "512x512"),
-            dateTrack = SimpleDateFormat(
-                "yyyy",
-                Locale.getDefault()
-            ).format(date)
+            dateTrack = date?.let {
+                SimpleDateFormat(
+                    "yyyy",
+                    Locale.getDefault()
+                ).format(it)
+            } ?: ""
         )
+        preparePlayer(track.previewUrl)
+    }
 
+    fun preparePlayer(url: String) {
+        mediaPlayer.setDataSource(url)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            changeState(StateMediaPlayer.STATE_PREPARED)
+        }
+        mediaPlayer.setOnCompletionListener {
+            changeState(StateMediaPlayer.STATE_PREPARED)
+            stopTimer()
+            resetTime()
+        }
     }
 
     fun playbackControl() {
         when (stateLiveData.value?.playerState) {
             StateMediaPlayer.STATE_PLAYING -> {
                 changeState(StateMediaPlayer.STATE_PAUSED)
+                pausePlayer()
                 stopTimer()
             }
             StateMediaPlayer.STATE_PREPARED, StateMediaPlayer.STATE_PAUSED -> {
                 changeState(StateMediaPlayer.STATE_PLAYING)
-                resetTime()
+                startPlayer()
             }
             null -> {}
             StateMediaPlayer.STATE_DEFAULT -> {}
@@ -115,6 +133,19 @@ class MediaViewModel(private val track: Track) : ViewModel() {
 
     fun stopTimer() {
         handler.removeCallbacks(searchRunnable)
+    }
+
+    fun startPlayer() {
+        searchDebounce()
+        mediaPlayer.start()
+    }
+
+    fun pausePlayer() {
+        mediaPlayer.pause()
+    }
+
+    fun mediaPlayerRelease() {
+        mediaPlayer.release()
     }
 }
 
