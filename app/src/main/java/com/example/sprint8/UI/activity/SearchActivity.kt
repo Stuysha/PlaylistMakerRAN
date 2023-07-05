@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
@@ -21,7 +22,6 @@ import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.viewmodel.SearchViewModel
 import com.example.sprint8.UI.viewmodel.StateVeiw
 import com.example.sprint8.data.dto.TunesResult
-import com.example.sprint8.data.preferences.HistoryControl
 import com.example.sprint8.domain.models.Track
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
@@ -39,7 +39,6 @@ class SearchActivity : AppCompatActivity() {
     var clearHistiry: NestedScrollView? = null
     var historyList: RecyclerView? = null
     var progressBar: FrameLayout? = null
-    val historyControl = HistoryControl()
 
 
     companion object {
@@ -52,7 +51,10 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
-        viewModel = defaultViewModelProviderFactory.create(SearchViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            SearchViewModel.getViewModelFactory()
+        )[SearchViewModel::class.java]
 
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.tool_search)
         inputEditText = findViewById(R.id.search)
@@ -73,7 +75,7 @@ class SearchActivity : AppCompatActivity() {
         inputEditText?.setText(inputSearchText)
 
         clearHistory.setOnClickListener {
-            historyControl.historyDelete(this)
+            viewModel.historyDelete()
             setStatusMediaList()
         }
 
@@ -107,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
                     clearButton.visibility = View.VISIBLE
                 }
                 if (inputEditText?.hasFocus() == true && s.isNullOrEmpty()) {
-                    viewModel.setHistory(this@SearchActivity)
+                    viewModel.setHistory()
                 } else setStatusMediaList()
 
 
@@ -120,8 +122,8 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText?.addTextChangedListener(simpleTextWatcher)
         inputEditText?.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus == true && inputEditText?.text.isNullOrEmpty()) {
-                viewModel.setHistory(this@SearchActivity)
+            if (hasFocus && inputEditText?.text.isNullOrEmpty()) {
+                viewModel.setHistory()
             } else setStatusMediaList()
         }
 
@@ -130,7 +132,7 @@ class SearchActivity : AppCompatActivity() {
         mediaList.layoutManager = LinearLayoutManager(this)
 
         adapter.click = {
-            historyControl.addTrack(it, this)
+            viewModel.saveHistoryTrack(it)
             val intent = Intent(this, MediaActivity::class.java)
             intent.putExtra(TRACK, Gson().toJson(it))
             startActivity(intent)
