@@ -20,6 +20,13 @@ class MediaViewModel(private val track: Track) : ViewModel() {
         )
     )
 
+    /**
+     * Согласно подсказке из задания:
+     *
+     * Логику работы с MediaPlayer можно полностью поручить ViewModel.
+     * Плеер — это важная часть бизнес-логики приложения, но этот инструмент входит в Android SDK,
+     * а значит, не может использоваться в слое Domain.
+     */
     private var mediaPlayer = android.media.MediaPlayer()
 
     fun getStateLiveData(): LiveData<StateMediaView> = stateLiveData
