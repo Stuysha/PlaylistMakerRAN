@@ -13,6 +13,13 @@ class SettingsViewModel(
     private val settingInteractor: SettingInteractor,
     private val application: App
 ) : ViewModel() {
+
+
+    fun editEnableDarkThemeSetting(checked: Boolean) {
+        settingInteractor.editEnableDarkThemeSetting(checked)
+        application.switchTheme(checked)
+    }
+
     companion object {
         fun getViewModelFactory(): ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -23,10 +30,5 @@ class SettingsViewModel(
                 )
             }
         }
-    }
-
-    fun editEnableDarkThemeSetting(checked: Boolean) {
-        settingInteractor.editEnableDarkThemeSetting(checked)
-        application.switchTheme(checked)
     }
 }

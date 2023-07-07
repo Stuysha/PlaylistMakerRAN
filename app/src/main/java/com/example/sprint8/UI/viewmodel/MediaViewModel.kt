@@ -13,15 +13,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MediaViewModel(private val track: Track) : ViewModel() {
-    companion object {
-        fun getViewModelFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MediaViewModel(
-                    track,
-                )
-            }
-        }
-    }
 
     private var stateLiveData = MutableLiveData(
         StateMediaView(
@@ -147,6 +138,16 @@ class MediaViewModel(private val track: Track) : ViewModel() {
     fun mediaPlayerRelease() {
         resetTime()
         mediaPlayer.release()
+    }
+
+    companion object {
+        fun getViewModelFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                MediaViewModel(
+                    track,
+                )
+            }
+        }
     }
 }
 

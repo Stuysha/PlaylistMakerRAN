@@ -6,17 +6,17 @@ import com.example.sprint8.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SearchInteractor(val serRepository: SearchRepository) {
+class SearchInteractor(val searchRepository: SearchRepository) {
 
     fun getSearchTrack(
         searchText: String,
         onSuccess: (MutableList<Track>?) -> Unit,
         onFailure: (Throwable?, String?) -> Unit
     ) {
-        serRepository.loadSearch(
+        searchRepository.loadSearch(
             searchText,
             {
-                onSuccess(it?.let { it1 -> convertToTracks(it1) })
+                onSuccess(it?.let { convertToTracks(it) })
             },
             { error, message ->
                 onFailure(error, message)
@@ -24,7 +24,7 @@ class SearchInteractor(val serRepository: SearchRepository) {
         )
     }
 
-    fun convertToTracks(tunes: TunesResult): MutableList<Track> {
+    private fun convertToTracks(tunes: TunesResult): MutableList<Track> {
         val tracList = mutableListOf<Track>()
         tunes.results?.forEach {
             tracList.add(
@@ -48,7 +48,7 @@ class SearchInteractor(val serRepository: SearchRepository) {
         return tracList
     }
 
-    fun getHistory() = serRepository.getHistory()
-    fun historyDelete() = serRepository.historyDelete()
-    fun addHistoryTrack(track: Track) = serRepository.addHistoryTrack(track)
+    fun getHistory() = searchRepository.getHistory()
+    fun historyDelete() = searchRepository.historyDelete()
+    fun addHistoryTrack(track: Track) = searchRepository.addHistoryTrack(track)
 }

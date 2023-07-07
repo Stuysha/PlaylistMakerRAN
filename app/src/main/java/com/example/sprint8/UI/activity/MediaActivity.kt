@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -35,12 +36,12 @@ class MediaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media)
         val trackJson = intent.getStringExtra(TRACK)
-        val trackR = Gson().fromJson(trackJson, Track::class.java)
+        val trackObject = Gson().fromJson(trackJson, Track::class.java)
         viewModel = ViewModelProvider(
             this,
-            MediaViewModel.getViewModelFactory(trackR)
+            MediaViewModel.getViewModelFactory(trackObject)
         )[MediaViewModel::class.java]
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.arrow)
+        val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
             finish()
         }
@@ -57,7 +58,7 @@ class MediaActivity : AppCompatActivity() {
         playback = findViewById(R.id.playback)
         likeTrack = findViewById(R.id.likeTrack)
 
-        timeTrack?.text = "00:00"
+        timeTrack?.setText(R.string.null_time)
         playback?.isEnabled = false
 
         playback?.setOnClickListener {
@@ -77,10 +78,10 @@ class MediaActivity : AppCompatActivity() {
             }
         }
         viewModel.getTimeTrack().observe(this) {
-            timeTrack?.text = it ?: ""
+            timeTrack?.text = it.orEmpty()
         }
-        viewModel.getstaticContentMedia().observe(this){
-            releaseDate?.text = it.dateTrack ?: ""
+        viewModel.getstaticContentMedia().observe(this) {
+            releaseDate?.text = it.dateTrack ?: getString(R.string.is_unknown).lowercase()
             trackName?.text = it.trackName
             artistName?.text = it.artistName
             collectionName?.text = it.collectionName
@@ -94,7 +95,7 @@ class MediaActivity : AppCompatActivity() {
                 .load(it.artTrack)
                 .placeholder(R.drawable.placeholder)
                 .transform(RoundedCorners(round))
-                .into(cover!!)
+                .into(cover ?: return@observe)
         }
 
 
