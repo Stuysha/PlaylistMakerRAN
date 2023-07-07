@@ -84,9 +84,7 @@ class MediaViewModel(private val track: Track) : ViewModel() {
     fun playbackControl() {
         when (stateLiveData.value?.playerState) {
             StateMediaPlayer.STATE_PLAYING -> {
-                changeState(StateMediaPlayer.STATE_PAUSED)
                 pausePlayer()
-                stopTimer()
             }
             StateMediaPlayer.STATE_PREPARED, StateMediaPlayer.STATE_PAUSED -> {
                 changeState(StateMediaPlayer.STATE_PLAYING)
@@ -141,10 +139,13 @@ class MediaViewModel(private val track: Track) : ViewModel() {
     }
 
     fun pausePlayer() {
+        changeState(StateMediaPlayer.STATE_PAUSED)
+        stopTimer()
         mediaPlayer.pause()
     }
 
     fun mediaPlayerRelease() {
+        resetTime()
         mediaPlayer.release()
     }
 }
