@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -21,11 +22,9 @@ import com.example.sprint8.R
 import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.viewmodel.SearchViewModel
 import com.example.sprint8.UI.viewmodel.StateVeiw
-import com.example.sprint8.data.dto.TunesResult
 import com.example.sprint8.domain.models.Track
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
-import java.text.SimpleDateFormat
 import java.util.*
 
 class SearchActivity : AppCompatActivity() {
@@ -36,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
     var noContentBox: FrameLayout? = null
     var noInternet: FrameLayout? = null
     var mediaList: RecyclerView? = null
-    var clearHistiry: NestedScrollView? = null
+    var clearHistory: NestedScrollView? = null
     var historyList: RecyclerView? = null
     var progressBar: FrameLayout? = null
 
@@ -60,13 +59,13 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.search)
         val clearButton = findViewById<ImageView>(R.id.close)
         val clearHistory = findViewById<Button>(R.id.clearHistory)
-        noContentBox = findViewById<FrameLayout>(R.id.nocontent)
-        noInternet = findViewById<FrameLayout>(R.id.nointernet)
-        mediaList = findViewById<RecyclerView>(R.id.media_list)
-        clearHistiry = findViewById<NestedScrollView>(R.id.searchHistory)
-        historyList = findViewById<RecyclerView>(R.id.histiry)
+        noContentBox = findViewById(R.id.nocontent)
+        noInternet = findViewById(R.id.nointernet)
+        mediaList = findViewById(R.id.media_list)
+        this.clearHistory = findViewById(R.id.searchHistory)
+        historyList = findViewById(R.id.histiry)
         historyList?.layoutManager = LinearLayoutManager(this)
-        progressBar = findViewById<FrameLayout>(R.id.progressBar)
+        progressBar = findViewById(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
             finish()
@@ -131,13 +130,7 @@ class SearchActivity : AppCompatActivity() {
         mediaList.adapter = adapter
         mediaList.layoutManager = LinearLayoutManager(this)
 
-        adapter.click = {
-            viewModel.saveHistoryTrack(it)
-            val intent = Intent(this, MediaActivity::class.java)
-            intent.putExtra(TRACK, Gson().toJson(it))
-            startActivity(intent)
-
-        }
+        adapter.click = ::clickToItem
 
 
         inputEditText?.setOnEditorActionListener { _, actionId, _ ->
@@ -167,12 +160,21 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    fun setStatusEmptyContent() {
+    fun clickToItem(track: Track) {
+        Log.d("test_debons", "click")
+        adapter.click = null
+        viewModel.saveHistoryTrack(track)
+        val intent = Intent(this, MediaActivity::class.java)
+        intent.putExtra(TRACK, Gson().toJson(track))
+        startActivity(intent)
+        adapter.click = ::clickToItem
+    }
 
+    fun setStatusEmptyContent() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
-        clearHistiry?.visibility = View.GONE
+        clearHistory?.visibility = View.GONE
         progressBar?.visibility = View.GONE
     }
 
@@ -181,12 +183,12 @@ class SearchActivity : AppCompatActivity() {
         noContentBox?.visibility = View.VISIBLE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
-        clearHistiry?.visibility = View.GONE
+        clearHistory?.visibility = View.GONE
         progressBar?.visibility = View.GONE
     }
 
     fun setStatusHistory() {
-        clearHistiry?.visibility = View.VISIBLE
+        clearHistory?.visibility = View.VISIBLE
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
@@ -201,7 +203,7 @@ class SearchActivity : AppCompatActivity() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.VISIBLE
         mediaList?.visibility = View.GONE
-        clearHistiry?.visibility = View.GONE
+        clearHistory?.visibility = View.GONE
         progressBar?.visibility = View.GONE
     }
 
@@ -210,7 +212,7 @@ class SearchActivity : AppCompatActivity() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.VISIBLE
-        clearHistiry?.visibility = View.GONE
+        clearHistory?.visibility = View.GONE
         progressBar?.visibility = View.GONE
         mediaList?.adapter = adapter
         historyList?.adapter = null
@@ -220,33 +222,8 @@ class SearchActivity : AppCompatActivity() {
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.GONE
         mediaList?.visibility = View.GONE
-        clearHistiry?.visibility = View.GONE
+        clearHistory?.visibility = View.GONE
         progressBar?.visibility = View.VISIBLE
-
-    }
-
-    fun convertToTracks(tunes: TunesResult): MutableList<Track> {
-        val tracList = mutableListOf<Track>()
-        tunes.results?.forEach {
-            tracList.add(
-                Track(
-                    trackId = it?.trackId ?: 0L,
-                    trackName = it?.trackName ?: "",
-                    artistName = it?.artistName ?: "",
-                    trackTime = SimpleDateFormat(
-                        "mm:ss",
-                        Locale.getDefault()
-                    ).format(it?.trackTimeMillis),
-                    artworkUrl100 = it?.artworkUrl100 ?: "",
-                    collectionName = it?.collectionName ?: "",
-                    releaseDate = it?.releaseDate ?: "",
-                    primaryGenreName = it?.primaryGenreName ?: "",
-                    country = it?.country ?: "",
-                    previewUrl = it?.previewUrl ?: "",
-                )
-            )
-        }
-        return tracList
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -259,11 +236,11 @@ class SearchActivity : AppCompatActivity() {
         inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
     }
 
-    private val searchRunnable =
-        Runnable { viewModel.loadSearch(inputEditText?.text?.toString() ?: "") }
+    private val searchRunnable = Runnable {
+        viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
+    }
     private val handler = Handler(Looper.getMainLooper())
     private fun searchDebounce() {
-
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, 2000L)
     }
