@@ -16,20 +16,19 @@ class SearchViewModel(
 ) : ViewModel() {
 
     companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : ViewModel> create(
-                    modelClass: Class<T>,
-                    extras: CreationExtras,
-                ): T {
-                    val application = checkNotNull(extras[APPLICATION_KEY])
+        fun getViewModelFactory(): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(
+                modelClass: Class<T>,
+                extras: CreationExtras,
+            ): T {
+                val application = checkNotNull(extras[APPLICATION_KEY])
 
-                    return SearchViewModel(
-                        CreatorSearchObject.createSearchInteractor(application)
-                    ) as T
-                }
+                return SearchViewModel(
+                    CreatorSearchObject.createSearchInteractor(application)
+                ) as T
             }
+        }
     }
 
     private var stateLiveData = MutableLiveData(StateSearchVeiw(null, StateVeiw.EMPTY_VIEW))

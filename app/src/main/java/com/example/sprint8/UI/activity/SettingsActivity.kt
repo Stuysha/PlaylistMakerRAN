@@ -6,12 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import com.example.sprint8.App
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.SettingsViewModel
-import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var viewModel: SettingsViewModel
@@ -56,14 +56,10 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, webpage)
             startActivity(intent)
         }
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch1)
+        val themeSwitcher = findViewById<SwitchCompat>(R.id.switch1)
         themeSwitcher.isChecked = (applicationContext as App).darkTheme
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
-            val settings = getSharedPreferences("setting", MODE_PRIVATE)
-            val edit = settings.edit()
-            edit.putBoolean("darkTheme", checked)
-            edit.commit()
-            (applicationContext as App).switchTheme(checked)
+            viewModel.editEnableDarkThemeSetting(checked)
         }
     }
 

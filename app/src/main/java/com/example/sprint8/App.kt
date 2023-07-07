@@ -2,6 +2,7 @@ package com.example.sprint8
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.sprint8.data.preferences.SettingSharedPreference
 
 class App : Application() {
 
@@ -9,8 +10,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        val settings = getSharedPreferences("setting" , MODE_PRIVATE)
-        darkTheme = settings.getBoolean("darkTheme", false)
+        darkTheme = SettingSharedPreference(this).getDarkThemeSetting()
+        switchTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
