@@ -36,6 +36,10 @@ class SearchViewModel(
     fun getStateLiveData(): LiveData<StateSearchVeiw> = stateLiveData
 
     fun loadSearch(searchText: String) {
+        stateLiveData.value = stateLiveData.value
+            ?.copy(
+                stateVeiw = StateVeiw.IN_PROGRESS
+            )
         searchInteractor.getSearchTrack(
             searchText,
             {

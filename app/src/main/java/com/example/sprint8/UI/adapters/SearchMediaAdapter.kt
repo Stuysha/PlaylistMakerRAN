@@ -1,5 +1,6 @@
 package com.example.sprint8.UI.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,7 @@ class SearchMediaAdapter(
         return tracks.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setItems(tracks: List<Track>) {
         this.tracks = tracks
         notifyDataSetChanged()
