@@ -1,5 +1,7 @@
 package com.example.sprint8.UI.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -11,13 +13,15 @@ import com.example.sprint8.domain.settings.SettingInteractor
 
 class SettingsViewModel(
     private val settingInteractor: SettingInteractor,
-    private val application: App
 ) : ViewModel() {
+
+    private var changeActiveDarkTheme = MutableLiveData<Boolean?>(null)
+    fun getActiveDarkTheme(): LiveData<Boolean?> = changeActiveDarkTheme
 
 
     fun editEnableDarkThemeSetting(checked: Boolean) {
         settingInteractor.editEnableDarkThemeSetting(checked)
-        application.switchTheme(checked)
+        changeActiveDarkTheme.value = checked
     }
 
     companion object {
@@ -26,7 +30,6 @@ class SettingsViewModel(
                 val application = checkNotNull(this[APPLICATION_KEY]) as App
                 SettingsViewModel(
                     CreatorSettingObject.createSearchInteractor(application),
-                    application
                 )
             }
         }

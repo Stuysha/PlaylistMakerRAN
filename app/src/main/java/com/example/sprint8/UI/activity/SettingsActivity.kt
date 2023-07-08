@@ -61,6 +61,12 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             viewModel.editEnableDarkThemeSetting(checked)
         }
+
+        viewModel.getActiveDarkTheme().observe(this) {
+            if (it != null) {
+                (applicationContext as App).switchTheme(it)
+            }
+        }
     }
 
 }
