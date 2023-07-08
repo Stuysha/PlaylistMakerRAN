@@ -23,6 +23,7 @@
             android:exported="false" />
         <activity
             android:name=".UI.activity.SearchActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".UI.activity.MainActivity"
