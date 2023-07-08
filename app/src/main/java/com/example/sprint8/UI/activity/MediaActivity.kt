@@ -80,7 +80,7 @@ class MediaActivity : AppCompatActivity() {
         viewModel.getTimeTrack().observe(this) {
             timeTrack?.text = it.orEmpty()
         }
-        viewModel.getstaticContentMedia().observe(this) {
+        viewModel.getStaticContentMedia().observe(this) {
             releaseDate?.text = it.dateTrack ?: getString(R.string.is_unknown).lowercase()
             trackName?.text = it.trackName
             artistName?.text = it.artistName
