@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.R
@@ -15,9 +14,10 @@ import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
 import com.example.sprint8.domain.models.Track
 import com.google.gson.Gson
+import org.koin.android.ext.android.inject
 
 class MediaActivity : AppCompatActivity() {
-    private lateinit var viewModel: MediaViewModel
+    private val viewModel: MediaViewModel by inject()
     var cover: ImageView? = null
     var trackName: TextView? = null
     var artistName: TextView? = null
@@ -37,10 +37,10 @@ class MediaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media)
         val trackJson = intent.getStringExtra(TRACK)
         val trackObject = Gson().fromJson(trackJson, Track::class.java)
-        viewModel = ViewModelProvider(
-            this,
-            MediaViewModel.getViewModelFactory(trackObject)
-        )[MediaViewModel::class.java]
+//        viewModel = ViewModelProvider(
+//            this,
+//            MediaViewModel.getViewModelFactory(trackObject)
+//        )[MediaViewModel::class.java]
         val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
             finish()

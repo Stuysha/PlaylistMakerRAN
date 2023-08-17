@@ -8,20 +8,16 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.ViewModelProvider
 import com.example.sprint8.App
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.SettingsViewModel
+import org.koin.android.ext.android.inject
 
 class SettingsActivity : AppCompatActivity() {
-    private lateinit var viewModel: SettingsViewModel
+    private  val viewModel: SettingsViewModel by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_screen)
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModel.getViewModelFactory()
-        )[SettingsViewModel::class.java]
         val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setOnClickListener {
             onBackPressed()
