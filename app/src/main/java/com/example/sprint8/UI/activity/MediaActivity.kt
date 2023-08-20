@@ -14,10 +14,11 @@ import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
 import com.example.sprint8.domain.models.Track
 import com.google.gson.Gson
-import org.koin.android.ext.android.inject
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.getKoin
 
 class MediaActivity : AppCompatActivity() {
-    private val viewModel: MediaViewModel by inject()
+    private lateinit var viewModel: MediaViewModel
     var cover: ImageView? = null
     var trackName: TextView? = null
     var artistName: TextView? = null
@@ -37,10 +38,7 @@ class MediaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media)
         val trackJson = intent.getStringExtra(TRACK)
         val trackObject = Gson().fromJson(trackJson, Track::class.java)
-//        viewModel = ViewModelProvider(
-//            this,
-//            MediaViewModel.getViewModelFactory(trackObject)
-//        )[MediaViewModel::class.java]
+        viewModel = getKoin().get(parameters = {parametersOf(trackObject)})
         val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
             finish()

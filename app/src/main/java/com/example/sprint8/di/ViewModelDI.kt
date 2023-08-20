@@ -1,12 +1,14 @@
 package com.example.sprint8.di
 
-import com.example.sprint8.App
 import com.example.sprint8.UI.viewmodel.*
 import com.example.sprint8.data.internet.RestProvider
+import com.example.sprint8.data.player.PlayerRepository
 import com.example.sprint8.data.preferences.HistoryControl
+import com.example.sprint8.data.preferences.SettingControl
 import com.example.sprint8.data.preferences.SettingSharedPreference
 import com.example.sprint8.data.search.SearchRepository
 import com.example.sprint8.data.settings.SettingRepository
+import com.example.sprint8.domain.player.PlayerInteractor
 import com.example.sprint8.domain.search.SearchInteractor
 import com.example.sprint8.domain.settings.SettingInteractor
 import org.koin.android.ext.koin.androidContext
@@ -18,7 +20,7 @@ val viewModelModule = module {
         MainViewModel()
     }
     viewModel {
-        MediaViewModel(get())
+        MediaViewModel(it.get(), get())
     }
     viewModel {
         MediaLibraryViewModel()
@@ -27,10 +29,7 @@ val viewModelModule = module {
         SearchViewModel(get())
     }
     viewModel {
-        MediaLibraryViewModel()
-    }
-    viewModel {
-        SettingsViewModel(get(),androidContext() as App)
+        SettingsViewModel(get())
     }
 }
 val interactorModule = module {
@@ -40,6 +39,9 @@ val interactorModule = module {
     single {
         SettingInteractor(get())
     }
+    factory {
+        PlayerInteractor(get())
+    }
 }
 val repositoryModule = module {
     single {
@@ -48,7 +50,9 @@ val repositoryModule = module {
     single {
         SettingRepository(get())
     }
-
+    factory {
+        PlayerRepository(get())
+    }
 }
 val internetModule = module {
     single {
@@ -59,7 +63,11 @@ val dataModule = module {
     single {
         HistoryControl(get())
     }
-    single {
-        SettingSharedPreference(get())
+    single<SettingControl> {
+        SettingSharedPreference(androidContext())
     }
+    factory {
+        android.media.MediaPlayer()
+    }
+
 }
