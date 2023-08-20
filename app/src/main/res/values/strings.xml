@@ -22,5 +22,6 @@
     <string name="genre_media">Жанр</string>
     <string name="country_media">Страна</string>
     <string name="history"> Вы искали </string>
-
+    <string name="is_unknown">Неизвестно</string>
+    <string name="null_time">00:00</string>
 </resources>

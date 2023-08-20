@@ -6,9 +6,9 @@ import com.example.sprint8.data.SharedPreferencesClient
 import com.example.sprint8.domain.models.Track
 import com.google.gson.Gson
 
-class HistoryControl : SharedPreferencesClient {
+class HistoryControl(val context: Context) : SharedPreferencesClient {
 
-    override fun getHistori(context: Context): Array<Track> {
+    override fun getHistori(): Array<Track> {
         val sharedPreferences = context.getSharedPreferences("HISTORI_SONG", MODE_PRIVATE)
         val historyTrack = sharedPreferences.getString("key_history", null)
         val historyTrackList = try {
@@ -23,7 +23,7 @@ class HistoryControl : SharedPreferencesClient {
         return Gson().toJson(track)
     }
 
-    override fun addTrack(track: Track, context: Context) {
+    override fun addTrack(track: Track) {
         val sharedPreferences = context.getSharedPreferences("HISTORI_SONG", MODE_PRIVATE)
         val historyTrack = sharedPreferences.getString("key_history", null)
         val historyTrackList = try {
@@ -55,7 +55,7 @@ class HistoryControl : SharedPreferencesClient {
         return Gson().fromJson(json, Array<Track>::class.java)
     }
 
-    override fun historyDelete(context: Context) {
+    override fun historyDelete() {
         val sharedPreferences = context.getSharedPreferences("HISTORI_SONG", MODE_PRIVATE)
         sharedPreferences.edit().remove("key_history").apply()
 

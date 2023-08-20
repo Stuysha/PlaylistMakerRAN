@@ -1,4 +1,4 @@
-package com.example.sprint8.presentation
+package com.example.sprint8.UI.activity
 
 
 import android.content.Intent
@@ -6,15 +6,22 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import com.example.sprint8.App
 import com.example.sprint8.R
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.sprint8.UI.viewmodel.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
+    private lateinit var viewModel: SettingsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_screen)
+        viewModel = ViewModelProvider(
+            this,
+            SettingsViewModel.getViewModelFactory()
+        )[SettingsViewModel::class.java]
         val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setOnClickListener {
             onBackPressed()
@@ -47,16 +54,18 @@ class SettingsActivity : AppCompatActivity() {
             val webesite = getString(R.string.webesite)
             val webpage: Uri = Uri.parse(webesite)
             val intent = Intent(Intent.ACTION_VIEW, webpage)
-                startActivity(intent)
+            startActivity(intent)
         }
-        val themeSwitcher = findViewById<SwitchMaterial>(R.id.switch1)
-themeSwitcher.isChecked = (applicationContext as App).darkTheme
-        themeSwitcher.setOnCheckedChangeListener { switcher, checked  ->
-            val settings = getSharedPreferences("setting" , MODE_PRIVATE)
-            val edit = settings.edit()
-            edit.putBoolean("darkTheme", checked)
-            edit.commit()
-            (applicationContext as App).switchTheme(checked)
+        val themeSwitcher = findViewById<SwitchCompat>(R.id.switch1)
+        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+            viewModel.editEnableDarkThemeSetting(checked)
+        }
+
+        viewModel.getActiveDarkTheme().observe(this) {
+            if (it != null) {
+                (applicationContext as App).switchTheme(it)
+            }
         }
     }
 

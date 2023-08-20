@@ -1,11 +1,12 @@
-package com.example.sprint8.presentation.adapters
+package com.example.sprint8.UI.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
+import com.example.sprint8.UI.viewholders.MediaViewHolder
 import com.example.sprint8.domain.models.Track
-import com.example.sprint8.presentation.viewholders.MediaViewHolder
 
 class SearchMediaAdapter(
     private var tracks: List<Track> = listOf()
@@ -28,6 +29,7 @@ class SearchMediaAdapter(
         return tracks.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setItems(tracks: List<Track>) {
         this.tracks = tracks
         notifyDataSetChanged()
