@@ -8,11 +8,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.sprint8.creator.CreatorMediaObject
 import com.example.sprint8.domain.models.Track
+import com.example.sprint8.domain.player.PlayerInteractor
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
-class MediaViewModel(private val track: Track) : ViewModel() {
+class MediaViewModel(
+    private val track: Track,
+    private val playerInteractor: PlayerInteractor
+) : ViewModel() {
 
     private var stateLiveData = MutableLiveData(
         StateMediaView(
@@ -20,23 +25,11 @@ class MediaViewModel(private val track: Track) : ViewModel() {
         )
     )
 
-    /**
-     * Согласно подсказке из задания:
-     *
-     * Логику работы с MediaPlayer можно полностью поручить ViewModel.
-     * Плеер — это важная часть бизнес-логики приложения, но этот инструмент входит в Android SDK,
-     * а значит, не может использоваться в слое Domain.
-     */
-    private var mediaPlayer = android.media.MediaPlayer()
-
     fun getStateLiveData(): LiveData<StateMediaView> = stateLiveData
-
     private var timeTrack = MutableLiveData("00:00")
     fun getTimeTrack(): LiveData<String> = timeTrack
-
     private var staticContentMedia = MutableLiveData<StaticContentMediaView>()
-    fun getstaticContentMedia(): LiveData<StaticContentMediaView> = staticContentMedia
-
+    fun getStaticContentMedia(): LiveData<StaticContentMediaView> = staticContentMedia
 
     init {
         stateLiveData.value = StateMediaView(
@@ -67,16 +60,17 @@ class MediaViewModel(private val track: Track) : ViewModel() {
     }
 
     fun preparePlayer(url: String) {
-        mediaPlayer.setDataSource(url)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            changeState(StateMediaPlayer.STATE_PREPARED)
-        }
-        mediaPlayer.setOnCompletionListener {
-            changeState(StateMediaPlayer.STATE_PREPARED)
-            stopTimer()
-            resetTime()
-        }
+        playerInteractor.preparePlayer(
+            url,
+            {
+                changeState(StateMediaPlayer.STATE_PREPARED)
+            },
+            {
+                changeState(StateMediaPlayer.STATE_PREPARED)
+                stopTimer()
+                resetTime()
+            }
+        )
     }
 
     fun playbackControl() {
@@ -84,10 +78,12 @@ class MediaViewModel(private val track: Track) : ViewModel() {
             StateMediaPlayer.STATE_PLAYING -> {
                 pausePlayer()
             }
+
             StateMediaPlayer.STATE_PREPARED, StateMediaPlayer.STATE_PAUSED -> {
                 changeState(StateMediaPlayer.STATE_PLAYING)
                 startPlayer()
             }
+
             null -> {}
             StateMediaPlayer.STATE_DEFAULT -> {}
         }
@@ -133,18 +129,18 @@ class MediaViewModel(private val track: Track) : ViewModel() {
 
     fun startPlayer() {
         searchDebounce()
-        mediaPlayer.start()
+        playerInteractor.startPlayer()
     }
 
     fun pausePlayer() {
         changeState(StateMediaPlayer.STATE_PAUSED)
         stopTimer()
-        mediaPlayer.pause()
+        playerInteractor.pausePlayer()
     }
 
     fun mediaPlayerRelease() {
         resetTime()
-        mediaPlayer.release()
+        playerInteractor.mediaPlayerRelease()
     }
 
     companion object {
@@ -152,6 +148,7 @@ class MediaViewModel(private val track: Track) : ViewModel() {
             initializer {
                 MediaViewModel(
                     track,
+                    CreatorMediaObject.createPlayerInteractor()
                 )
             }
         }

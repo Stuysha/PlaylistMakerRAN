@@ -37,13 +37,8 @@ class SearchActivity : AppCompatActivity() {
     var clearHistory: NestedScrollView? = null
     var historyList: RecyclerView? = null
     var progressBar: FrameLayout? = null
-
-
-    companion object {
-        const val SEARCH_TEXT = "searchText"
-        const val TRACK = "track"
-
-    }
+    private var isClickAllowed = true
+    private val handlerDebounce = Handler(Looper.getMainLooper())
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -125,9 +120,6 @@ class SearchActivity : AppCompatActivity() {
         mediaList.adapter = adapter
         mediaList.layoutManager = LinearLayoutManager(this)
 
-        adapter.click = ::clickToItem
-
-
         inputEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
@@ -146,22 +138,41 @@ class SearchActivity : AppCompatActivity() {
                     setStatusMediaList()
                     adapter.setItems(stateView.listTrack ?: listOf())
                 }
+
                 StateVeiw.SHOW_HISTORY -> {
                     setStatusHistory()
                     adapter.setItems(stateView.listTrack ?: listOf())
                 }
+
                 StateVeiw.EMPTY_VIEW -> setStatusEmptyContent()
             }
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        adapter.click = ::clickToItem
+    }
+
     fun clickToItem(track: Track) {
         adapter.click = null
-        viewModel.saveHistoryTrack(track)
-        val intent = Intent(this, MediaActivity::class.java)
-        intent.putExtra(TRACK, Gson().toJson(track))
-        startActivity(intent)
-        adapter.click = ::clickToItem
+        if (clickDebounce()) {
+            viewModel.saveHistoryTrack(track)
+            val intent = Intent(this, MediaActivity::class.java)
+            intent.putExtra(TRACK, Gson().toJson(track))
+            startActivity(intent)
+        }
+    }
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handlerDebounce.postDelayed(
+                { isClickAllowed = true },
+                CLICK_DEBOUNCE_DELAY
+            )
+        }
+        return current
     }
 
     fun setStatusEmptyContent() {
@@ -188,12 +199,10 @@ class SearchActivity : AppCompatActivity() {
         mediaList?.visibility = View.GONE
         progressBar?.visibility = View.GONE
         mediaList?.adapter = null
-
         historyList?.adapter = adapter
     }
 
     fun setStatusNoInternet() {
-
         noContentBox?.visibility = View.GONE
         noInternet?.visibility = View.VISIBLE
         mediaList?.visibility = View.GONE
@@ -239,5 +248,10 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, 2000L)
     }
 
+    companion object {
+        const val SEARCH_TEXT = "searchText"
+        const val TRACK = "track"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+    }
 }
 
