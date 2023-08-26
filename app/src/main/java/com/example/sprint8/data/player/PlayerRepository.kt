@@ -2,9 +2,9 @@ package com.example.sprint8.data.player
 
 class PlayerRepository(
     private val mediaPlayer: android.media.MediaPlayer
-) {
+): PlayerRepositoryInterface {
 
-    fun preparePlayer(
+    override fun preparePlayer(
         url: String,
         setOnPreparedListener: () -> Unit,
         setOnCompletionListener: () -> Unit
@@ -19,16 +19,30 @@ class PlayerRepository(
         }
     }
 
-    fun startPlayer() {
+    override fun startPlayer() {
         mediaPlayer.start()
     }
 
-    fun pausePlayer() {
+    override fun pausePlayer() {
         mediaPlayer.pause()
     }
 
-    fun mediaPlayerRelease() {
+    override fun mediaPlayerRelease() {
         mediaPlayer.release()
     }
 
+}
+
+interface PlayerRepositoryInterface{
+    fun preparePlayer(
+        url: String,
+        setOnPreparedListener: () -> Unit,
+        setOnCompletionListener: () -> Unit
+    )
+
+    fun startPlayer()
+
+    fun pausePlayer()
+
+    fun mediaPlayerRelease()
 }

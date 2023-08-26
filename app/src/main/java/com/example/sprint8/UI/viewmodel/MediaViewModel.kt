@@ -5,18 +5,14 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.sprint8.creator.CreatorMediaObject
 import com.example.sprint8.domain.models.Track
-import com.example.sprint8.domain.player.PlayerInteractor
+import com.example.sprint8.domain.player.PlayerInteractorInterface
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MediaViewModel(
     private val track: Track,
-    private val playerInteractor: PlayerInteractor
+    private val playerInteractor: PlayerInteractorInterface
 ) : ViewModel() {
 
     private var stateLiveData = MutableLiveData(
@@ -141,17 +137,6 @@ class MediaViewModel(
     fun mediaPlayerRelease() {
         resetTime()
         playerInteractor.mediaPlayerRelease()
-    }
-
-    companion object {
-        fun getViewModelFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                MediaViewModel(
-                    track,
-                    CreatorMediaObject.createPlayerInteractor()
-                )
-            }
-        }
     }
 }
 

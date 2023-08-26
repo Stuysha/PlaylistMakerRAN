@@ -1,14 +1,14 @@
 package com.example.sprint8.domain.search
 
 import com.example.sprint8.data.dto.TunesResult
-import com.example.sprint8.data.search.SearchRepository
+import com.example.sprint8.data.search.SearchRepositoryInterface
 import com.example.sprint8.domain.models.Track
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
-class SearchInteractor(val searchRepository: SearchRepository) {
+class SearchInteractor(val searchRepository: SearchRepositoryInterface): SearchInteractorInterface {
 
-    fun getSearchTrack(
+    override fun getSearchTrack(
         searchText: String,
         onSuccess: (MutableList<Track>?) -> Unit,
         onFailure: (Throwable?, String?) -> Unit
@@ -48,7 +48,19 @@ class SearchInteractor(val searchRepository: SearchRepository) {
         return tracList
     }
 
-    fun getHistory() = searchRepository.getHistory()
-    fun historyDelete() = searchRepository.historyDelete()
-    fun addHistoryTrack(track: Track) = searchRepository.addHistoryTrack(track)
+    override fun getHistory() = searchRepository.getHistory()
+    override fun historyDelete() = searchRepository.historyDelete()
+    override fun addHistoryTrack(track: Track) = searchRepository.addHistoryTrack(track)
+}
+
+interface SearchInteractorInterface {
+    fun getSearchTrack(
+        searchText: String,
+        onSuccess: (MutableList<Track>?) -> Unit,
+        onFailure: (Throwable?, String?) -> Unit
+    )
+
+    fun getHistory(): Array<Track>
+    fun historyDelete()
+    fun addHistoryTrack(track: Track)
 }

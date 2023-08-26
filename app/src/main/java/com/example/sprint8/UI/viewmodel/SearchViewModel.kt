@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.sprint8.domain.models.Track
-import com.example.sprint8.domain.search.SearchInteractor
+import com.example.sprint8.domain.search.SearchInteractorInterface
 
 class SearchViewModel(
-    val searchInteractor: SearchInteractor
+    val searchInteractor: SearchInteractorInterface
 ) : ViewModel() {
 
     private var stateLiveData = MutableLiveData(StateSearchVeiw(null, StateVeiw.EMPTY_VIEW))

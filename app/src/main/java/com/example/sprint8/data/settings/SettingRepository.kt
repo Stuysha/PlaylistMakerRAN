@@ -4,10 +4,14 @@ import com.example.sprint8.data.preferences.SettingControl
 
 class SettingRepository(
     private val settingControl: SettingControl
-) {
+): SettingRepositoryInterface {
 
-    fun editEnableDarkThemeSetting(checked: Boolean) {
+    override fun editEnableDarkThemeSetting(checked: Boolean) {
         settingControl.editEnableDarkThemeSetting(checked)
     }
 
+}
+
+interface SettingRepositoryInterface{
+    fun editEnableDarkThemeSetting(checked: Boolean)
 }

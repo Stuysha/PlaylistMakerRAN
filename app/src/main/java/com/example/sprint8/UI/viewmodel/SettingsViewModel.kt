@@ -3,11 +3,10 @@ package com.example.sprint8.UI.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.sprint8.App
-import com.example.sprint8.domain.settings.SettingInteractor
+import com.example.sprint8.domain.settings.SettingInteractorInterface
 
 class SettingsViewModel(
-    private val settingInteractor: SettingInteractor,
+    private val settingInteractor: SettingInteractorInterface,
 ) : ViewModel() {
 
     private var changeActiveDarkTheme = MutableLiveData<Boolean?>(null)
