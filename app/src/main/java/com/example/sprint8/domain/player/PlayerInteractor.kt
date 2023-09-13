@@ -1,10 +1,11 @@
 package com.example.sprint8.domain.player
 
-import com.example.sprint8.data.player.PlayerRepository
+import com.example.sprint8.data.player.PlayerRepositoryInterface
 
-class PlayerInteractor(private val playerRepository: PlayerRepository) {
+class PlayerInteractor(private val playerRepository: PlayerRepositoryInterface) :
+    PlayerInteractorInterface {
 
-    fun preparePlayer(
+    override fun preparePlayer(
         url: String,
         setOnPreparedListener: () -> Unit,
         setOnCompletionListener: () -> Unit
@@ -12,7 +13,19 @@ class PlayerInteractor(private val playerRepository: PlayerRepository) {
         url, setOnPreparedListener, setOnCompletionListener
     )
 
-    fun startPlayer() = playerRepository.startPlayer()
-    fun pausePlayer() = playerRepository.pausePlayer()
-    fun mediaPlayerRelease() = playerRepository.mediaPlayerRelease()
+    override fun startPlayer() = playerRepository.startPlayer()
+    override fun pausePlayer() = playerRepository.pausePlayer()
+    override fun mediaPlayerRelease() = playerRepository.mediaPlayerRelease()
+}
+
+interface PlayerInteractorInterface {
+    fun preparePlayer(
+        url: String,
+        setOnPreparedListener: () -> Unit,
+        setOnCompletionListener: () -> Unit
+    )
+
+    fun startPlayer()
+    fun pausePlayer()
+    fun mediaPlayerRelease()
 }

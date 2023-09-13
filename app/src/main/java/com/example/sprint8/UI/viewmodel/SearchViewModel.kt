@@ -3,16 +3,11 @@ package com.example.sprint8.UI.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.sprint8.creator.CreatorSearchObject
 import com.example.sprint8.domain.models.Track
-import com.example.sprint8.domain.search.SearchInteractor
-import java.util.*
+import com.example.sprint8.domain.search.SearchInteractorInterface
 
 class SearchViewModel(
-    val searchInteractor: SearchInteractor
+    val searchInteractor: SearchInteractorInterface
 ) : ViewModel() {
 
     private var stateLiveData = MutableLiveData(StateSearchVeiw(null, StateVeiw.EMPTY_VIEW))
@@ -58,21 +53,6 @@ class SearchViewModel(
     fun historyDelete() = searchInteractor.historyDelete()
     fun saveHistoryTrack(track: Track) = searchInteractor.addHistoryTrack(track)
 
-    companion object {
-        fun getViewModelFactory(): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(
-                modelClass: Class<T>,
-                extras: CreationExtras,
-            ): T {
-                val application = checkNotNull(extras[APPLICATION_KEY])
-
-                return SearchViewModel(
-                    CreatorSearchObject.createSearchInteractor(application)
-                ) as T
-            }
-        }
-    }
 }
 
 data class StateSearchVeiw(

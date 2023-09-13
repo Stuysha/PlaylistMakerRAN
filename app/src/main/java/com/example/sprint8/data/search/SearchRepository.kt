@@ -11,8 +11,8 @@ import retrofit2.Response
 class SearchRepository(
     private val api: Api,
     private val historyControl: HistoryControl
-) {
-    fun loadSearch(
+): SearchRepositoryInterface {
+    override fun loadSearch(
         searchText: String,
         onSuccess: (TunesResult?) -> Unit,
         onFailure: (Throwable?, String?) -> Unit
@@ -43,8 +43,21 @@ class SearchRepository(
             })
     }
 
-    fun getHistory() = historyControl.getHistori()
-    fun historyDelete() = historyControl.historyDelete()
-    fun addHistoryTrack(track: Track) = historyControl.addTrack(track)
+    override fun getHistory() = historyControl.getHistori()
+    override fun historyDelete() = historyControl.historyDelete()
+    override fun addHistoryTrack(track: Track) = historyControl.addTrack(track)
 
+}
+
+
+interface SearchRepositoryInterface{
+    fun loadSearch(
+        searchText: String,
+        onSuccess: (TunesResult?) -> Unit,
+        onFailure: (Throwable?, String?) -> Unit
+    )
+
+    fun getHistory() : Array<Track>
+    fun historyDelete()
+    fun addHistoryTrack(track: Track)
 }

@@ -27,7 +27,7 @@
         <TextView
 
             style="@style/TextViewSettingScreen"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/dark_theme" />
 
@@ -35,8 +35,8 @@
             android:id="@+id/switch1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/button_interval21"
+            android:layout_gravity="center_vertical|end"
+
             android:layout_marginEnd="18dp"
             app:thumbTint="@color/image"
             app:trackTint="@color/serch_grey" />
