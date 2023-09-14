@@ -1,5 +1,7 @@
 package com.example.sprint8.di
 
+import com.example.sprint8.UI.fragments.PlaylistsViewModel
+import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
 import com.example.sprint8.UI.viewmodel.MainViewModel
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.example.sprint8.UI.viewmodel.MediaViewModel
@@ -40,6 +42,12 @@ val viewModelModule = module {
     }
     viewModel {
         SettingsViewModel(get())
+    }
+    viewModel {
+        FavoritesTracksViewModel()
+    }
+    viewModel {
+        PlaylistsViewModel()
     }
 }
 val interactorModule = module {
