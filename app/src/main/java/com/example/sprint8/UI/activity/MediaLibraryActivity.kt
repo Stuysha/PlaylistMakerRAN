@@ -2,6 +2,7 @@ package com.example.sprint8.UI.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -38,6 +39,11 @@ class MediaLibraryActivity : AppCompatActivity() {
             }
         }
         tabMediator.attach()
+
+        val toolbar = findViewById<Toolbar>(R.id.tool_mediateka)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     override fun onDestroy() {
