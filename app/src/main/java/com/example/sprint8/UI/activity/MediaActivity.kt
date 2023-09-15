@@ -120,7 +120,7 @@ class MediaActivity : AppCompatActivity() {
     fun setPlayView() {
         playback?.setImageDrawable(
             ContextCompat.getDrawable(
-                applicationContext,
+                this,
                 R.drawable.play
             )
         )
@@ -129,7 +129,7 @@ class MediaActivity : AppCompatActivity() {
     fun setViewPause() {
         playback?.setImageDrawable(
             ContextCompat.getDrawable(
-                applicationContext,
+                this,
                 R.drawable.pause
             )
         )
