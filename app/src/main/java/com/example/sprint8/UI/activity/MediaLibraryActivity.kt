@@ -23,8 +23,8 @@ class MediaLibraryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_libraryactivity)
 
-        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
-        val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager = findViewById<ViewPager2>(R.id.view_pager)
+        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
 
 
         viewPager.adapter = MediaLibraryPagerAdapter(supportFragmentManager, lifecycle)
@@ -35,6 +35,7 @@ class MediaLibraryActivity : AppCompatActivity() {
 
                     tab.text = this.getString(R.string.favorites_tracks)
                 }
+
                 1 -> tab.text = this.getString(R.string.playlists)
             }
         }
@@ -62,8 +63,8 @@ class MediaLibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Life
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> FavoritesTracksFragment()
-            else -> PlaylistsFragment()
+            0 -> FavoritesTracksFragment.newInstance()
+            else -> PlaylistsFragment.newInstance()
         }
     }
 }

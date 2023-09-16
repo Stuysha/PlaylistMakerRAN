@@ -11,6 +11,11 @@ import org.koin.android.ext.android.inject
 
 class FavoritesTracksFragment : Fragment() {
 
+    companion object {
+
+        fun newInstance() = FavoritesTracksFragment()
+    }
+
     private val viewModel: FavoritesTracksViewModel by inject()
 
     override fun onCreateView(

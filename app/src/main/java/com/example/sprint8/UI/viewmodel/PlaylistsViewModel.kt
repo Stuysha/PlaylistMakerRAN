@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.fragments
+package com.example.sprint8.UI.viewmodel
 
 import androidx.lifecycle.ViewModel
 
