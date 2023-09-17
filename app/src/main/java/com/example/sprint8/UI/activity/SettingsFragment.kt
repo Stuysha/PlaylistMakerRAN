@@ -4,25 +4,35 @@ package com.example.sprint8.UI.activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import com.example.sprint8.App
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.SettingsViewModel
 import org.koin.android.ext.android.inject
 
-class SettingsActivity : AppCompatActivity() {
-    private  val viewModel: SettingsViewModel by inject()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.settings_screen)
-        val toolbar = findViewById<Toolbar>(R.id.arrow)
+class SettingsFragment : Fragment() {
+    private val viewModel: SettingsViewModel by inject()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.settings_screen, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         toolbar.setOnClickListener {
-            onBackPressed()
+            activity?.onBackPressed()
         }
-        val buttonShareApp = findViewById<FrameLayout>(R.id.share_app)
+        val buttonShareApp = view.findViewById<FrameLayout>(R.id.share_app)
         buttonShareApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
@@ -31,7 +41,7 @@ class SettingsActivity : AppCompatActivity() {
             )
             startActivity(intent)
         }
-        val buttonWriteSupport = findViewById<FrameLayout>(R.id.write_support)
+        val buttonWriteSupport = view.findViewById<FrameLayout>(R.id.write_support)
         buttonWriteSupport.setOnClickListener {
             val message = getString(R.string.text_message)
             val topic = getString(R.string.topic_message)
@@ -45,22 +55,22 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val buttonUserAgreement = findViewById<FrameLayout>(R.id.uUser_agreement)
+        val buttonUserAgreement = view.findViewById<FrameLayout>(R.id.uUser_agreement)
         buttonUserAgreement.setOnClickListener {
             val webesite = getString(R.string.webesite)
             val webpage: Uri = Uri.parse(webesite)
             val intent = Intent(Intent.ACTION_VIEW, webpage)
             startActivity(intent)
         }
-        val themeSwitcher = findViewById<SwitchCompat>(R.id.switch1)
-        themeSwitcher.isChecked = (applicationContext as App).darkTheme
+        val themeSwitcher = view.findViewById<SwitchCompat>(R.id.switch1)
+        themeSwitcher.isChecked = (activity?.applicationContext as App).darkTheme
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             viewModel.editEnableDarkThemeSetting(checked)
         }
-
-        viewModel.getActiveDarkTheme().observe(this) {
+        //TODO проверить
+        viewModel.getActiveDarkTheme().observe(this.viewLifecycleOwner) {
             if (it != null) {
-                (applicationContext as App).switchTheme(it)
+                (activity?.applicationContext as App).switchTheme(it)
             }
         }
     }

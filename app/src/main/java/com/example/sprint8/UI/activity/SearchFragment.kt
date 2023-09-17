@@ -1,6 +1,5 @@
 package com.example.sprint8.UI.activity
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,12 +7,16 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
@@ -24,9 +27,8 @@ import com.example.sprint8.domain.models.Track
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
 import org.koin.android.ext.android.inject
-import java.util.*
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
     private  val viewModel: SearchViewModel by inject()
     var inputEditText: TextInputEditText? = null
     var inputSearchText = ""
@@ -40,25 +42,31 @@ class SearchActivity : AppCompatActivity() {
     private var isClickAllowed = true
     private val handlerDebounce = Handler(Looper.getMainLooper())
 
-    @SuppressLint("MissingInflatedId")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
 
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.tool_search)
-        inputEditText = findViewById(R.id.search)
-        val clearButton = findViewById<ImageView>(R.id.close)
-        val clearHistory = findViewById<Button>(R.id.clearHistory)
-        noContentBox = findViewById(R.id.nocontent)
-        noInternet = findViewById(R.id.nointernet)
-        mediaList = findViewById(R.id.media_list)
-        this.clearHistory = findViewById(R.id.searchHistory)
-        historyList = findViewById(R.id.histiry)
-        historyList?.layoutManager = LinearLayoutManager(this)
-        progressBar = findViewById(R.id.progressBar)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.activity_search, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.tool_search)
+        inputEditText = view.findViewById(R.id.search)
+        val clearButton = view.findViewById<ImageView>(R.id.close)
+        val clearHistory = view.findViewById<Button>(R.id.clearHistory)
+        noContentBox = view.findViewById(R.id.nocontent)
+        noInternet = view.findViewById(R.id.nointernet)
+        mediaList = view.findViewById(R.id.media_list)
+        this.clearHistory = view.findViewById(R.id.searchHistory)
+        historyList = view.findViewById(R.id.histiry)
+        historyList?.layoutManager = LinearLayoutManager(context)
+        progressBar = view.findViewById(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
-            finish()
+        //TODO перевести на навигацию фрагментов
+        //finish()
         }
 
         inputEditText?.setText(inputSearchText)
@@ -73,10 +81,10 @@ class SearchActivity : AppCompatActivity() {
             inputEditText?.setText("")
 
             val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText?.windowToken, 0)
         }
-        val buttonApd = findViewById<Button>(R.id.buttonApd)
+        val buttonApd = view.findViewById<Button>(R.id.buttonApd)
         buttonApd.setOnClickListener {
             setStatusMediaList()
             viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
@@ -116,9 +124,9 @@ class SearchActivity : AppCompatActivity() {
             } else setStatusMediaList()
         }
 
-        val mediaList = findViewById<RecyclerView>(R.id.media_list)
+        val mediaList = view.findViewById<RecyclerView>(R.id.media_list)
         mediaList.adapter = adapter
-        mediaList.layoutManager = LinearLayoutManager(this)
+        mediaList.layoutManager = LinearLayoutManager(context)
 
         inputEditText?.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -127,7 +135,7 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
-        viewModel.getStateLiveData().observe(this) { stateView ->
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) { stateView ->
             stateView.stateVeiw
 
             when (stateView.stateVeiw) {
@@ -158,7 +166,7 @@ class SearchActivity : AppCompatActivity() {
         adapter.click = null
         if (clickDebounce()) {
             viewModel.saveHistoryTrack(track)
-            val intent = Intent(this, MediaActivity::class.java)
+            val intent = Intent(context, MediaFragment::class.java)
             intent.putExtra(TRACK, Gson().toJson(track))
             startActivity(intent)
         }
@@ -234,10 +242,10 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_TEXT, inputSearchText)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
-    }
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
+//    }
 
     private val searchRunnable = Runnable {
         viewModel.loadSearch(inputEditText?.text?.toString() ?: "")

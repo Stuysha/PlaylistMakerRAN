@@ -15,18 +15,13 @@
         android:theme="@style/Theme.Sprint8Ryabikina"
         tools:targetApi="31">
         <activity
-            android:name=".UI.activity.MediaLibraryActivity"
-            android:exported="true">
-        </activity>
+            android:name=".UI.activity.MediaLibraryFragment"
+            android:exported="true"></activity>
         <activity
-            android:name=".UI.activity.MediaActivity"
+            android:name=".UI.activity.MediaFragment"
             android:exported="false" />
         <activity
-            android:name=".UI.activity.SearchActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
-        <activity
-            android:name=".UI.activity.MainActivity"
+            android:name=".UI.activity.SingleActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.activity.SettingsActivity"
+            android:name=".UI.activity.SettingsFragment"
             android:exported="true" />
     </application>
 

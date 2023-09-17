@@ -1,15 +1,18 @@
 package com.example.sprint8.UI.activity
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.R
-import com.example.sprint8.UI.activity.SearchActivity.Companion.TRACK
+import com.example.sprint8.UI.activity.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
 import com.example.sprint8.domain.models.Track
@@ -17,7 +20,7 @@ import com.google.gson.Gson
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 
-class MediaActivity : AppCompatActivity() {
+class MediaFragment : Fragment() {
     private lateinit var viewModel: MediaViewModel
     var cover: ImageView? = null
     var trackName: TextView? = null
@@ -32,29 +35,36 @@ class MediaActivity : AppCompatActivity() {
     var playback: ImageView? = null
     var likeTrack: ImageView? = null
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.activity_media, container, false)
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media)
-        val trackJson = intent.getStringExtra(TRACK)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val trackJson = arguments?.getString(TRACK)
         val trackObject = Gson().fromJson(trackJson, Track::class.java)
-        viewModel = getKoin().get(parameters = {parametersOf(trackObject)})
-        val toolbar = findViewById<Toolbar>(R.id.arrow)
+        viewModel = getKoin().get(parameters = { parametersOf(trackObject) })
+        val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
-            finish()
+            //TODO
+            //finish()
         }
-        cover = findViewById(R.id.imageCover)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        timeTrack = findViewById(R.id.timeTrack)
-        collectionName = findViewById(R.id.collectionName)
-        releaseDate = findViewById(R.id.releaseDate)
-        primaryGenreName = findViewById(R.id.primaryGenreName)
-        country = findViewById(R.id.country)
-        trackTimeMills = findViewById(R.id.trackTimeMills)
-        addInPlaylist = findViewById(R.id.addInPlaylist)
-        playback = findViewById(R.id.playback)
-        likeTrack = findViewById(R.id.likeTrack)
+        cover = view.findViewById(R.id.imageCover)
+        trackName = view.findViewById(R.id.trackName)
+        artistName = view.findViewById(R.id.artistName)
+        timeTrack = view.findViewById(R.id.timeTrack)
+        collectionName = view.findViewById(R.id.collectionName)
+        releaseDate = view.findViewById(R.id.releaseDate)
+        primaryGenreName = view.findViewById(R.id.primaryGenreName)
+        country = view.findViewById(R.id.country)
+        trackTimeMills = view.findViewById(R.id.trackTimeMills)
+        addInPlaylist = view.findViewById(R.id.addInPlaylist)
+        playback = view.findViewById(R.id.playback)
+        likeTrack = view.findViewById(R.id.likeTrack)
 
         timeTrack?.setText(R.string.null_time)
         playback?.isEnabled = false
@@ -63,22 +73,24 @@ class MediaActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
-        viewModel.getStateLiveData().observe(this) {
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) {
             when (it.playerState) {
                 StateMediaPlayer.STATE_DEFAULT -> {
                 }
+
                 StateMediaPlayer.STATE_PREPARED -> {
                     playback?.isEnabled = true
                     setPlayView()
                 }
+
                 StateMediaPlayer.STATE_PLAYING -> startPlayer()
                 StateMediaPlayer.STATE_PAUSED -> pausePlayer()
             }
         }
-        viewModel.getTimeTrack().observe(this) {
+        viewModel.getTimeTrack().observe(viewLifecycleOwner) {
             timeTrack?.text = it.orEmpty()
         }
-        viewModel.getStaticContentMedia().observe(this) {
+        viewModel.getStaticContentMedia().observe(viewLifecycleOwner) {
             releaseDate?.text = it.dateTrack ?: getString(R.string.is_unknown).lowercase()
             trackName?.text = it.trackName
             artistName?.text = it.artistName
@@ -95,6 +107,12 @@ class MediaActivity : AppCompatActivity() {
                 .transform(RoundedCorners(round))
                 .into(cover ?: return@observe)
         }
+
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
 
     }
@@ -118,20 +136,24 @@ class MediaActivity : AppCompatActivity() {
     }
 
     fun setPlayView() {
-        playback?.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.play
+        context?.let {
+            playback?.setImageDrawable(
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.play
+                )
             )
-        )
+        }
     }
 
     fun setViewPause() {
-        playback?.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.pause
+        context?.let {
+            playback?.setImageDrawable(
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.pause
+                )
             )
-        )
+        }
     }
 }
