@@ -11,6 +11,7 @@ import android.widget.FrameLayout
 import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.sprint8.App
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.SettingsViewModel
@@ -30,7 +31,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         toolbar.setOnClickListener {
-            activity?.onBackPressed()
+            findNavController().popBackStack()
         }
         val buttonShareApp = view.findViewById<FrameLayout>(R.id.share_app)
         buttonShareApp.setOnClickListener {
@@ -67,7 +68,6 @@ class SettingsFragment : Fragment() {
         themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
             viewModel.editEnableDarkThemeSetting(checked)
         }
-        //TODO проверить
         viewModel.getActiveDarkTheme().observe(this.viewLifecycleOwner) {
             if (it != null) {
                 (activity?.applicationContext as App).switchTheme(it)

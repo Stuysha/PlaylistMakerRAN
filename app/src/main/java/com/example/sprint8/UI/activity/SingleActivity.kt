@@ -10,9 +10,5 @@ class SingleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.single_activity)
 
-        supportFragmentManager.beginTransaction().add(
-            R.id.main_box,
-            MainFragment()
-        ).commit()
     }
 }

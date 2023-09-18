@@ -1,7 +1,6 @@
 package com.example.sprint8.UI.activity
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,8 +14,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
@@ -29,7 +30,7 @@ import com.google.gson.Gson
 import org.koin.android.ext.android.inject
 
 class SearchFragment : Fragment() {
-    private  val viewModel: SearchViewModel by inject()
+    private val viewModel: SearchViewModel by inject()
     var inputEditText: TextInputEditText? = null
     var inputSearchText = ""
     val adapter: SearchMediaAdapter = SearchMediaAdapter()
@@ -65,8 +66,7 @@ class SearchFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
-        //TODO перевести на навигацию фрагментов
-        //finish()
+            findNavController().popBackStack()
         }
 
         inputEditText?.setText(inputSearchText)
@@ -166,11 +166,13 @@ class SearchFragment : Fragment() {
         adapter.click = null
         if (clickDebounce()) {
             viewModel.saveHistoryTrack(track)
-            val intent = Intent(context, MediaFragment::class.java)
-            intent.putExtra(TRACK, Gson().toJson(track))
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_mediaFragment,
+                bundleOf(TRACK to Gson().toJson(track))
+            )
         }
     }
+
     private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -242,10 +244,10 @@ class SearchFragment : Fragment() {
         outState.putString(SEARCH_TEXT, inputSearchText)
     }
 
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-//        super.onRestoreInstanceState(savedInstanceState)
-//        inputSearchText = savedInstanceState.getString(SEARCH_TEXT) ?: ""
-//    }
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        inputSearchText = savedInstanceState?.getString(SEARCH_TEXT) ?: ""
+    }
 
     private val searchRunnable = Runnable {
         viewModel.loadSearch(inputEditText?.text?.toString() ?: "")

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.MainViewModel
 import org.koin.android.ext.android.inject
@@ -26,21 +27,20 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val buttonSearch = view.findViewById<Button>(R.id.search)
 
+        val navController = findNavController()
+
         buttonSearch.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.main_box, SearchFragment())
-                .addToBackStack(null).commit()
+            navController.navigate(R.id.action_mainFragment_to_searchFragment)
         }
 
         val buttonMedia = view.findViewById<Button>(R.id.media_library)
         buttonMedia.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.main_box, MediaLibraryFragment())
-                .addToBackStack(null).commit()
+            navController.navigate(R.id.action_mainFragment_to_mediaLibraryFragment)
         }
 
         val buttonSetting = view.findViewById<Button>(R.id.setting)
         buttonSetting.setOnClickListener {
-            parentFragmentManager.beginTransaction().replace(R.id.main_box, SettingsFragment())
-                .addToBackStack(null).commit()
+            navController.navigate(R.id.action_mainFragment_to_settingsFragment)
         }
     }
 }
