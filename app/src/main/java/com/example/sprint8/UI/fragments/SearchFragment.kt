@@ -53,7 +53,6 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.tool_search)
         inputEditText = view.findViewById(R.id.search)
         val clearButton = view.findViewById<ImageView>(R.id.close)
         val clearHistory = view.findViewById<Button>(R.id.clearHistory)
@@ -64,10 +63,6 @@ class SearchFragment : Fragment() {
         historyList = view.findViewById(R.id.histiry)
         historyList?.layoutManager = LinearLayoutManager(context)
         progressBar = view.findViewById(R.id.progressBar)
-
-        toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
 
         inputEditText?.setText(inputSearchText)
 

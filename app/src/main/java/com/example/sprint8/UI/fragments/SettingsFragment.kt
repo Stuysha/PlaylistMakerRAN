@@ -9,9 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.SwitchCompat
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.sprint8.App
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.SettingsViewModel
@@ -29,10 +27,6 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = view.findViewById<Toolbar>(R.id.arrow)
-        toolbar.setOnClickListener {
-            findNavController().navigateUp()
-        }
         val buttonShareApp = view.findViewById<FrameLayout>(R.id.share_app)
         buttonShareApp.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)

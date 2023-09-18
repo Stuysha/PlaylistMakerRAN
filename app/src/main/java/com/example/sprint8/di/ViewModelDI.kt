@@ -1,7 +1,6 @@
 package com.example.sprint8.di
 
 import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
-import com.example.sprint8.UI.viewmodel.MainViewModel
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.PlaylistsViewModel
@@ -28,9 +27,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel {
-        MainViewModel()
-    }
     viewModel {
         MediaViewModel(it.get(), get())
     }

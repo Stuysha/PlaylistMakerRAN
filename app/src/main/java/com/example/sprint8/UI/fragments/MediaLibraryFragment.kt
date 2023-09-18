@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sprint8.R
@@ -47,11 +45,6 @@ class MediaLibraryFragment : Fragment() {
             }
         }
         tabMediator.attach()
-
-        val toolbar = view.findViewById<Toolbar>(R.id.tool_mediateka)
-        toolbar.setNavigationOnClickListener {
-            findNavController().navigateUp()
-        }
     }
 
     override fun onDestroy() {

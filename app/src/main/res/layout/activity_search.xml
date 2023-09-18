@@ -14,7 +14,6 @@
         android:backgroundTint="@color/whiteToolbar"
         android:foregroundTint="@color/whiteToolbar"
         android:textColor="?attr/colorPrimaryVariant"
-        app:navigationIcon="@drawable/arrow"
         app:title="@string/search" />
 
     <FrameLayout
