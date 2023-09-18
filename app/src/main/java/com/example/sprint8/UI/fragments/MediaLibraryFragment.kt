@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,8 +12,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sprint8.R
-import com.example.sprint8.UI.fragments.FavoritesTracksFragment
-import com.example.sprint8.UI.fragments.PlaylistsFragment
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -52,7 +50,7 @@ class MediaLibraryFragment : Fragment() {
 
         val toolbar = view.findViewById<Toolbar>(R.id.tool_mediateka)
         toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
         }
     }
 

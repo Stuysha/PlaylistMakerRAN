@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 
 import android.content.Intent
@@ -31,7 +31,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         toolbar.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
         }
         val buttonShareApp = view.findViewById<FrameLayout>(R.id.share_app)
         buttonShareApp.setOnClickListener {

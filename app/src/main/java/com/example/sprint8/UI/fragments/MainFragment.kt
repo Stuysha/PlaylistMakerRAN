@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater

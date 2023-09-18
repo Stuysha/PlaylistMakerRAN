@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.R
-import com.example.sprint8.UI.activity.SearchFragment.Companion.TRACK
+import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
 import com.example.sprint8.domain.models.Track
@@ -51,7 +51,7 @@ class MediaFragment : Fragment() {
         viewModel = getKoin().get(parameters = { parametersOf(trackObject) })
         val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
         }
         cover = view.findViewById(R.id.imageCover)
         trackName = view.findViewById(R.id.trackName)

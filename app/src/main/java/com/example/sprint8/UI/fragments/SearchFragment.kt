@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -66,7 +66,7 @@ class SearchFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar)
 
         toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigateUp()
         }
 
         inputEditText?.setText(inputSearchText)
