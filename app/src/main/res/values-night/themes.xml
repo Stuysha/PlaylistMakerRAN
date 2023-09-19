@@ -13,5 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:textColorSecondary">@color/whiteToolbar</item>
+        <item name="colorSurface">@color/black_blue_background</item>
+        <item name="android:background">@color/black_blue_background</item>
     </style>
 </resources>
