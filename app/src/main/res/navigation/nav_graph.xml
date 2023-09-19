@@ -19,7 +19,7 @@
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.example.sprint8.UI.fragments.MediaFragment"
+        android:name="com.example.sprint8.UI.activity.MediaActivity"
         android:label="activity_media"
         tools:layout="@layout/activity_media" />
     <fragment
