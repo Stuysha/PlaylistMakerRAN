@@ -3,8 +3,11 @@ package com.example.sprint8.UI.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.sprint8.domain.models.Track
 import com.example.sprint8.domain.search.SearchInteractorInterface
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
     val searchInteractor: SearchInteractorInterface
@@ -14,29 +17,35 @@ class SearchViewModel(
     fun getStateLiveData(): LiveData<StateSearchVeiw> = stateLiveData
 
     fun loadSearch(searchText: String) {
-        stateLiveData.value = stateLiveData.value
-            ?.copy(
-                stateVeiw = StateVeiw.IN_PROGRESS
-            )
-        searchInteractor.getSearchTrack(
-            searchText,
-            {
-                if (it.isNullOrEmpty()) {
-                    stateLiveData.value =
-                        stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_CONTENT)
-                } else {
-                    stateLiveData.value = stateLiveData.value
-                        ?.copy(
-                            listTrack = it,
-                            stateVeiw = StateVeiw.SHOW_CONTENT
-                        )
+        stateLiveData.value = stateLiveData.value?.copy(
+            stateVeiw = StateVeiw.IN_PROGRESS
+        )
+
+        viewModelScope.launch {
+            try {
+                searchInteractor.loadSearch(searchText).apply {
+                    this.collect {
+                        if (it.isEmpty()) {
+                            stateLiveData.value =
+                                stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_CONTENT)
+                        } else {
+                            stateLiveData.value = stateLiveData.value
+                                ?.copy(
+                                    listTrack = it,
+                                    stateVeiw = StateVeiw.SHOW_CONTENT
+                                )
+                        }
+                    }
+                    catch {
+                        stateLiveData.value =
+                            stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_INTERNET)
+                    }
                 }
-            },
-            { _, _ ->
+            } catch (_: Throwable) {
                 stateLiveData.value =
                     stateLiveData.value?.copy(stateVeiw = StateVeiw.NO_INTERNET)
             }
-        )
+        }
     }
 
     fun setHistory() {
