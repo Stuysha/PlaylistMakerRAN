@@ -98,5 +98,11 @@
         <item name="android:textColor">?attr/colorPrimaryVariant</item>
     </style>
 
-
+    <style name="BottomNavigationColored" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="itemIconTint">@color/bottom_item_tint</item>
+        <item name="itemTextColor">@color/bottom_item_tint</item>
+        <item name="itemTextAppearanceInactive">@color/bottom_item_tint</item>
+        <item name="itemTextAppearanceActive">@color/bottom_item_tint</item>
+        <item name="android:background">@drawable/background_bottom_navigation</item>
+    </style>
 </resources>

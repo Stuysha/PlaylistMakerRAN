@@ -1,33 +1,38 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sprint8.R
-import com.example.sprint8.UI.fragments.FavoritesTracksFragment
-import com.example.sprint8.UI.fragments.PlaylistsFragment
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import org.koin.android.ext.android.inject
 
-class MediaLibraryActivity : AppCompatActivity() {
+class MediaLibraryFragment : Fragment() {
     private val viewModel: MediaLibraryViewModel by inject()
     private lateinit var tabMediator: TabLayoutMediator
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media_libraryactivity)
 
-        val viewPager = findViewById<ViewPager2>(R.id.view_pager)
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.activity_media_libraryactivity, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val viewPager = view.findViewById<ViewPager2>(R.id.view_pager)
+        val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
 
 
-        viewPager.adapter = MediaLibraryPagerAdapter(supportFragmentManager, lifecycle)
+        viewPager.adapter = MediaLibraryPagerAdapter(childFragmentManager, lifecycle)
 
         tabMediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
@@ -40,15 +45,10 @@ class MediaLibraryActivity : AppCompatActivity() {
             }
         }
         tabMediator.attach()
-
-        val toolbar = findViewById<Toolbar>(R.id.tool_mediateka)
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         tabMediator.detach()
     }
 

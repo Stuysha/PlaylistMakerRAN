@@ -3,17 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/arrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/whiteToolbar"
-        android:foregroundTint="@color/whiteToolbar"
         android:textColor="?attr/colorPrimaryVariant"
-        app:navigationIcon="@drawable/arrow"
         app:title="@string/settings">
 
 

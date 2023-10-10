@@ -14,28 +14,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Sprint8Ryabikina"
         tools:targetApi="31">
+
         <activity
-            android:name=".UI.activity.MediaLibraryActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".UI.activity.MediaActivity"
-            android:exported="false" />
-        <activity
-            android:name=".UI.activity.SearchActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
-        <activity
-            android:name=".UI.activity.MainActivity"
-            android:exported="true">
+            android:name=".UI.activity.SingleActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".UI.activity.SettingsActivity"
-            android:exported="true" />
+            android:name=".UI.activity.MediaActivity"
+            android:exported="true"
+            >
+        </activity>
     </application>
 
 </manifest>

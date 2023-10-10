@@ -4,19 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.activity.MediaLibraryActivity">
+    tools:context=".UI.fragments.MediaLibraryFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tool_mediateka"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/whiteToolbar"
-        android:foregroundTint="@color/whiteToolbar"
         android:textColor="?attr/colorPrimaryVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/arrow"
         app:title="@string/tool_mediateka" />
 
     <com.google.android.material.tabs.TabLayout

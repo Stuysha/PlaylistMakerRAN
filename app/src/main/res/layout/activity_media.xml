@@ -10,8 +10,6 @@
         android:id="@+id/arrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/whiteToolbar"
-        android:foregroundTint="@color/whiteToolbar"
         android:textColor="?attr/colorPrimaryVariant"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.R
-import com.example.sprint8.UI.activity.SearchActivity.Companion.TRACK
+import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
 import com.example.sprint8.domain.models.Track
@@ -38,7 +38,7 @@ class MediaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_media)
         val trackJson = intent.getStringExtra(TRACK)
         val trackObject = Gson().fromJson(trackJson, Track::class.java)
-        viewModel = getKoin().get(parameters = {parametersOf(trackObject)})
+        viewModel = getKoin().get(parameters = { parametersOf(trackObject) })
         val toolbar = findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
             finish()
@@ -67,10 +67,12 @@ class MediaActivity : AppCompatActivity() {
             when (it.playerState) {
                 StateMediaPlayer.STATE_DEFAULT -> {
                 }
+
                 StateMediaPlayer.STATE_PREPARED -> {
                     playback?.isEnabled = true
                     setPlayView()
                 }
+
                 StateMediaPlayer.STATE_PLAYING -> startPlayer()
                 StateMediaPlayer.STATE_PAUSED -> pausePlayer()
             }
