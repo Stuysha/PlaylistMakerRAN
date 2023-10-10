@@ -17,6 +17,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
@@ -27,6 +28,9 @@ import com.example.sprint8.UI.viewmodel.StateVeiw
 import com.example.sprint8.domain.models.Track
 import com.google.android.material.textfield.TextInputEditText
 import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class SearchFragment : Fragment() {
@@ -94,7 +98,7 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 inputSearchText = s?.toString() ?: ""
                 if (s.isNullOrEmpty()) {
-                    handler.removeCallbacks(searchRunnable)
+                    job?.cancel()
                     clearButton.visibility = View.GONE
                 } else {
                     searchDebounce()
@@ -171,10 +175,11 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            handlerDebounce.postDelayed(
-                { isClickAllowed = true },
-                CLICK_DEBOUNCE_DELAY
-            )
+            lifecycleScope.launch(){
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
+
         }
         return current
     }
@@ -243,14 +248,22 @@ class SearchFragment : Fragment() {
         inputSearchText = savedInstanceState?.getString(SEARCH_TEXT) ?: ""
     }
 
-    private val searchRunnable = Runnable {
-        viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
-    }
-    private val handler = Handler(Looper.getMainLooper())
+//    private val searchRunnable = Runnable {
+//        viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
+//    }
+//    private val handler = Handler(Looper.getMainLooper())
+    var job: Job? = null
     private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, 2000L)
+        job?.cancel()
+     job = lifecycleScope.launch(){
+            delay(2000)
+            viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
+
+        }
+//        handler.removeCallbacks(searchRunnable)
+//        handler.postDelayed(searchRunnable, 2000L)
     }
+
 
     companion object {
         const val SEARCH_TEXT = "searchText"
