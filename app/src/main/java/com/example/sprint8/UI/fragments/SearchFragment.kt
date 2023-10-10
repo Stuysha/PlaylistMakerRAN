@@ -175,7 +175,7 @@ class SearchFragment : Fragment() {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            lifecycleScope.launch(){
+            lifecycleScope.launch() {
                 delay(CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
             }
@@ -248,20 +248,16 @@ class SearchFragment : Fragment() {
         inputSearchText = savedInstanceState?.getString(SEARCH_TEXT) ?: ""
     }
 
-//    private val searchRunnable = Runnable {
-//        viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
-//    }
-//    private val handler = Handler(Looper.getMainLooper())
+
     var job: Job? = null
     private fun searchDebounce() {
         job?.cancel()
-     job = lifecycleScope.launch(){
+        job = lifecycleScope.launch() {
             delay(2000)
             viewModel.loadSearch(inputEditText?.text?.toString() ?: "")
 
         }
-//        handler.removeCallbacks(searchRunnable)
-//        handler.postDelayed(searchRunnable, 2000L)
+
     }
 
 
