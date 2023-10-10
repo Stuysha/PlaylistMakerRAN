@@ -105,7 +105,8 @@ class MediaViewModel(
     }
 
     fun setTime() {
-        timeTrack.value = String.format("%02d:%02d", seconds / 60, seconds % 60)
+        val time = seconds/1000
+        timeTrack.value = String.format("%02d:%02d", time / 60, time % 60)
     }
 
 
@@ -113,8 +114,8 @@ class MediaViewModel(
     fun searchDebounce() {
         job?.cancel()
         job = viewModelScope.launch {
-            delay(1000)
-            seconds += 1
+            delay(300)
+            seconds += 300
             setTime()
             searchDebounce()
         }
