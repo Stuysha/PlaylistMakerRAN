@@ -3,11 +3,11 @@ package com.example.sprint8.domain.models
 
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class TrackResult(
     @SerializedName("artistName")
     val artistName: String?,
     @SerializedName("trackId")
-    val trackId: Long?,
+    val trackId: Long,
     @SerializedName("artworkUrl100")
     val artworkUrl100: String?,
     @SerializedName("trackName")

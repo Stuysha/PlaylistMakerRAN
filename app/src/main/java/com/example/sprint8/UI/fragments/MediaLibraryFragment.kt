@@ -36,11 +36,7 @@ class MediaLibraryFragment : Fragment() {
 
         tabMediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
-                0 -> {
-
-                    tab.text = this.getString(R.string.favorites_tracks)
-                }
-
+                0 -> tab.text = this.getString(R.string.favorites_tracks)
                 1 -> tab.text = this.getString(R.string.playlists)
             }
         }

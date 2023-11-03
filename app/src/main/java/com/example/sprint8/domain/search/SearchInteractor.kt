@@ -21,19 +21,19 @@ class SearchInteractor(val searchRepository: SearchRepositoryInterface): SearchI
         tunes.results?.forEach {
             tracList.add(
                 Track(
-                    trackId = it?.trackId ?: 0L,
-                    trackName = it?.trackName ?: "",
-                    artistName = it?.artistName ?: "",
+                    trackId = it.trackId ?: 0L,
+                    trackName = it.trackName ?: "",
+                    artistName = it.artistName ?: "",
                     trackTime = SimpleDateFormat(
                         "mm:ss",
                         Locale.getDefault()
-                    ).format(it?.trackTimeMillis),
-                    artworkUrl100 = it?.artworkUrl100 ?: "",
-                    collectionName = it?.collectionName ?: "",
-                    releaseDate = it?.releaseDate ?: "",
-                    primaryGenreName = it?.primaryGenreName ?: "",
-                    country = it?.country ?: "",
-                    previewUrl = it?.previewUrl ?: "",
+                    ).format(it.trackTimeMillis),
+                    artworkUrl100 = it.artworkUrl100 ?: "",
+                    collectionName = it.collectionName ?: "",
+                    releaseDate = it.releaseDate ?: "",
+                    primaryGenreName = it.primaryGenreName ?: "",
+                    country = it.country ?: "",
+                    previewUrl = it.previewUrl ?: "",
                 )
             )
         }

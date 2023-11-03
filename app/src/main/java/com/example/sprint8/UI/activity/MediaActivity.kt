@@ -89,8 +89,9 @@ class MediaActivity : AppCompatActivity() {
             primaryGenreName?.text = it.primaryGenreName
             country?.text = it.country
             trackTimeMills?.text = it.trackTime
+            if (it.isFavoriteTrack) setActiveFavoriteView()
+            else setNoActiveFavoriteView()
             val round = this.resources.getDimensionPixelSize(R.dimen.round_image_media8)
-
             Glide.with(this)
                 .load(it.artTrack)
                 .placeholder(R.drawable.placeholder)
@@ -98,7 +99,9 @@ class MediaActivity : AppCompatActivity() {
                 .into(cover ?: return@observe)
         }
 
-
+        likeTrack?.setOnClickListener {
+            viewModel.controlFavoriteTrack()
+        }
     }
 
     override fun onPause() {
@@ -133,6 +136,24 @@ class MediaActivity : AppCompatActivity() {
             ContextCompat.getDrawable(
                 this,
                 R.drawable.pause
+            )
+        )
+    }
+
+    fun setActiveFavoriteView() {
+        likeTrack?.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.favorite_track
+            )
+        )
+    }
+
+    fun setNoActiveFavoriteView() {
+        likeTrack?.setImageDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.like
             )
         )
     }

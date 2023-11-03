@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 
 class SearchRepository(
     private val api: Api,
-    private val historyControl: HistoryControl
+    private val historyControl: HistoryControl,
 ) : SearchRepositoryInterface {
 
     override fun loadSearch(searchText: String): Flow<TunesResult> = flow {

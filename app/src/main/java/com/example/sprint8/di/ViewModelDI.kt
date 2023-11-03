@@ -1,12 +1,17 @@
 package com.example.sprint8.di
 
+import androidx.room.Room
 import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.PlaylistsViewModel
 import com.example.sprint8.UI.viewmodel.SearchViewModel
 import com.example.sprint8.UI.viewmodel.SettingsViewModel
+import com.example.sprint8.data.converters.TrackConverter
+import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.internet.RestProvider
+import com.example.sprint8.data.media.FavoriteTracksRepository
+import com.example.sprint8.data.media.FavoriteTracksRepositoryRepositoryInterface
 import com.example.sprint8.data.player.PlayerRepository
 import com.example.sprint8.data.player.PlayerRepositoryInterface
 import com.example.sprint8.data.preferences.HistoryControl
@@ -16,6 +21,8 @@ import com.example.sprint8.data.search.SearchRepository
 import com.example.sprint8.data.search.SearchRepositoryInterface
 import com.example.sprint8.data.settings.SettingRepository
 import com.example.sprint8.data.settings.SettingRepositoryInterface
+import com.example.sprint8.domain.media.FavoriteTracksInteractor
+import com.example.sprint8.domain.media.FavoriteTracksInteractorInterface
 import com.example.sprint8.domain.player.PlayerInteractor
 import com.example.sprint8.domain.player.PlayerInteractorInterface
 import com.example.sprint8.domain.search.SearchInteractor
@@ -40,7 +47,7 @@ val viewModelModule = module {
         SettingsViewModel(get())
     }
     viewModel {
-        FavoritesTracksViewModel()
+        FavoritesTracksViewModel(get())
     }
     viewModel {
         PlaylistsViewModel()
@@ -54,7 +61,10 @@ val interactorModule = module {
         SettingInteractor(get())
     }
     factory<PlayerInteractorInterface> {
-        PlayerInteractor(get())
+        PlayerInteractor(get(), get())
+    }
+    factory<FavoriteTracksInteractorInterface> {
+        FavoriteTracksInteractor(get(), get())
     }
 }
 val repositoryModule = module {
@@ -65,7 +75,11 @@ val repositoryModule = module {
         SettingRepository(get())
     }
     factory<PlayerRepositoryInterface> {
-        PlayerRepository(get())
+        PlayerRepository(get(), get())
+    }
+    factory { TrackConverter() }
+    factory<FavoriteTracksRepositoryRepositoryInterface> {
+        FavoriteTracksRepository(get())
     }
 }
 val internetModule = module {
@@ -83,5 +97,8 @@ val dataModule = module {
     factory {
         android.media.MediaPlayer()
     }
-
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
+    }
 }
