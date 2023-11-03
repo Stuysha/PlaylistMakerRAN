@@ -1,12 +1,14 @@
 package com.example.sprint8.UI.viewmodel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.sprint8.domain.models.Track
 import com.example.sprint8.domain.player.PlayerInteractorInterface
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -93,13 +95,7 @@ class MediaViewModel(
     }
 
     var seconds = 0
-    private val searchRunnable = object : Runnable {
-        override fun run() {
-            seconds += 1
-            setTime()
-            handler.postDelayed(this, 1000L)
-        }
-    }
+
 
     fun resetTime() {
         if (stateLiveData.value?.playerState != StateMediaPlayer.STATE_PAUSED) {
@@ -109,18 +105,26 @@ class MediaViewModel(
     }
 
     fun setTime() {
-        timeTrack.value = String.format("%02d:%02d", seconds / 60, seconds % 60)
+        val time = seconds/1000
+        timeTrack.value = String.format("%02d:%02d", time / 60, time % 60)
     }
 
-    private val handler = Handler(Looper.getMainLooper())
 
+    var job: Job? = null
     fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, 1000L)
+        job?.cancel()
+        job = viewModelScope.launch {
+            delay(300)
+            seconds += 300
+            setTime()
+            searchDebounce()
+        }
+
     }
 
     fun stopTimer() {
-        handler.removeCallbacks(searchRunnable)
+        job?.cancel()
+
     }
 
     fun startPlayer() {

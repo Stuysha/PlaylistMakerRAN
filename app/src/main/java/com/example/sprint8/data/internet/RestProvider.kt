@@ -23,19 +23,19 @@ class RestProvider : NetworkClient {
 
     override fun search(text: String): Response<TunesResult?> {
         val response = Response<TunesResult?>()
-        try {
-            val resp = api.search(text).execute()
-            val body = resp.body()
-
-            if (body != null) {
-                response.resultCode = 0
-                response.data = body
-            } else {
-                response.resultCode = 1
-            }
-        } catch (e: Throwable) {
-            response.resultCode = 2
-        }
+//        try {
+//            val resp = api.search(text).execute()
+//            val body = resp.body()
+//
+//            if (body != null) {
+//                response.resultCode = 0
+//                response.data = body
+//            } else {
+//                response.resultCode = 1
+//            }
+//        } catch (e: Throwable) {
+//            response.resultCode = 2
+//        }
         return response
     }
 }
