@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sprint8.domain.models.Track
 import com.example.sprint8.domain.player.PlayerInteractorInterface
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -55,6 +57,15 @@ class MediaViewModel(
             } ?: ""
         )
         preparePlayer(track.previewUrl)
+        viewModelScope.launch(Dispatchers.IO) {
+            playerInteractor.getFavoriteTrack(track.trackId).collect {
+                withContext(Dispatchers.Main) {
+                    staticContentMedia.value = staticContentMedia.value?.copy(
+                        isFavoriteTrack = it != null
+                    )
+                }
+            }
+        }
     }
 
     fun preparePlayer(url: String) {
@@ -105,7 +116,7 @@ class MediaViewModel(
     }
 
     fun setTime() {
-        val time = seconds/1000
+        val time = seconds / 1000
         timeTrack.value = String.format("%02d:%02d", time / 60, time % 60)
     }
 
@@ -142,13 +153,38 @@ class MediaViewModel(
         resetTime()
         playerInteractor.mediaPlayerRelease()
     }
+
+    fun controlFavoriteTrack() {
+        if (staticContentMedia.value?.isFavoriteTrack == true) {
+            removeFavoriteTrack()
+        } else {
+            addFavoriteTrack()
+        }
+    }
+
+    fun addFavoriteTrack() {
+        staticContentMedia.value = staticContentMedia.value?.copy(
+            isFavoriteTrack = true
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            playerInteractor.addFavoriteTrack(track, System.currentTimeMillis())
+        }
+    }
+
+    fun removeFavoriteTrack() {
+        staticContentMedia.value = staticContentMedia.value?.copy(
+            isFavoriteTrack = false
+        )
+        viewModelScope.launch(Dispatchers.IO) {
+            playerInteractor.removeFavoriteTrack(track)
+        }
+    }
 }
 
 data class StateMediaView(
     val playerState: StateMediaPlayer,
     val urlTrack: String? = null,
-
-    )
+)
 
 enum class StateMediaPlayer {
     STATE_DEFAULT,
@@ -166,4 +202,5 @@ data class StaticContentMediaView(
     val trackTime: String? = null,
     val artTrack: String? = null,
     val dateTrack: String? = null,
+    val isFavoriteTrack: Boolean = false
 )

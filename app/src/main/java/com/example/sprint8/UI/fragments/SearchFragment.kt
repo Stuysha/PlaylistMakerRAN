@@ -3,8 +3,6 @@ package com.example.sprint8.UI.fragments
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -45,8 +43,6 @@ class SearchFragment : Fragment() {
     var historyList: RecyclerView? = null
     var progressBar: FrameLayout? = null
     private var isClickAllowed = true
-    private val handlerDebounce = Handler(Looper.getMainLooper())
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -264,7 +260,7 @@ class SearchFragment : Fragment() {
     companion object {
         const val SEARCH_TEXT = "searchText"
         const val TRACK = "track"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }
 

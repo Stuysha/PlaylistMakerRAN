@@ -1,8 +1,14 @@
 package com.example.sprint8.data.player
 
+import com.example.sprint8.data.db.AppDatabase
+import com.example.sprint8.data.db.entity.TrackEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+
 class PlayerRepository(
-    private val mediaPlayer: android.media.MediaPlayer
-): PlayerRepositoryInterface {
+    private val mediaPlayer: android.media.MediaPlayer,
+    private val appDatabase: AppDatabase,
+) : PlayerRepositoryInterface {
 
     override fun preparePlayer(
         url: String,
@@ -19,6 +25,18 @@ class PlayerRepository(
         }
     }
 
+    override suspend fun addFavoriteTrack(track: TrackEntity) {
+        appDatabase.trackDao().insertTrack(track)
+    }
+
+    override suspend fun removeFavoriteTrack(track: TrackEntity) {
+        appDatabase.trackDao().deleteTrack(track)
+    }
+
+    override suspend fun getFavoriteTrack(idTrack: Long) = flow {
+        this.emit(appDatabase.trackDao().getTrack(idTrack))
+    }
+
     override fun startPlayer() {
         mediaPlayer.start()
     }
@@ -33,12 +51,18 @@ class PlayerRepository(
 
 }
 
-interface PlayerRepositoryInterface{
+interface PlayerRepositoryInterface {
     fun preparePlayer(
         url: String,
         setOnPreparedListener: () -> Unit,
         setOnCompletionListener: () -> Unit
     )
+
+    suspend fun addFavoriteTrack(track: TrackEntity)
+
+    suspend fun removeFavoriteTrack(track: TrackEntity)
+
+    suspend fun getFavoriteTrack(idTrack: Long): Flow<TrackEntity?>
 
     fun startPlayer()
 
