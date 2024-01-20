@@ -30,4 +30,7 @@
     <string name="playlists_new">Новый плейлист</string>
     <string name="favorites_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>
+    <string name="creat">Создать</string>
+    <string name="name">Название*</string>
+    <string name="description">Описание</string>
 </resources>
