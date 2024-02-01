@@ -1,6 +1,5 @@
 package com.example.sprint8.UI.fragments
 
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -14,8 +13,10 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.PlaylistsViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import org.koin.android.ext.android.inject
 
@@ -39,6 +40,17 @@ class CreatingNewPlaylist : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val namePlayList = view.findViewById<TextInputEditText>(R.id.namePlayList)
         val createButton = view.findViewById<Button>(R.id.button_apd)
+        val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.arrow)
+        val description = view.findViewById<TextInputEditText>(R.id.description)
+        toolbar.setNavigationOnClickListener {
+
+             if (!namePlayList.text.isNullOrEmpty() || !description.text.isNullOrEmpty() || uRi!=null ){
+                 dialogue()
+             } else {
+                 findNavController().popBackStack()
+             }
+
+        }
 
         namePlayList.doOnTextChanged { text, start, before, count ->
             if (text.isNullOrEmpty()) {
@@ -50,10 +62,11 @@ class CreatingNewPlaylist : Fragment() {
             }
         }
 
-        val picture = view.findViewById<ImageView>(R.id.picture)
+        val picture = view.findViewById<ImageView>(R.id.image)
         picture.setOnClickListener { accessingRepository() }
     }
-lateinit var pickMedia : ActivityResultLauncher<PickVisualMediaRequest>
+     var uRi: Uri? = null
+     lateinit var pickMedia : ActivityResultLauncher<PickVisualMediaRequest>
     override
     fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,8 +76,10 @@ lateinit var pickMedia : ActivityResultLauncher<PickVisualMediaRequest>
 
                 // Callback вызовется, когда пользователь выберет картинку
                 if (uri != null) {
-                    val picture = view?.findViewById<ImageView>(R.id.picture)
+                    uRi = uri
+                    val picture = view?.findViewById<ImageView>(R.id.image)
                     picture?.setImageURI(uri)
+                    picture?.scaleType=ImageView.ScaleType.FIT_XY
 //                    mediaAdd(uri)
                     Log.d("PhotoPicker", "Выбранный URI: $uri")
                 } else {
@@ -75,33 +90,26 @@ lateinit var pickMedia : ActivityResultLauncher<PickVisualMediaRequest>
 
     fun accessingRepository() {
 
-
-//        val createDocumentResult =
-//            registerForActivityResult(ActivityResultContracts.OpenDocument()) {
-//                // тут мы обрабатываем результат запроса
-//                Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
-//            }
-//        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-//        context.contentResolver.takePersistableUriPermission(uri, flag)
-        // создаём событие с результатом и передаём в него PickVisualMedia()
-
-// Вызываем метод launch и передаём параметр, чтобы предлагались только картинки
-        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))    }
-
-    fun mediaAdd (uri: Uri)
-    {
-        val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
-  context?.contentResolver?.takePersistableUriPermission(uri, flag)
+        pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
-//    private fun createFile() {
-//                val createDocumentResult =
-//            registerForActivityResult(ActivityResultContracts.OpenDocument()) {
-//                // тут мы обрабатываем результат запроса
-//                Toast.makeText(this, it.toString(), Toast.LENGTH_LONG).show()
-//            }
-//        // запускаем Activity, которая вернёт нам результат
-//        createDocumentResult.launch("invoice.pdf")
-//    }
+
+     fun dialogue() {
+
+         context?.let {
+             MaterialAlertDialogBuilder(it)
+                 .setTitle("Завершить создание плейлиста?") // Заголовок диалога
+                 .setMessage("Все несохраненные данные будут потеряны") // Описание диалога
+                 .setNeutralButton("Отмена") { dialog, which -> // Добавляет кнопку «Отмена»
+                     // Действия, выполняемые при нажатии на кнопку «Отмена»
+                 }
+                 .setPositiveButton("Завершить") { dialog, which -> findNavController().popBackStack()// Добавляет кнопку «Да»
+                     // Действия, выполняемые при нажатии на кнопку «Да»
+                 }
+                 .show()
+         }
+    }
+
+
 
 }
 
