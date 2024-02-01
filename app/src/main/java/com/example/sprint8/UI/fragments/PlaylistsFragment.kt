@@ -37,5 +37,8 @@ class PlaylistsFragment : Fragment() {
                 //bundleOf(TRACK to Gson().toJson(track))
             )
         }
+
+
     }
+
 }
