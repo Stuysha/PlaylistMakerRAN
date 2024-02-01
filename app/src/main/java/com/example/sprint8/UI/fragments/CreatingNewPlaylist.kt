@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,11 +45,11 @@ class CreatingNewPlaylist : Fragment() {
         val description = view.findViewById<TextInputEditText>(R.id.description)
         toolbar.setNavigationOnClickListener {
 
-             if (!namePlayList.text.isNullOrEmpty() || !description.text.isNullOrEmpty() || uRi!=null ){
-                 dialogue()
-             } else {
-                 findNavController().popBackStack()
-             }
+            if (!namePlayList.text.isNullOrEmpty() || !description.text.isNullOrEmpty() || uRi != null) {
+                dialogue()
+            } else {
+                findNavController().popBackStack()
+            }
 
         }
 
@@ -64,13 +65,24 @@ class CreatingNewPlaylist : Fragment() {
 
         val picture = view.findViewById<ImageView>(R.id.image)
         picture.setOnClickListener { accessingRepository() }
+        createButton.setOnClickListener {
+            findNavController().popBackStack()
+            Toast.makeText(
+                context, "Плейлист ${
+                    namePlayList.text.toString()
+                } создан", Toast.LENGTH_LONG
+            )
+                .show()
+        }
     }
-     var uRi: Uri? = null
-     lateinit var pickMedia : ActivityResultLauncher<PickVisualMediaRequest>
+
+    var uRi: Uri? = null
+    lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+
     override
     fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-         pickMedia =
+        pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 
 
@@ -79,7 +91,7 @@ class CreatingNewPlaylist : Fragment() {
                     uRi = uri
                     val picture = view?.findViewById<ImageView>(R.id.image)
                     picture?.setImageURI(uri)
-                    picture?.scaleType=ImageView.ScaleType.FIT_XY
+                    picture?.scaleType = ImageView.ScaleType.FIT_XY
 //                    mediaAdd(uri)
                     Log.d("PhotoPicker", "Выбранный URI: $uri")
                 } else {
@@ -93,22 +105,22 @@ class CreatingNewPlaylist : Fragment() {
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
-     fun dialogue() {
+    fun dialogue() {
 
-         context?.let {
-             MaterialAlertDialogBuilder(it)
-                 .setTitle("Завершить создание плейлиста?") // Заголовок диалога
-                 .setMessage("Все несохраненные данные будут потеряны") // Описание диалога
-                 .setNeutralButton("Отмена") { dialog, which -> // Добавляет кнопку «Отмена»
-                     // Действия, выполняемые при нажатии на кнопку «Отмена»
-                 }
-                 .setPositiveButton("Завершить") { dialog, which -> findNavController().popBackStack()// Добавляет кнопку «Да»
-                     // Действия, выполняемые при нажатии на кнопку «Да»
-                 }
-                 .show()
-         }
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle("Завершить создание плейлиста?") // Заголовок диалога
+                .setMessage("Все несохраненные данные будут потеряны") // Описание диалога
+                .setNeutralButton("Отмена") { dialog, which -> // Добавляет кнопку «Отмена»
+                    // Действия, выполняемые при нажатии на кнопку «Отмена»
+                }
+                .setPositiveButton("Завершить") { dialog, which ->
+                    findNavController().popBackStack()// Добавляет кнопку «Да»
+                    // Действия, выполняемые при нажатии на кнопку «Да»
+                }
+                .show()
+        }
     }
-
 
 
 }
