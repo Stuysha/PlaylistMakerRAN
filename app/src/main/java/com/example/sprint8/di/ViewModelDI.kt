@@ -1,6 +1,7 @@
 package com.example.sprint8.di
 
 import androidx.room.Room
+import com.example.sprint8.UI.viewmodel.CreatingNewPlaylistViewModel
 import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.example.sprint8.UI.viewmodel.MediaViewModel
@@ -10,6 +11,8 @@ import com.example.sprint8.UI.viewmodel.SettingsViewModel
 import com.example.sprint8.data.converters.TrackConverter
 import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.internet.RestProvider
+import com.example.sprint8.data.media.CreatingNewPlaylistRepository
+import com.example.sprint8.data.media.CreatingNewPlaylistRepositoryInterface
 import com.example.sprint8.data.media.FavoriteTracksRepository
 import com.example.sprint8.data.media.FavoriteTracksRepositoryRepositoryInterface
 import com.example.sprint8.data.player.PlayerRepository
@@ -21,6 +24,8 @@ import com.example.sprint8.data.search.SearchRepository
 import com.example.sprint8.data.search.SearchRepositoryInterface
 import com.example.sprint8.data.settings.SettingRepository
 import com.example.sprint8.data.settings.SettingRepositoryInterface
+import com.example.sprint8.domain.media.CreatingNewPlaylistInteractor
+import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
 import com.example.sprint8.domain.media.FavoriteTracksInteractor
 import com.example.sprint8.domain.media.FavoriteTracksInteractorInterface
 import com.example.sprint8.domain.player.PlayerInteractor
@@ -52,6 +57,9 @@ val viewModelModule = module {
     viewModel {
         PlaylistsViewModel()
     }
+    viewModel {
+        CreatingNewPlaylistViewModel(get())
+    }
 }
 val interactorModule = module {
     single<SearchInteractorInterface> {
@@ -65,6 +73,9 @@ val interactorModule = module {
     }
     factory<FavoriteTracksInteractorInterface> {
         FavoriteTracksInteractor(get(), get())
+    }
+    factory<CreatingNewPlaylistInteractorInterface> {
+        CreatingNewPlaylistInteractor(get())
     }
 }
 val repositoryModule = module {
@@ -80,6 +91,9 @@ val repositoryModule = module {
     factory { TrackConverter() }
     factory<FavoriteTracksRepositoryRepositoryInterface> {
         FavoriteTracksRepository(get())
+    }
+    factory<CreatingNewPlaylistRepositoryInterface> {
+        CreatingNewPlaylistRepository(get())
     }
 }
 val internetModule = module {

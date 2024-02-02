@@ -1,7 +1,10 @@
 package com.example.sprint8.UI.fragments
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,12 +23,14 @@ import com.example.sprint8.UI.viewmodel.PlaylistsViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import org.koin.android.ext.android.inject
+import java.io.File
+import java.io.FileOutputStream
 
-class CreatingNewPlaylist : Fragment() {
-
+class CreatingNewPlaylistFragment : Fragment() {
+private val viewModel : CreatingNewPlaylistViewModel by inject()
     companion object {
 
-        fun newInstance() = CreatingNewPlaylist()
+        fun newInstance() = CreatingNewPlaylistFragment()
     }
 
     private val viewModel: PlaylistsViewModel by inject()
@@ -85,8 +90,6 @@ class CreatingNewPlaylist : Fragment() {
         pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
 
-
-                // Callback вызовется, когда пользователь выберет картинку
                 if (uri != null) {
                     uRi = uri
                     val picture = view?.findViewById<ImageView>(R.id.image)
@@ -94,6 +97,7 @@ class CreatingNewPlaylist : Fragment() {
                     picture?.scaleType = ImageView.ScaleType.FIT_XY
 //                    mediaAdd(uri)
                     Log.d("PhotoPicker", "Выбранный URI: $uri")
+                    saveImageToPrivateStorage(uri)
                 } else {
                     Log.d("PhotoPicker", "Ничего не выбрано")
                 }
@@ -120,6 +124,25 @@ class CreatingNewPlaylist : Fragment() {
                 }
                 .show()
         }
+    }
+
+
+    private fun saveImageToPrivateStorage(uRi: Uri): File {
+            val filePath = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
+               if (!filePath.exists()) {
+            val result = filePath.mkdirs()
+
+        }
+        val uniqueName = "Name_${System.currentTimeMillis()}"
+               val file = File(filePath, "${uniqueName}.jpg")
+              val inputStream = context?.contentResolver?.openInputStream(uRi)
+
+        val outputStream = FileOutputStream(file)
+
+        val result = BitmapFactory
+            .decodeStream(inputStream)
+            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        return file
     }
 
 

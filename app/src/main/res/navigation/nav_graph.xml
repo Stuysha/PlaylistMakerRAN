@@ -33,6 +33,6 @@
     </fragment>
     <fragment
         android:id="@+id/creatingNewPlaylist"
-        android:name="com.example.sprint8.UI.fragments.CreatingNewPlaylist"
+        android:name="com.example.sprint8.UI.fragments.CreatingNewPlaylistFragment"
         android:label="CreatingNewPlaylist" />
 </navigation>
