@@ -19,7 +19,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.sprint8.R
-import com.example.sprint8.UI.viewmodel.PlaylistsViewModel
+import com.example.sprint8.UI.viewmodel.CreatingNewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import org.koin.android.ext.android.inject
@@ -33,7 +33,7 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
         fun newInstance() = CreatingNewPlaylistFragment()
     }
 
-    private val viewModel: PlaylistsViewModel by inject()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,11 +66,14 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
 
                 createButton.isEnabled = true
             }
+
         }
 
         val picture = view.findViewById<ImageView>(R.id.image)
         picture.setOnClickListener { accessingRepository() }
         createButton.setOnClickListener {
+            val picture = uRi?.let { it1 -> saveImageToPrivateStorage(it1).absolutePath }
+            viewModel.insertNewPlaylist(name = namePlayList.text.toString(), description = description.text.toString(), picture= picture  )
             findNavController().popBackStack()
             Toast.makeText(
                 context, "Плейлист ${
@@ -79,6 +82,7 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
             )
                 .show()
         }
+
     }
 
     var uRi: Uri? = null
@@ -97,7 +101,7 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
                     picture?.scaleType = ImageView.ScaleType.FIT_XY
 //                    mediaAdd(uri)
                     Log.d("PhotoPicker", "Выбранный URI: $uri")
-                    saveImageToPrivateStorage(uri)
+
                 } else {
                     Log.d("PhotoPicker", "Ничего не выбрано")
                 }
@@ -113,15 +117,12 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
 
         context?.let {
             MaterialAlertDialogBuilder(it)
-                .setTitle("Завершить создание плейлиста?") // Заголовок диалога
-                .setMessage("Все несохраненные данные будут потеряны") // Описание диалога
-                .setNeutralButton("Отмена") { dialog, which -> // Добавляет кнопку «Отмена»
-                    // Действия, выполняемые при нажатии на кнопку «Отмена»
+                .setTitle("Завершить создание плейлиста?")
+                .setMessage("Все несохраненные данные будут потеряны")
+                .setNeutralButton("Отмена") { dialog, which ->
                 }
                 .setPositiveButton("Завершить") { dialog, which ->
-                    findNavController().popBackStack()// Добавляет кнопку «Да»
-                    // Действия, выполняемые при нажатии на кнопку «Да»
-                }
+                    findNavController().popBackStack()                }
                 .show()
         }
     }

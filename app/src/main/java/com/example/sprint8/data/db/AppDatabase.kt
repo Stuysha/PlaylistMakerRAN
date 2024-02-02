@@ -7,7 +7,7 @@ import com.example.sprint8.data.db.dao.TrackDao
 import com.example.sprint8.data.db.entity.NewPlaylistEntity
 import com.example.sprint8.data.db.entity.TrackEntity
 
-@Database(version = 1, entities = [TrackEntity::class, NewPlaylistEntity::class ])
+@Database(version = 2, entities = [TrackEntity::class, NewPlaylistEntity::class ])
 abstract class AppDatabase : RoomDatabase(){
 
     abstract fun trackDao(): TrackDao
