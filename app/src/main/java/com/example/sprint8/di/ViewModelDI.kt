@@ -55,7 +55,7 @@ val viewModelModule = module {
         FavoritesTracksViewModel(get())
     }
     viewModel {
-        PlaylistsViewModel()
+        PlaylistsViewModel(get())
     }
     viewModel {
         CreatingNewPlaylistViewModel(get())

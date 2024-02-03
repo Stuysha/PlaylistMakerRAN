@@ -7,8 +7,14 @@ class CreatingNewPlaylistInteractor (val creatingNewPlaylistRepository : Creatin
     override suspend fun insertNewPlaylist(newPlaylist: List<NewPlaylistEntity>) {
         creatingNewPlaylistRepository.insertNewPlaylist(newPlaylist)
     }
+    override suspend fun getNewPlaylist(): List<NewPlaylistEntity> {
+        return creatingNewPlaylistRepository.getNewPlaylist()
+
+    }
 }
 interface CreatingNewPlaylistInteractorInterface {
      suspend fun insertNewPlaylist(newPlaylist: List<NewPlaylistEntity>)
+
+     suspend fun getNewPlaylist(): List<NewPlaylistEntity>
 
 }

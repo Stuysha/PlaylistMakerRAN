@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
+import com.example.sprint8.UI.adapters.PlayListAdapter
 import com.example.sprint8.UI.viewmodel.PlaylistsViewModel
 import org.koin.android.ext.android.inject
 
@@ -19,8 +23,10 @@ class PlaylistsFragment : Fragment() {
     }
 
     private val viewModel: PlaylistsViewModel by inject()
+    val adapter = PlayListAdapter()
 
     override fun onCreateView(
+
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
@@ -29,8 +35,11 @@ class PlaylistsFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
         val newButtonPlaylist = view.findViewById<Button>(R.id.button_apd)
+        val playlists = view.findViewById<RecyclerView>(R.id.play_lists)
+        val nocontent = view.findViewById<ConstraintLayout>(R.id.nocontent)
         newButtonPlaylist.setOnClickListener {
             findNavController().navigate(
                 R.id.action_mediaLibraryFragment_to_creatingNewPlaylist,
@@ -39,6 +48,16 @@ class PlaylistsFragment : Fragment() {
         }
 
 
+        playlists.adapter = adapter
+        playlists.layoutManager = GridLayoutManager(context, 2)
+        viewModel.stateLiveData.observe(viewLifecycleOwner) {
+            adapter.setItems(it)
+            if (it.size == 0) nocontent.visibility = View.VISIBLE
+         else { nocontent.visibility = View.GONE }
+
+    }
+
+viewModel.getNewPlaylist()
     }
 
 }
