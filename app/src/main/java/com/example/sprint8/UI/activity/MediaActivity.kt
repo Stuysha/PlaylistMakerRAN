@@ -2,6 +2,7 @@ package com.example.sprint8.UI.activity
 
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -13,6 +14,7 @@ import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
 import com.example.sprint8.domain.models.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
@@ -101,6 +103,15 @@ class MediaActivity : AppCompatActivity() {
 
         likeTrack?.setOnClickListener {
             viewModel.controlFavoriteTrack()
+        }
+        val bottomSheetContainer = findViewById<LinearLayout>(R.id.standard_bottom_sheet)
+
+        //  BottomSheetBehavior.from() — вспомогательная функция, позволяющая получить объект BottomSheetBehavior, связанный с контейнером BottomSheet
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        addInPlaylist?.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
