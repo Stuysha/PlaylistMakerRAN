@@ -11,17 +11,19 @@ import java.io.File
 
 
 class MediaPlayList(parentView: View) : ViewHolder(parentView) {
-        fun bind(model: NewPlaylistEntity) {
+    fun bind(model: NewPlaylistEntity) {
         itemView.findViewById<TextView>(R.id.title).text = model.name
         itemView.findViewById<TextView>(R.id.size_tracks).text = "0 Tracks"
 
 
         val round = itemView.resources.getDimensionPixelSize(R.dimen.round_image_search)
 
-            model.picture?.let {  Glide.with(itemView)
+        model.picture?.let {
+            Glide.with(itemView)
                 .load(File(it))
                 .placeholder(R.drawable.placeholder)
                 .transform(RoundedCorners(round))
-                .into(itemView.findViewById(R.id.image)) }
+                .into(itemView.findViewById(R.id.image))
+        }
     }
 }

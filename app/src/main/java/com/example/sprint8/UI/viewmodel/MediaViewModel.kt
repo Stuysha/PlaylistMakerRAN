@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sprint8.data.db.entity.NewPlaylistEntity
+import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
 import com.example.sprint8.domain.models.Track
 import com.example.sprint8.domain.player.PlayerInteractorInterface
 import kotlinx.coroutines.Dispatchers
@@ -16,8 +18,19 @@ import java.util.Locale
 
 class MediaViewModel(
     private val track: Track,
-    private val playerInteractor: PlayerInteractorInterface
+    private val playerInteractor: PlayerInteractorInterface, val newPlaylistInteractor: CreatingNewPlaylistInteractorInterface
 ) : ViewModel() {
+
+
+
+        var stateList = MutableLiveData<List<NewPlaylistEntity> >()
+        fun getListPlayList() {
+            viewModelScope.launch {  newPlaylistInteractor.getNewPlaylist().let { stateList.value=it } }
+
+
+        }
+
+
 
     private var stateLiveData = MutableLiveData(
         StateMediaView(

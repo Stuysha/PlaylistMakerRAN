@@ -7,9 +7,12 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.sprint8.R
+import com.example.sprint8.UI.adapters.MediaPlayListAdapter
 import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.MediaViewModel
 import com.example.sprint8.UI.viewmodel.StateMediaPlayer
@@ -33,7 +36,7 @@ class MediaActivity : AppCompatActivity() {
     var addInPlaylist: ImageView? = null
     var playback: ImageView? = null
     var likeTrack: ImageView? = null
-
+    val mediaPlayListAdapter = MediaPlayListAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +60,9 @@ class MediaActivity : AppCompatActivity() {
         addInPlaylist = findViewById(R.id.addInPlaylist)
         playback = findViewById(R.id.playback)
         likeTrack = findViewById(R.id.likeTrack)
+        var listPlyList = findViewById<RecyclerView>(R.id.list_ply_list)
+        listPlyList.adapter = mediaPlayListAdapter
+        listPlyList.layoutManager=LinearLayoutManager(this)
 
         timeTrack?.setText(R.string.null_time)
         playback?.isEnabled = false
@@ -105,13 +111,15 @@ class MediaActivity : AppCompatActivity() {
             viewModel.controlFavoriteTrack()
         }
         val bottomSheetContainer = findViewById<LinearLayout>(R.id.standard_bottom_sheet)
-
-        //  BottomSheetBehavior.from() — вспомогательная функция, позволяющая получить объект BottomSheetBehavior, связанный с контейнером BottomSheet
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         addInPlaylist?.setOnClickListener {
+            viewModel.getListPlayList()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        viewModel.stateList.observe(this){
+            mediaPlayListAdapter.setItems(it)
         }
     }
 
