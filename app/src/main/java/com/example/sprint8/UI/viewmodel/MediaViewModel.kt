@@ -4,8 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sprint8.data.db.entity.NewPlaylistEntity
+import com.example.sprint8.data.db.entity.TracksAndListId
 import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
+import com.example.sprint8.domain.models.NewPlaylist
 import com.example.sprint8.domain.models.Track
 import com.example.sprint8.domain.player.PlayerInteractorInterface
 import kotlinx.coroutines.Dispatchers
@@ -18,18 +19,43 @@ import java.util.Locale
 
 class MediaViewModel(
     private val track: Track,
-    private val playerInteractor: PlayerInteractorInterface, val newPlaylistInteractor: CreatingNewPlaylistInteractorInterface
+    private val playerInteractor: PlayerInteractorInterface,
+    val newPlaylistInteractor: CreatingNewPlaylistInteractorInterface
 ) : ViewModel() {
 
+    var stateMessageAddPlayList = MutableLiveData<Pair<String, Boolean>?>()
 
+    fun clearMessageAddPlayList() {
+        stateMessageAddPlayList.value = null
+    }
 
-        var stateList = MutableLiveData<List<NewPlaylistEntity> >()
-        fun getListPlayList() {
-            viewModelScope.launch {  newPlaylistInteractor.getNewPlaylist().let { stateList.value=it } }
-
-
+    fun newTracksToPlayList(idPlaylist: Long, idTrack: Long, playlistName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = newPlaylistInteractor.insertTracksAndListId(
+                TracksAndListId(
+                    idTrack = idTrack,
+                    idPlayList = idPlaylist
+                )
+            )
+            if (result) {
+                stateMessageAddPlayList.postValue("Добавлено в плейлист $playlistName" to true)
+            } else {
+                stateMessageAddPlayList.postValue(
+                    "Трек уже добавлен в плейлист $playlistName" to false
+                )
+            }
         }
 
+    }
+
+    var stateList = MutableLiveData<List<NewPlaylist>>()
+    fun getListPlayList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            newPlaylistInteractor.getNewPlaylist().let {
+                stateList.postValue(it)
+            }
+        }
+    }
 
 
     private var stateLiveData = MutableLiveData(

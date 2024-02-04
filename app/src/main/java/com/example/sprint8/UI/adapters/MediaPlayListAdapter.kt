@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewholders.MediaPlayList
-import com.example.sprint8.data.db.entity.NewPlaylistEntity
+import com.example.sprint8.domain.models.NewPlaylist
 
 class MediaPlayListAdapter(
-    private var tracks: List<NewPlaylistEntity> = listOf()
+
+
+    private var tracks: List<NewPlaylist> = listOf()
 ) : RecyclerView.Adapter<MediaPlayList>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaPlayList {
@@ -30,10 +32,10 @@ class MediaPlayListAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setItems(tracks: List<NewPlaylistEntity>) {
+    fun setItems(tracks: List<NewPlaylist>) {
         this.tracks = tracks
         notifyDataSetChanged()
     }
 
-    var click: ((NewPlaylistEntity) -> Unit)? = null
+    var click: ((NewPlaylist) -> Unit)? = null
 }

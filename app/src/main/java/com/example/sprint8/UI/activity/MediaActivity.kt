@@ -1,9 +1,11 @@
 package com.example.sprint8.UI.activity
 
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -62,7 +64,7 @@ class MediaActivity : AppCompatActivity() {
         likeTrack = findViewById(R.id.likeTrack)
         var listPlyList = findViewById<RecyclerView>(R.id.list_ply_list)
         listPlyList.adapter = mediaPlayListAdapter
-        listPlyList.layoutManager=LinearLayoutManager(this)
+        listPlyList.layoutManager = LinearLayoutManager(this)
 
         timeTrack?.setText(R.string.null_time)
         playback?.isEnabled = false
@@ -118,9 +120,42 @@ class MediaActivity : AppCompatActivity() {
             viewModel.getListPlayList()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
-        viewModel.stateList.observe(this){
+        viewModel.stateList.observe(this) {
             mediaPlayListAdapter.setItems(it)
         }
+        mediaPlayListAdapter.click = {
+            viewModel.newTracksToPlayList(
+                idPlaylist = it.id,
+                idTrack = trackObject.trackId,
+                playlistName = it.name ?: ""
+            )
+        }
+        viewModel.stateMessageAddPlayList.observe(this) {
+            if (it != null) {
+                Toast.makeText(this, it.first, Toast.LENGTH_LONG).show()
+                if (it.second) bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                viewModel.clearMessageAddPlayList()
+            }
+        }
+        val overlay = findViewById<View>(R.id.overlay)
+        bottomSheetBehavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            overlay.visibility = View.GONE
+                        }
+
+                        else -> {
+                            overlay.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            })
     }
 
     override fun onPause() {
