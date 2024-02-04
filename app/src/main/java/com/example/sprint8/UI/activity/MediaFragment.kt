@@ -1,14 +1,18 @@
 package com.example.sprint8.UI.activity
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -24,7 +28,7 @@ import com.google.gson.Gson
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.getKoin
 
-class MediaActivity : AppCompatActivity() {
+class MediaFragment : Fragment() {
     private lateinit var viewModel: MediaViewModel
     var cover: ImageView? = null
     var trackName: TextView? = null
@@ -40,31 +44,37 @@ class MediaActivity : AppCompatActivity() {
     var likeTrack: ImageView? = null
     val mediaPlayListAdapter = MediaPlayListAdapter()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.activity_media, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_media)
-        val trackJson = intent.getStringExtra(TRACK)
+        val trackJson = arguments?.getString(TRACK)
         val trackObject = Gson().fromJson(trackJson, Track::class.java)
         viewModel = getKoin().get(parameters = { parametersOf(trackObject) })
-        val toolbar = findViewById<Toolbar>(R.id.arrow)
+        val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         toolbar.setNavigationOnClickListener {
-            finish()
+            findNavController().popBackStack()
         }
-        cover = findViewById(R.id.imageCover)
-        trackName = findViewById(R.id.trackName)
-        artistName = findViewById(R.id.artistName)
-        timeTrack = findViewById(R.id.timeTrack)
-        collectionName = findViewById(R.id.collectionName)
-        releaseDate = findViewById(R.id.releaseDate)
-        primaryGenreName = findViewById(R.id.primaryGenreName)
-        country = findViewById(R.id.country)
-        trackTimeMills = findViewById(R.id.trackTimeMills)
-        addInPlaylist = findViewById(R.id.addInPlaylist)
-        playback = findViewById(R.id.playback)
-        likeTrack = findViewById(R.id.likeTrack)
-        var listPlyList = findViewById<RecyclerView>(R.id.list_ply_list)
+        cover = view.findViewById(R.id.imageCover)
+        trackName = view.findViewById(R.id.trackName)
+        artistName = view.findViewById(R.id.artistName)
+        timeTrack = view.findViewById(R.id.timeTrack)
+        collectionName = view.findViewById(R.id.collectionName)
+        releaseDate = view.findViewById(R.id.releaseDate)
+        primaryGenreName = view.findViewById(R.id.primaryGenreName)
+        country = view.findViewById(R.id.country)
+        trackTimeMills = view.findViewById(R.id.trackTimeMills)
+        addInPlaylist = view.findViewById(R.id.addInPlaylist)
+        playback = view.findViewById(R.id.playback)
+        likeTrack = view.findViewById(R.id.likeTrack)
+        val listPlyList = view.findViewById<RecyclerView>(R.id.list_ply_list)
         listPlyList.adapter = mediaPlayListAdapter
-        listPlyList.layoutManager = LinearLayoutManager(this)
+        listPlyList.layoutManager = LinearLayoutManager(context)
 
         timeTrack?.setText(R.string.null_time)
         playback?.isEnabled = false
@@ -73,7 +83,7 @@ class MediaActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
-        viewModel.getStateLiveData().observe(this) {
+        viewModel.getStateLiveData().observe(viewLifecycleOwner) {
             when (it.playerState) {
                 StateMediaPlayer.STATE_DEFAULT -> {
                 }
@@ -87,10 +97,10 @@ class MediaActivity : AppCompatActivity() {
                 StateMediaPlayer.STATE_PAUSED -> pausePlayer()
             }
         }
-        viewModel.getTimeTrack().observe(this) {
+        viewModel.getTimeTrack().observe(viewLifecycleOwner) {
             timeTrack?.text = it.orEmpty()
         }
-        viewModel.getStaticContentMedia().observe(this) {
+        viewModel.getStaticContentMedia().observe(viewLifecycleOwner) {
             releaseDate?.text = it.dateTrack ?: getString(R.string.is_unknown).lowercase()
             trackName?.text = it.trackName
             artistName?.text = it.artistName
@@ -112,7 +122,7 @@ class MediaActivity : AppCompatActivity() {
         likeTrack?.setOnClickListener {
             viewModel.controlFavoriteTrack()
         }
-        val bottomSheetContainer = findViewById<LinearLayout>(R.id.standard_bottom_sheet)
+        val bottomSheetContainer = view.findViewById<LinearLayout>(R.id.standard_bottom_sheet)
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
 
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -120,7 +130,7 @@ class MediaActivity : AppCompatActivity() {
             viewModel.getListPlayList()
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
-        viewModel.stateList.observe(this) {
+        viewModel.stateList.observe(viewLifecycleOwner) {
             mediaPlayListAdapter.setItems(it)
         }
         mediaPlayListAdapter.click = {
@@ -130,14 +140,14 @@ class MediaActivity : AppCompatActivity() {
                 playlistName = it.name ?: ""
             )
         }
-        viewModel.stateMessageAddPlayList.observe(this) {
+        viewModel.stateMessageAddPlayList.observe(viewLifecycleOwner) {
             if (it != null) {
-                Toast.makeText(this, it.first, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, it.first, Toast.LENGTH_LONG).show()
                 if (it.second) bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 viewModel.clearMessageAddPlayList()
             }
         }
-        val overlay = findViewById<View>(R.id.overlay)
+        val overlay = view.findViewById<View>(R.id.overlay)
         bottomSheetBehavior.addBottomSheetCallback(
             object : BottomSheetBehavior.BottomSheetCallback() {
 
@@ -156,6 +166,10 @@ class MediaActivity : AppCompatActivity() {
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {}
             })
+
+        view.findViewById<Button>(R.id.button_apd).setOnClickListener {
+            findNavController().navigate(R.id.action_mediaFragment_to_creatingNewPlaylist)
+        }
     }
 
     override fun onPause() {
@@ -178,37 +192,45 @@ class MediaActivity : AppCompatActivity() {
 
     fun setPlayView() {
         playback?.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.play
-            )
+            context?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.play
+                )
+            }
         )
     }
 
     fun setViewPause() {
         playback?.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.pause
-            )
+            context?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.pause
+                )
+            }
         )
     }
 
     fun setActiveFavoriteView() {
         likeTrack?.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.favorite_track
-            )
+            context?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.favorite_track
+                )
+            }
         )
     }
 
     fun setNoActiveFavoriteView() {
         likeTrack?.setImageDrawable(
-            ContextCompat.getDrawable(
-                this,
-                R.drawable.like
-            )
+            context?.let {
+                ContextCompat.getDrawable(
+                    it,
+                    R.drawable.like
+                )
+            }
         )
     }
 }
