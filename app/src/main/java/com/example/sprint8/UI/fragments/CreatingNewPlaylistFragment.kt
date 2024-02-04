@@ -1,10 +1,7 @@
 package com.example.sprint8.UI.fragments
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,23 +14,19 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.CreatingNewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
-import java.io.File
-import java.io.FileOutputStream
 
 class CreatingNewPlaylistFragment : Fragment() {
-private val viewModel : CreatingNewPlaylistViewModel by inject()
-    companion object {
-
-        fun newInstance() = CreatingNewPlaylistFragment()
-    }
-
-
+    private val viewModel: CreatingNewPlaylistViewModel by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,28 +52,32 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
         }
 
         namePlayList.doOnTextChanged { text, start, before, count ->
-            if (text.isNullOrEmpty()) {
-
-                createButton.isEnabled = false
-            } else {
-
-                createButton.isEnabled = true
-            }
+            createButton.isEnabled = !text.isNullOrEmpty()
 
         }
 
         val picture = view.findViewById<ImageView>(R.id.image)
         picture.setOnClickListener { accessingRepository() }
         createButton.setOnClickListener {
-            val picture = uRi?.let { it1 -> saveImageToPrivateStorage(it1).absolutePath }
-            viewModel.insertNewPlaylist(name = namePlayList.text.toString(), description = description.text.toString(), picture= picture  )
-            findNavController().popBackStack()
-            Toast.makeText(
-                context, "Плейлист ${
-                    namePlayList.text.toString()
-                } создан", Toast.LENGTH_LONG
-            )
-                .show()
+            viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                val picture = uRi?.let { it1 ->
+                    viewModel.saveImageToPrivateStorage(it1, context).absolutePath
+                }
+                viewModel.insertNewPlaylist(
+                    name = namePlayList.text.toString(),
+                    description = description.text.toString(),
+                    picture = picture
+                )
+                withContext(Dispatchers.Main) {
+                    findNavController().popBackStack()
+                    Toast.makeText(
+                        context, "Плейлист ${
+                            namePlayList.text.toString()
+                        } создан", Toast.LENGTH_LONG
+                    )
+                        .show()
+                }
+            }
         }
 
     }
@@ -88,8 +85,7 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
     var uRi: Uri? = null
     lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
-    override
-    fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -122,28 +118,10 @@ private val viewModel : CreatingNewPlaylistViewModel by inject()
                 .setNeutralButton("Отмена") { dialog, which ->
                 }
                 .setPositiveButton("Завершить") { dialog, which ->
-                    findNavController().popBackStack()                }
+                    findNavController().popBackStack()
+                }
                 .show()
         }
-    }
-
-
-    private fun saveImageToPrivateStorage(uRi: Uri): File {
-            val filePath = File(context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "myalbum")
-               if (!filePath.exists()) {
-            val result = filePath.mkdirs()
-
-        }
-        val uniqueName = "Name_${System.currentTimeMillis()}"
-               val file = File(filePath, "${uniqueName}.jpg")
-              val inputStream = context?.contentResolver?.openInputStream(uRi)
-
-        val outputStream = FileOutputStream(file)
-
-        val result = BitmapFactory
-            .decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        return file
     }
 
 
