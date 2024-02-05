@@ -61,8 +61,8 @@ class CreatingNewPlaylistFragment : Fragment() {
         createButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val picture = uRi?.let { it1 ->
-                    viewModel.saveImageToPrivateStorage(it1, context).absolutePath
-                }
+                    viewModel.saveImageToPrivateStorage(it1, context)?.absolutePath
+                } ?: return@launch
                 viewModel.insertNewPlaylist(
                     name = namePlayList.text.toString(),
                     description = description.text.toString(),

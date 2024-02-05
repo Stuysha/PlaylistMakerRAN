@@ -22,7 +22,10 @@ class CreatingNewPlaylistViewModel(
 
     }
 
-    suspend fun saveImageToPrivateStorage(uRi: Uri, context: Context?): File {
-        return creatingNewPlaylistInteractor.saveImageToPrivateStorage(uRi, context)
+    suspend fun saveImageToPrivateStorage(uRi: Uri, context: Context?): File? {
+        return creatingNewPlaylistInteractor.saveImageToPrivateStorage(
+            context?.filesDir?.absolutePath ?: return null,
+            context.contentResolver?.openInputStream(uRi) ?: return null
+        )
     }
 }

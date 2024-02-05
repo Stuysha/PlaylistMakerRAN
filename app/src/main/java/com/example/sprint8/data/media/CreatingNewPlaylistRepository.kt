@@ -1,8 +1,13 @@
 package com.example.sprint8.data.media
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.db.entity.NewPlaylistEntity
 import com.example.sprint8.data.db.entity.TracksAndListId
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 
 class CreatingNewPlaylistRepository(
     private val appDatabase: AppDatabase,
@@ -40,6 +45,30 @@ class CreatingNewPlaylistRepository(
             false
         }
     }
+
+    override suspend fun saveImageToPrivateStorage(
+//        uRi: Uri,
+        basePath: String/*context: Context?*/,
+        inputStream: InputStream
+    ): File {
+//        val filePath = File(context?.filesDir, "myalbum")
+        val filePath = File(basePath, "myalbum")
+        if (!filePath.exists()) {
+            val result = filePath.mkdirs()
+
+        }
+        val uniqueName = "Name_${System.currentTimeMillis()}"
+        val file = File(filePath, "${uniqueName}.jpg")
+
+//        val inputStream = context?.contentResolver?.openInputStream(uRi)
+
+        val outputStream = FileOutputStream(file)
+
+        val result = BitmapFactory
+            .decodeStream(inputStream)
+            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+        return file
+    }
 }
 
 interface CreatingNewPlaylistRepositoryInterface {
@@ -48,4 +77,5 @@ interface CreatingNewPlaylistRepositoryInterface {
     suspend fun deleteNewPlaylist(newPlaylist: List<NewPlaylistEntity>)
     suspend fun getNewPlaylist(): MutableList<Pair<NewPlaylistEntity, Int>>
     suspend fun insertTracksAndListId(newPlaylist: TracksAndListId): Boolean
+    suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File
 }
