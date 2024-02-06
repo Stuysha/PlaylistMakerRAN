@@ -1,6 +1,6 @@
 package com.example.sprint8.domain.settings
 
-import com.example.sprint8.data.settings.SettingRepositoryInterface
+import com.example.sprint8.domain.interfaces.SettingRepositoryInterface
 
 class SettingInteractor(private val settingRepository: SettingRepositoryInterface) :
     SettingInteractorInterface {

@@ -1,8 +1,6 @@
 package com.example.sprint8.domain.media
 
-import com.example.sprint8.data.db.entity.NewPlaylistEntity
-import com.example.sprint8.data.db.entity.TracksAndListId
-import com.example.sprint8.data.media.CreatingNewPlaylistRepositoryInterface
+import com.example.sprint8.domain.interfaces.CreatingNewPlaylistRepositoryInterface
 import com.example.sprint8.domain.models.NewPlaylist
 import java.io.File
 import java.io.InputStream
@@ -10,8 +8,8 @@ import java.io.InputStream
 class CreatingNewPlaylistInteractor(
     val creatingNewPlaylistRepository: CreatingNewPlaylistRepositoryInterface
 ) : CreatingNewPlaylistInteractorInterface {
-    override suspend fun insertNewPlaylist(newPlaylist: List<NewPlaylistEntity>) {
-        creatingNewPlaylistRepository.insertNewPlaylist(newPlaylist)
+    override suspend fun insertNewPlaylist(name: String, description: String?, picture: String?) {
+        creatingNewPlaylistRepository.insertNewPlaylist(name, description, picture)
     }
 
     override suspend fun getNewPlaylist(): List<NewPlaylist> {
@@ -27,20 +25,23 @@ class CreatingNewPlaylistInteractor(
 
     }
 
-    override suspend fun insertTracksAndListId(newPlaylist: TracksAndListId): Boolean {
-        return creatingNewPlaylistRepository.insertTracksAndListId(newPlaylist)
+    override suspend fun insertTracksAndListId(idPlayList: Long, idTrack: Long): Boolean {
+        return creatingNewPlaylistRepository.insertTracksAndListId(idPlayList, idTrack)
     }
 
-    override suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File {
+    override suspend fun saveImageToPrivateStorage(
+        basePath: String,
+        inputStream: InputStream
+    ): File {
         return creatingNewPlaylistRepository.saveImageToPrivateStorage(basePath, inputStream)
     }
 }
 
 interface CreatingNewPlaylistInteractorInterface {
-    suspend fun insertNewPlaylist(newPlaylist: List<NewPlaylistEntity>)
+    suspend fun insertNewPlaylist(name: String, description: String?, picture: String?)
 
     suspend fun getNewPlaylist(): List<NewPlaylist>
 
-    suspend fun insertTracksAndListId(newPlaylist: TracksAndListId): Boolean
+    suspend fun insertTracksAndListId(idPlayList: Long, idTrack: Long): Boolean
     suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File
 }

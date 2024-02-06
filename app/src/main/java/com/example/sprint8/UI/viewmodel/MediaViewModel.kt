@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sprint8.data.db.entity.TracksAndListId
 import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
 import com.example.sprint8.domain.models.NewPlaylist
 import com.example.sprint8.domain.models.Track
@@ -32,10 +31,8 @@ class MediaViewModel(
     fun newTracksToPlayList(idPlaylist: Long, idTrack: Long, playlistName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = newPlaylistInteractor.insertTracksAndListId(
-                TracksAndListId(
-                    idTrack = idTrack,
-                    idPlayList = idPlaylist
-                )
+                idPlayList = idPlaylist,
+                idTrack = idTrack
             )
             if (result) {
                 stateMessageAddPlayList.postValue("Добавлено в плейлист $playlistName" to true)

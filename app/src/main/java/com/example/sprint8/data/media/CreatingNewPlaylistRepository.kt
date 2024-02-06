@@ -4,7 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.db.entity.NewPlaylistEntity
-import com.example.sprint8.data.db.entity.TracksAndListId
+import com.example.sprint8.data.db.entity.TracksAndListIdEntity
+import com.example.sprint8.domain.interfaces.CreatingNewPlaylistRepositoryInterface
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -12,12 +13,17 @@ import java.io.InputStream
 class CreatingNewPlaylistRepository(
     private val appDatabase: AppDatabase,
 ) : CreatingNewPlaylistRepositoryInterface {
-    override suspend fun insertNewPlaylist(newPlaylist: List<NewPlaylistEntity>) {
-        appDatabase.newPlayListDao().insertNewPlaylist(newPlaylist)
+    override suspend fun insertNewPlaylist(name: String, description: String?, picture: String?) {
+        appDatabase.newPlayListDao().insertNewPlaylist(
+            listOf(NewPlaylistEntity(name = name, description = description, picture = picture))
+        )
     }
 
-    override suspend fun deleteNewPlaylist(newPlaylist: List<NewPlaylistEntity>) {
-        appDatabase.newPlayListDao().deleteNewPlaylist(newPlaylist)
+    override suspend fun deleteNewPlaylist(playlistIds: List<Long>) {
+        appDatabase.newPlayListDao()
+            .deleteNewPlaylist(
+                playlistIds.map { NewPlaylistEntity(id = it, null, null, null) }
+            )
     }
 
     override suspend fun getNewPlaylist(): MutableList<Pair<NewPlaylistEntity, Int>> {
@@ -35,11 +41,13 @@ class CreatingNewPlaylistRepository(
 
     }
 
-    override suspend fun insertTracksAndListId(newPlaylist: TracksAndListId): Boolean {
+    override suspend fun insertTracksAndListId(idPlayList: Long, idTrack: Long): Boolean {
         val result = appDatabase.newPlayListDao()
-            .getTracksAndListId(newPlaylist.idPlayList, newPlaylist.idTrack)
+            .getTracksAndListId(idPlayList, idTrack)
         return if (result.isEmpty()) {
-            appDatabase.newPlayListDao().insertTracksAndListId(newPlaylist)
+            appDatabase.newPlayListDao().insertTracksAndListId(
+                TracksAndListIdEntity(idPlayList = idPlayList, idTrack = idTrack)
+            )
             true
         } else {
             false
@@ -47,20 +55,15 @@ class CreatingNewPlaylistRepository(
     }
 
     override suspend fun saveImageToPrivateStorage(
-//        uRi: Uri,
-        basePath: String/*context: Context?*/,
+        basePath: String,
         inputStream: InputStream
     ): File {
-//        val filePath = File(context?.filesDir, "myalbum")
         val filePath = File(basePath, "myalbum")
         if (!filePath.exists()) {
             val result = filePath.mkdirs()
-
         }
         val uniqueName = "Name_${System.currentTimeMillis()}"
         val file = File(filePath, "${uniqueName}.jpg")
-
-//        val inputStream = context?.contentResolver?.openInputStream(uRi)
 
         val outputStream = FileOutputStream(file)
 
@@ -69,13 +72,4 @@ class CreatingNewPlaylistRepository(
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         return file
     }
-}
-
-interface CreatingNewPlaylistRepositoryInterface {
-
-    suspend fun insertNewPlaylist(newPlaylist: List<NewPlaylistEntity>)
-    suspend fun deleteNewPlaylist(newPlaylist: List<NewPlaylistEntity>)
-    suspend fun getNewPlaylist(): MutableList<Pair<NewPlaylistEntity, Int>>
-    suspend fun insertTracksAndListId(newPlaylist: TracksAndListId): Boolean
-    suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File
 }

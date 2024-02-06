@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.sprint8.data.db.entity.NewPlaylistEntity
-import com.example.sprint8.data.db.entity.TracksAndListId
+import com.example.sprint8.data.db.entity.TracksAndListIdEntity
 
 @Dao
 interface NewPlaylistDao {
@@ -20,15 +20,15 @@ interface NewPlaylistDao {
     suspend fun getNewPlaylist(): List<NewPlaylistEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTracksAndListId(newPlaylist: TracksAndListId)
+    suspend fun insertTracksAndListId(newPlaylist: TracksAndListIdEntity)
 
     @Delete
-    suspend fun deleteTracksAndListId(newPlaylist: List<TracksAndListId>)
+    suspend fun deleteTracksAndListId(newPlaylist: List<TracksAndListIdEntity>)
 
-    @Query("SELECT * FROM TracksAndListId")
-    suspend fun getTracksAndListId(): List<TracksAndListId>
+    @Query("SELECT * FROM TracksAndListIdEntity")
+    suspend fun getTracksAndListId(): List<TracksAndListIdEntity>
 
 
-    @Query("SELECT * FROM TracksAndListId WHERE idPlayList == :idPlaylist AND idTrack == :idTrack")
-    suspend fun getTracksAndListId(idPlaylist: Long, idTrack: Long): List<TracksAndListId>
+    @Query("SELECT * FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist AND idTrack == :idTrack")
+    suspend fun getTracksAndListId(idPlaylist: Long, idTrack: Long): List<TracksAndListIdEntity>
 }

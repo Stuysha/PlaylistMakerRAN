@@ -1,8 +1,7 @@
 package com.example.sprint8.data.media
 
 import com.example.sprint8.data.db.AppDatabase
-import com.example.sprint8.data.db.entity.TrackEntity
-import kotlinx.coroutines.flow.Flow
+import com.example.sprint8.domain.interfaces.FavoriteTracksRepositoryRepositoryInterface
 import kotlinx.coroutines.flow.flow
 
 class FavoriteTracksRepository(
@@ -15,6 +14,3 @@ class FavoriteTracksRepository(
 
 }
 
-interface FavoriteTracksRepositoryRepositoryInterface {
-    suspend fun getFavoriteTracks(): Flow<List<TrackEntity>>
-}
