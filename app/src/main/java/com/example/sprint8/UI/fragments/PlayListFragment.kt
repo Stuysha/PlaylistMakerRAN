@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sprint8.R
 import com.example.sprint8.UI.adapters.SearchMediaAdapter
+import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.PlayListViewModel
+import com.google.gson.Gson
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import java.io.File
@@ -74,6 +77,17 @@ class PlayListFragment : Fragment() {
 
         viewModel.stateTracks.observe(viewLifecycleOwner) {
             adapter.setItems(it)
+        }
+
+        adapter.click = {
+            findNavController().navigate(
+                R.id.action_playListFragment_to_mediaFragment,
+                bundleOf(TRACK to Gson().toJson(it))
+            )
+        }
+
+        adapter.longClick = {
+
         }
     }
 }

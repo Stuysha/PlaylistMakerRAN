@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_playListFragment"
             app:destination="@id/playListFragment" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
     </fragment>
     <fragment
         android:id="@+id/creatingNewPlaylist"
@@ -45,5 +48,9 @@
     <fragment
         android:id="@+id/playListFragment"
         android:name="com.example.sprint8.UI.fragments.PlayListFragment"
-        android:label="PlayListFragment" />
+        android:label="PlayListFragment" >
+        <action
+            android:id="@+id/action_playListFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
 </navigation>

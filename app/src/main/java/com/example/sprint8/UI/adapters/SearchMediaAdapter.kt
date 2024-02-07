@@ -23,6 +23,10 @@ class SearchMediaAdapter(
         holder.itemView.setOnClickListener {
             click?.invoke(tracks[position])
         }
+        holder.itemView.setOnLongClickListener {
+            longClick?.invoke(tracks[position])
+            true
+        }
     }
 
     override fun getItemCount(): Int {
@@ -36,4 +40,5 @@ class SearchMediaAdapter(
     }
 
     var click: ((Track) -> Unit)? = null
+    var longClick: ((Track) -> Unit)? = null
 }
