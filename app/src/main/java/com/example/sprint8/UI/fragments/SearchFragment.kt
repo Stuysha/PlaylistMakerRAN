@@ -1,7 +1,6 @@
 package com.example.sprint8.UI.fragments
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,13 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
-import com.example.sprint8.UI.activity.MediaActivity
 import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.viewmodel.SearchViewModel
 import com.example.sprint8.UI.viewmodel.StateVeiw
@@ -161,9 +161,10 @@ class SearchFragment : Fragment() {
         adapter.click = null
         if (clickDebounce()) {
             viewModel.saveHistoryTrack(track)
-            val intent = Intent(context, MediaActivity::class.java)
-            intent.putExtra(TRACK, Gson().toJson(track))
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_searchFragment_to_mediaFragment,
+                bundleOf(TRACK to Gson().toJson(track))
+            )
         }
     }
 

@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
-import com.example.sprint8.UI.activity.MediaActivity
+import com.example.sprint8.UI.activity.MediaFragment
 import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
@@ -70,7 +70,7 @@ class FavoritesTracksFragment : Fragment() {
     fun clickToItem(track: Track) {
         adapter.click = null
         if (clickDebounce()) {
-            val intent = Intent(context, MediaActivity::class.java)
+            val intent = Intent(context, MediaFragment::class.java)
             intent.putExtra(TRACK, Gson().toJson(track))
             startActivity(intent)
         }

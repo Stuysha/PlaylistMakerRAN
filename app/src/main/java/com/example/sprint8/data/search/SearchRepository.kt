@@ -3,6 +3,7 @@ package com.example.sprint8.data.search
 import com.example.sprint8.data.dto.TunesResult
 import com.example.sprint8.data.internet.Api
 import com.example.sprint8.data.preferences.HistoryControl
+import com.example.sprint8.domain.interfaces.SearchRepositoryInterface
 import com.example.sprint8.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -23,10 +24,3 @@ class SearchRepository(
 }
 
 
-interface SearchRepositoryInterface {
-    fun loadSearch(searchText: String): Flow<TunesResult>
-
-    fun getHistory(): Array<Track>
-    fun historyDelete()
-    fun addHistoryTrack(track: Track)
-}

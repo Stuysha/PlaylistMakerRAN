@@ -19,12 +19,24 @@
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.example.sprint8.UI.activity.MediaActivity"
+        android:name="com.example.sprint8.UI.activity.MediaFragment"
         android:label="activity_media"
-        tools:layout="@layout/activity_media" />
+        tools:layout="@layout/activity_media" >
+        <action
+            android:id="@+id/action_mediaFragment_to_creatingNewPlaylist"
+            app:destination="@id/creatingNewPlaylist" />
+    </fragment>
     <fragment
         android:id="@+id/mediaLibraryFragment"
         android:name="com.example.sprint8.UI.fragments.MediaLibraryFragment"
         android:label="activity_media_libraryactivity"
-        tools:layout="@layout/activity_media_libraryactivity" />
+        tools:layout="@layout/activity_media_libraryactivity" >
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_creatingNewPlaylist"
+            app:destination="@id/creatingNewPlaylist" />
+    </fragment>
+    <fragment
+        android:id="@+id/creatingNewPlaylist"
+        android:name="com.example.sprint8.UI.fragments.CreatingNewPlaylistFragment"
+        android:label="CreatingNewPlaylist" />
 </navigation>

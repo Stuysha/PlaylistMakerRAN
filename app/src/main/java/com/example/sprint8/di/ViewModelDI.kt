@@ -1,6 +1,7 @@
 package com.example.sprint8.di
 
 import androidx.room.Room
+import com.example.sprint8.UI.viewmodel.CreatingNewPlaylistViewModel
 import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
 import com.example.sprint8.UI.viewmodel.MediaLibraryViewModel
 import com.example.sprint8.UI.viewmodel.MediaViewModel
@@ -10,17 +11,21 @@ import com.example.sprint8.UI.viewmodel.SettingsViewModel
 import com.example.sprint8.data.converters.TrackConverter
 import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.internet.RestProvider
+import com.example.sprint8.data.media.CreatingNewPlaylistRepository
 import com.example.sprint8.data.media.FavoriteTracksRepository
-import com.example.sprint8.data.media.FavoriteTracksRepositoryRepositoryInterface
 import com.example.sprint8.data.player.PlayerRepository
-import com.example.sprint8.data.player.PlayerRepositoryInterface
 import com.example.sprint8.data.preferences.HistoryControl
 import com.example.sprint8.data.preferences.SettingControl
 import com.example.sprint8.data.preferences.SettingSharedPreference
 import com.example.sprint8.data.search.SearchRepository
-import com.example.sprint8.data.search.SearchRepositoryInterface
 import com.example.sprint8.data.settings.SettingRepository
-import com.example.sprint8.data.settings.SettingRepositoryInterface
+import com.example.sprint8.domain.interfaces.CreatingNewPlaylistRepositoryInterface
+import com.example.sprint8.domain.interfaces.FavoriteTracksRepositoryRepositoryInterface
+import com.example.sprint8.domain.interfaces.PlayerRepositoryInterface
+import com.example.sprint8.domain.interfaces.SearchRepositoryInterface
+import com.example.sprint8.domain.interfaces.SettingRepositoryInterface
+import com.example.sprint8.domain.media.CreatingNewPlaylistInteractor
+import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
 import com.example.sprint8.domain.media.FavoriteTracksInteractor
 import com.example.sprint8.domain.media.FavoriteTracksInteractorInterface
 import com.example.sprint8.domain.player.PlayerInteractor
@@ -35,7 +40,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel {
-        MediaViewModel(it.get(), get())
+        MediaViewModel(it.get(), get(), get())
     }
     viewModel {
         MediaLibraryViewModel()
@@ -50,7 +55,10 @@ val viewModelModule = module {
         FavoritesTracksViewModel(get())
     }
     viewModel {
-        PlaylistsViewModel()
+        PlaylistsViewModel(get())
+    }
+    viewModel {
+        CreatingNewPlaylistViewModel(get())
     }
 }
 val interactorModule = module {
@@ -66,6 +74,9 @@ val interactorModule = module {
     factory<FavoriteTracksInteractorInterface> {
         FavoriteTracksInteractor(get(), get())
     }
+    factory<CreatingNewPlaylistInteractorInterface> {
+        CreatingNewPlaylistInteractor(get())
+    }
 }
 val repositoryModule = module {
     single<SearchRepositoryInterface> {
@@ -80,6 +91,9 @@ val repositoryModule = module {
     factory { TrackConverter() }
     factory<FavoriteTracksRepositoryRepositoryInterface> {
         FavoriteTracksRepository(get())
+    }
+    factory<CreatingNewPlaylistRepositoryInterface> {
+        CreatingNewPlaylistRepository(get())
     }
 }
 val internetModule = module {

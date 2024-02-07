@@ -2,7 +2,7 @@ package com.example.sprint8.domain.player
 
 import com.example.sprint8.data.converters.TrackConverter
 import com.example.sprint8.data.db.entity.TrackEntity
-import com.example.sprint8.data.player.PlayerRepositoryInterface
+import com.example.sprint8.domain.interfaces.PlayerRepositoryInterface
 import com.example.sprint8.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 

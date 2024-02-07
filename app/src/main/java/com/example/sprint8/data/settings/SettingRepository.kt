@@ -1,6 +1,7 @@
 package com.example.sprint8.data.settings
 
 import com.example.sprint8.data.preferences.SettingControl
+import com.example.sprint8.domain.interfaces.SettingRepositoryInterface
 
 class SettingRepository(
     private val settingControl: SettingControl
@@ -12,6 +13,3 @@ class SettingRepository(
 
 }
 
-interface SettingRepositoryInterface{
-    fun editEnableDarkThemeSetting(checked: Boolean)
-}

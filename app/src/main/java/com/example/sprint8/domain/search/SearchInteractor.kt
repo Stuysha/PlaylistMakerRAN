@@ -1,14 +1,15 @@
 package com.example.sprint8.domain.search
 
 import com.example.sprint8.data.dto.TunesResult
-import com.example.sprint8.data.search.SearchRepositoryInterface
+import com.example.sprint8.domain.interfaces.SearchRepositoryInterface
 import com.example.sprint8.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class SearchInteractor(val searchRepository: SearchRepositoryInterface): SearchInteractorInterface {
+class SearchInteractor(val searchRepository: SearchRepositoryInterface) :
+    SearchInteractorInterface {
     override fun loadSearch(searchText: String): Flow<MutableList<Track>> {
         return searchRepository.loadSearch(searchText)
             .map {
