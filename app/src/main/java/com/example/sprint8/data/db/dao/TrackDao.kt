@@ -18,6 +18,9 @@ interface TrackDao {
     @Delete
     suspend fun deleteTrack(track: TrackEntity)
 
+    @Query("DELETE FROM TrackEntity WHERE trackId == :trackId")
+    suspend fun deleteTrack(trackId: Long)
+
     @Query("SELECT * FROM TrackEntity ORDER BY addTime DESC")
     suspend fun getTracks(): List<TrackEntity>
 

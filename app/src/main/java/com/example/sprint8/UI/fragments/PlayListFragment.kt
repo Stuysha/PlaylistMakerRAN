@@ -17,6 +17,8 @@ import com.example.sprint8.R
 import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.PlayListViewModel
+import com.example.sprint8.domain.models.Track
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
@@ -87,7 +89,21 @@ class PlayListFragment : Fragment() {
         }
 
         adapter.longClick = {
+            showDeleteTrackDialog(it)
+        }
+    }
 
+    fun showDeleteTrackDialog(track: Track) {
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle("Удалить трек")
+                .setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
+                .setNegativeButton("Отмена") { dialog, which ->
+                }
+                .setPositiveButton("Удалить") { dialog, which ->
+                    viewModel.deleteTrackFromPlaylist(track.trackId)
+                }
+                .show()
         }
     }
 }

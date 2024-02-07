@@ -9,7 +9,8 @@ class FavoriteTracksRepository(
 ) : FavoriteTracksRepositoryInterface {
 
     override suspend fun getFavoriteTracks() = flow {
-        this.emit(appDatabase.trackDao().getTracks())
+        val ids = appDatabase.favoritesTracksDao().getFavoritesTracks().map { it.id }
+        this.emit(appDatabase.trackDao().getTracks(ids))
     }
 
 }

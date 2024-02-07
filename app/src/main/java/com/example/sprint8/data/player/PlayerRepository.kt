@@ -1,6 +1,7 @@
 package com.example.sprint8.data.player
 
 import com.example.sprint8.data.db.AppDatabase
+import com.example.sprint8.data.db.entity.FavoritesTracksEntity
 import com.example.sprint8.data.db.entity.TrackEntity
 import com.example.sprint8.domain.interfaces.PlayerRepositoryInterface
 import kotlinx.coroutines.flow.flow
@@ -26,15 +27,21 @@ class PlayerRepository(
     }
 
     override suspend fun addFavoriteTrack(track: TrackEntity) {
+        appDatabase.favoritesTracksDao().insertFavoritesTracks(FavoritesTracksEntity(track.trackId))
         appDatabase.trackDao().insertTrack(track)
     }
 
     override suspend fun removeFavoriteTrack(track: TrackEntity) {
-        appDatabase.trackDao().deleteTrack(track)
+        appDatabase.favoritesTracksDao().deleteFavoritesTracks(FavoritesTracksEntity(track.trackId))
+        val trackPlayList = appDatabase.newPlayListDao().getTracksAndListIdByTrack(track.trackId)
+        if (trackPlayList.isEmpty()) appDatabase.trackDao().deleteTrack(track)
     }
 
     override suspend fun getFavoriteTrack(idTrack: Long) = flow {
-        this.emit(appDatabase.trackDao().getTrack(idTrack))
+        if (appDatabase.favoritesTracksDao().getFavoritesTracks(idTrack).isEmpty())
+            emit(null)
+        else
+            this.emit(appDatabase.trackDao().getTrack(idTrack))
     }
 
     override fun startPlayer() {

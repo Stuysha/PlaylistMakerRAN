@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class CreatingNewPlaylistViewModel(
-    val creatingNewPlaylistInteractor: CreatingNewPlaylistInteractorInterface
+    private val creatingNewPlaylistInteractor: CreatingNewPlaylistInteractorInterface
 ) : ViewModel() {
     fun insertNewPlaylist(name: String, description: String?, picture: String?) {
         viewModelScope.launch(Dispatchers.IO) {

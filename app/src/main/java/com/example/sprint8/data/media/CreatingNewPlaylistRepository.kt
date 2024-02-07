@@ -79,6 +79,14 @@ class CreatingNewPlaylistRepository(
     override suspend fun getPlaylist(id: Long): Pair<NewPlaylistEntity, List<Track>> {
         val playList = appDatabase.newPlayListDao().getPlayList(id)
         val idTrack = appDatabase.newPlayListDao().getTracksAndListId(id).map { it.idTrack }
-        return playList to appDatabase.trackDao().getTracks(idTrack).map { movieDbConvertor.map(it) }
+        return playList to appDatabase.trackDao().getTracks(idTrack)
+            .map { movieDbConvertor.map(it) }
+    }
+
+    override suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long) {
+        appDatabase.newPlayListDao().deleteTracksAndListId(idPlayList, idTrack)
+        if (appDatabase.favoritesTracksDao().getFavoritesTracks(idTrack).isEmpty())
+            if (appDatabase.newPlayListDao().getTracksAndListIdByTrack(idTrack).isEmpty())
+                appDatabase.trackDao().deleteTrack(idTrack)
     }
 }

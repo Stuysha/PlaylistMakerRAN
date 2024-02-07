@@ -16,13 +16,23 @@ class PlayListViewModel(
 
     var statePlayList = MutableLiveData<Pair<NewPlaylist, String>>()
     var stateTracks = MutableLiveData<List<Track>>()
-    val stateSummaryTime = MutableLiveData<String>()
 
     init {
+        loadData()
+    }
+
+    fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             val (playList, tracks, time) = newPlaylistInteractor.getPlaylistAndTracks(idPlaylist)
             statePlayList.postValue(playList to time)
             stateTracks.postValue(tracks)
+        }
+    }
+
+    fun deleteTrackFromPlaylist(idTrack: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            newPlaylistInteractor.deleteTrackFromPlaylist(idPlaylist, idTrack)
+            loadData()
         }
     }
 }
