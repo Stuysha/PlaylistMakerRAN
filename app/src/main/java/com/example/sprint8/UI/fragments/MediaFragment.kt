@@ -1,4 +1,4 @@
-package com.example.sprint8.UI.activity
+package com.example.sprint8.UI.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -48,7 +48,7 @@ class MediaFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.activity_media, container, false)
+        return inflater.inflate(R.layout.fragment_media, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -136,7 +136,6 @@ class MediaFragment : Fragment() {
         mediaPlayListAdapter.click = {
             viewModel.newTracksToPlayList(
                 idPlaylist = it.id,
-                idTrack = trackObject.trackId,
                 playlistName = it.name ?: ""
             )
         }

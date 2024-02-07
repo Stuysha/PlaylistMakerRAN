@@ -19,9 +19,9 @@
         android:label="SettingsFragment" />
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.example.sprint8.UI.activity.MediaFragment"
+        android:name="com.example.sprint8.UI.fragments.MediaFragment"
         android:label="activity_media"
-        tools:layout="@layout/activity_media" >
+        tools:layout="@layout/fragment_media" >
         <action
             android:id="@+id/action_mediaFragment_to_creatingNewPlaylist"
             app:destination="@id/creatingNewPlaylist" />
@@ -34,9 +34,16 @@
         <action
             android:id="@+id/action_mediaLibraryFragment_to_creatingNewPlaylist"
             app:destination="@id/creatingNewPlaylist" />
+        <action
+            android:id="@+id/action_mediaLibraryFragment_to_playListFragment"
+            app:destination="@id/playListFragment" />
     </fragment>
     <fragment
         android:id="@+id/creatingNewPlaylist"
         android:name="com.example.sprint8.UI.fragments.CreatingNewPlaylistFragment"
         android:label="CreatingNewPlaylist" />
+    <fragment
+        android:id="@+id/playListFragment"
+        android:name="com.example.sprint8.UI.fragments.PlayListFragment"
+        android:label="PlayListFragment" />
 </navigation>

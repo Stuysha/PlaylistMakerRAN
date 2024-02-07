@@ -1,12 +1,17 @@
 package com.example.sprint8.domain.media
 
 import com.example.sprint8.domain.interfaces.CreatingNewPlaylistRepositoryInterface
+import com.example.sprint8.domain.interfaces.TrackRepositoryInterface
 import com.example.sprint8.domain.models.NewPlaylist
+import com.example.sprint8.domain.models.Track
 import java.io.File
 import java.io.InputStream
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class CreatingNewPlaylistInteractor(
-    val creatingNewPlaylistRepository: CreatingNewPlaylistRepositoryInterface
+    private val creatingNewPlaylistRepository: CreatingNewPlaylistRepositoryInterface,
+    private val trackRepository: TrackRepositoryInterface
 ) : CreatingNewPlaylistInteractorInterface {
     override suspend fun insertNewPlaylist(name: String, description: String?, picture: String?) {
         creatingNewPlaylistRepository.insertNewPlaylist(name, description, picture)
@@ -22,11 +27,32 @@ class CreatingNewPlaylistInteractor(
                 trackSize = it.second
             )
         }
-
     }
 
-    override suspend fun insertTracksAndListId(idPlayList: Long, idTrack: Long): Boolean {
-        return creatingNewPlaylistRepository.insertTracksAndListId(idPlayList, idTrack)
+    override suspend fun getPlaylistAndTracks(id: Long): Triple<NewPlaylist, List<Track>, String> {
+        val it = creatingNewPlaylistRepository.getPlaylist(id)
+
+        val summ = it.second.sumOf {
+            SimpleDateFormat("mm:ss", Locale.getDefault()).parse(it.trackTime)?.time ?: 0
+        }
+
+        return Triple(
+            NewPlaylist(
+                id = it.first.id,
+                name = it.first.name,
+                description = it.first.description,
+                picture = it.first.picture,
+                trackSize = it.second.size
+            ),
+            it.second,
+            SimpleDateFormat("mm", Locale.getDefault()).format(summ)
+        )
+    }
+
+    override suspend fun insertTracksAndListId(idPlayList: Long, track: Track): Boolean {
+        val result = creatingNewPlaylistRepository.insertTracksAndListId(idPlayList, track.trackId)
+        trackRepository.insertTrack(track)
+        return result
     }
 
     override suspend fun saveImageToPrivateStorage(
@@ -42,6 +68,8 @@ interface CreatingNewPlaylistInteractorInterface {
 
     suspend fun getNewPlaylist(): List<NewPlaylist>
 
-    suspend fun insertTracksAndListId(idPlayList: Long, idTrack: Long): Boolean
+    suspend fun getPlaylistAndTracks(id: Long): Triple<NewPlaylist, List<Track>, String>
+
+    suspend fun insertTracksAndListId(idPlayList: Long, track: Track): Boolean
     suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File
 }

@@ -6,7 +6,7 @@ import com.example.sprint8.domain.models.TrackResult
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackConverter {
+class  TrackConverter {
 
     fun map(track: TrackResult): TrackEntity {
         return TrackEntity(

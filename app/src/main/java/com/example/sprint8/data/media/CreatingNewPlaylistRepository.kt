@@ -2,16 +2,19 @@ package com.example.sprint8.data.media
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.example.sprint8.data.converters.TrackConverter
 import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.db.entity.NewPlaylistEntity
 import com.example.sprint8.data.db.entity.TracksAndListIdEntity
 import com.example.sprint8.domain.interfaces.CreatingNewPlaylistRepositoryInterface
+import com.example.sprint8.domain.models.Track
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
 class CreatingNewPlaylistRepository(
     private val appDatabase: AppDatabase,
+    private val movieDbConvertor: TrackConverter,
 ) : CreatingNewPlaylistRepositoryInterface {
     override suspend fun insertNewPlaylist(name: String, description: String?, picture: String?) {
         appDatabase.newPlayListDao().insertNewPlaylist(
@@ -71,5 +74,11 @@ class CreatingNewPlaylistRepository(
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         return file
+    }
+
+    override suspend fun getPlaylist(id: Long): Pair<NewPlaylistEntity, List<Track>> {
+        val playList = appDatabase.newPlayListDao().getPlayList(id)
+        val idTrack = appDatabase.newPlayListDao().getTracksAndListId(id).map { it.idTrack }
+        return playList to appDatabase.trackDao().getTracks(idTrack).map { movieDbConvertor.map(it) }
     }
 }

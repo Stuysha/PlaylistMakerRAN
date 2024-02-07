@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UI.activity.MediaFragment">
+        tools:context=".UI.fragments.MediaFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/arrow"
@@ -251,18 +251,19 @@
         android:layout_height="match_parent"
         android:background="#99000000"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/standard_bottom_sheet"
-        android:background="@drawable/background_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_bottom_sheet"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         app:behavior_hideable="true"
         app:behavior_peekHeight="240dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
 
         <View
             style="@style/Stick"
