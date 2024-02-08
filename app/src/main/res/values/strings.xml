@@ -34,4 +34,7 @@
     <string name="name">Название*</string>
     <string name="description">Описание</string>
     <string name="newplaylist">Новый плейлист</string>
+    <string name="menu_share">Поделиться</string>
+    <string name="menu_edit">Редактировать информацию</string>
+    <string name="menu_delete">Удалить плейлист</string>
 </resources>

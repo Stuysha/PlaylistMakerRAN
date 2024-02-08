@@ -14,4 +14,5 @@ interface CreatingNewPlaylistRepositoryInterface {
     suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File
     suspend fun getPlaylist(id: Long): Pair<NewPlaylistEntity, List<Track>>
     suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long)
+    suspend fun deletePlayList(idPlayList: Long)
 }

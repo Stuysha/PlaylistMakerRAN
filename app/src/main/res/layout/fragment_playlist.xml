@@ -142,7 +142,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_bottom_sheet"
         android:orientation="vertical"
-        android:paddingHorizontal="16dp"
+        android:paddingHorizontal="13dp"
         app:behavior_hideable="false"
         app:behavior_peekHeight="160dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
@@ -164,6 +164,65 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_bottom_sheet"
+        android:orientation="vertical"
+        android:paddingHorizontal="13dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="270dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="visible">
+
+        <View
+            style="@style/Stick"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            app:cornerRadius="44dp" />
+
+        <include
+            android:id="@+id/view_holder"
+            layout="@layout/media_play_list" />
+
+        <TextView
+            android:id="@+id/menu_share"
+            style="@style/TextViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="3dp"
+            android:paddingTop="@dimen/button_interval21"
+            android:paddingEnd="3dp"
+            android:paddingBottom="@dimen/button_interval21"
+            android:text="@string/menu_share" />
+
+        <TextView
+            android:id="@+id/menu_edit"
+            style="@style/TextViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="3dp"
+            android:paddingTop="@dimen/button_interval21"
+            android:paddingEnd="3dp"
+            android:paddingBottom="@dimen/button_interval21"
+            android:text="@string/menu_edit" />
+
+        <TextView
+            android:id="@+id/menu_delete"
+            style="@style/TextViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="3dp"
+            android:paddingTop="@dimen/button_interval21"
+            android:paddingEnd="3dp"
+            android:paddingBottom="@dimen/button_interval21"
+            android:text="@string/menu_delete" />
 
     </LinearLayout>
 

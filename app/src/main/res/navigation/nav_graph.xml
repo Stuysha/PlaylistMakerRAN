@@ -52,5 +52,8 @@
         <action
             android:id="@+id/action_playListFragment_to_mediaFragment"
             app:destination="@id/mediaFragment" />
+        <action
+            android:id="@+id/action_playListFragment_to_creatingNewPlaylist"
+            app:destination="@id/creatingNewPlaylist" />
     </fragment>
 </navigation>

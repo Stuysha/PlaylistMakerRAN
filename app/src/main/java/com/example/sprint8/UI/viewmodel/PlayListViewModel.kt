@@ -35,4 +35,18 @@ class PlayListViewModel(
             loadData()
         }
     }
+
+    fun isNotEmptyTracks() = stateTracks.value.isNullOrEmpty().not()
+
+    fun createStringShared(): String {
+        var string = "${stateTracks.value?.size} треков\n"
+        stateTracks.value?.forEachIndexed { index, track ->
+            string += "${index + 1}. ${track.artistName} - ${track.trackName} (${track.trackTime})\n"
+        }
+        return string
+    }
+
+    suspend fun deletePlayList() {
+        newPlaylistInteractor.deletePlayList(idPlaylist)
+    }
 }

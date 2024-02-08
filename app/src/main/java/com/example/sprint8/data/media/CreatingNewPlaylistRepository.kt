@@ -85,8 +85,22 @@ class CreatingNewPlaylistRepository(
 
     override suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long) {
         appDatabase.newPlayListDao().deleteTracksAndListId(idPlayList, idTrack)
+        checkAndDeleteTrack(idTrack)
+    }
+
+    suspend fun checkAndDeleteTrack(idTrack: Long) {
         if (appDatabase.favoritesTracksDao().getFavoritesTracks(idTrack).isEmpty())
             if (appDatabase.newPlayListDao().getTracksAndListIdByTrack(idTrack).isEmpty())
                 appDatabase.trackDao().deleteTrack(idTrack)
+    }
+
+    override suspend fun deletePlayList(idPlayList: Long) {
+        val playlistDao = appDatabase.newPlayListDao()
+        val idTracks = playlistDao.getTracksAndListId(idPlayList)
+        playlistDao.deleteNewPlaylist(listOf(NewPlaylistEntity(id = idPlayList, null, null, null)))
+        playlistDao.deleteTracksAndListId(idPlayList)
+        idTracks.forEach {
+            checkAndDeleteTrack(it.idTrack)
+        }
     }
 }

@@ -28,6 +28,10 @@ interface NewPlaylistDao {
     @Query("DELETE FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist AND idTrack == :idTrack")
     suspend fun deleteTracksAndListId(idPlaylist: Long, idTrack: Long)
 
+
+    @Query("DELETE FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist")
+    suspend fun deleteTracksAndListId(idPlaylist: Long)
+
     @Query("SELECT * FROM TracksAndListIdEntity")
     suspend fun getTracksAndListId(): List<TracksAndListIdEntity>
 

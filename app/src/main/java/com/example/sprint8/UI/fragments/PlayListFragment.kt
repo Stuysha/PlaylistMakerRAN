@@ -1,14 +1,19 @@
 package com.example.sprint8.UI.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +23,12 @@ import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.PlayListViewModel
 import com.example.sprint8.domain.models.Track
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent
 import java.io.File
@@ -54,6 +63,22 @@ class PlayListFragment : Fragment() {
         val menu = view.findViewById<ImageView>(R.id.menu)
         val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         val listTracks = view.findViewById<RecyclerView>(R.id.track_list)
+        val menuShare = view.findViewById<TextView>(R.id.menu_share)
+        val menuEdit = view.findViewById<TextView>(R.id.menu_edit)
+        val menuDelete = view.findViewById<TextView>(R.id.menu_delete)
+        val bottomSheetMenu = view.findViewById<LinearLayout>(R.id.bottom_sheet_menu)
+
+
+        val viewHolder = view.findViewById<ConstraintLayout>(R.id.view_holder)
+        val imageViewHolder = viewHolder.findViewById<ImageView>(R.id.image)
+        val titleViewHolder = viewHolder.findViewById<TextView>(R.id.title)
+        val infoViewHolder = viewHolder.findViewById<TextView>(R.id.size_tracks)
+
+
+        val bottomSheetMenuBehavior = BottomSheetBehavior.from(bottomSheetMenu)
+        bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        (imageViewHolder.layoutParams as ConstraintLayout.LayoutParams).leftMargin = 0
 
         toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
@@ -69,12 +94,20 @@ class PlayListFragment : Fragment() {
                     .load(File(it))
                     .placeholder(R.drawable.placeholder)
                     .into(image)
+
+                Glide.with(this)
+                    .load(File(it))
+                    .placeholder(R.drawable.placeholder)
+                    .into(imageViewHolder)
             }
 
             playlistName.text = it.name
+            titleViewHolder.text = it.name
+
             info.text = it.description
             tracksInfo.text = "${state.second} минут"
             countTrack.text = "${it.trackSize} треков"
+            infoViewHolder.text = "${it.trackSize} треков"
         }
 
         viewModel.stateTracks.observe(viewLifecycleOwner) {
@@ -91,6 +124,21 @@ class PlayListFragment : Fragment() {
         adapter.longClick = {
             showDeleteTrackDialog(it)
         }
+
+        share.setOnClickListener { share() }
+
+        menu.setOnClickListener {
+            bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        menuShare.setOnClickListener { share() }
+        menuEdit.setOnClickListener {
+            findNavController().navigate(R.id.action_playListFragment_to_creatingNewPlaylist)
+        }
+        menuDelete.setOnClickListener {
+            bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            showDeletePlayListDialog()
+        }
     }
 
     fun showDeleteTrackDialog(track: Track) {
@@ -104,6 +152,43 @@ class PlayListFragment : Fragment() {
                     viewModel.deleteTrackFromPlaylist(track.trackId)
                 }
                 .show()
+        }
+    }
+
+    fun showDeletePlayListDialog() {
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle("Удалить плейлист")
+                .setMessage("Хотите удалить плейлист?")
+                .setNegativeButton("Нет") { dialog, which ->
+                }
+                .setPositiveButton("Да") { dialog, which ->
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        viewModel.deletePlayList()
+                        withContext(Dispatchers.Main) {
+                            findNavController().popBackStack()
+                        }
+                    }
+                }
+                .show()
+        }
+    }
+
+    fun share() {
+        if (viewModel.isNotEmptyTracks()) {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(
+                Intent.EXTRA_TEXT,
+                viewModel.createStringShared()
+            )
+            startActivity(intent)
+        } else {
+            Toast.makeText(
+                context,
+                "В этом плейлисте нет списка треков, которым можно поделиться",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }

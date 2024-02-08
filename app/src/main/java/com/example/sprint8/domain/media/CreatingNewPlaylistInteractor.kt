@@ -65,6 +65,10 @@ class CreatingNewPlaylistInteractor(
     override suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long) {
         creatingNewPlaylistRepository.deleteTrackFromPlaylist(idPlayList, idTrack)
     }
+
+    override suspend fun deletePlayList(idPlayList: Long) {
+        creatingNewPlaylistRepository.deletePlayList(idPlayList)
+    }
 }
 
 interface CreatingNewPlaylistInteractorInterface {
@@ -77,4 +81,6 @@ interface CreatingNewPlaylistInteractorInterface {
     suspend fun insertTracksAndListId(idPlayList: Long, track: Track): Boolean
     suspend fun saveImageToPrivateStorage(basePath: String, inputStream: InputStream): File
     suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long)
+
+    suspend fun deletePlayList(idPlayList: Long)
 }
