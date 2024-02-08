@@ -63,10 +63,12 @@ class PlayListFragment : Fragment() {
         val menu = view.findViewById<ImageView>(R.id.menu)
         val toolbar = view.findViewById<Toolbar>(R.id.arrow)
         val listTracks = view.findViewById<RecyclerView>(R.id.track_list)
+        val noTracks = view.findViewById<TextView>(R.id.no_tracks)
         val menuShare = view.findViewById<TextView>(R.id.menu_share)
         val menuEdit = view.findViewById<TextView>(R.id.menu_edit)
         val menuDelete = view.findViewById<TextView>(R.id.menu_delete)
         val bottomSheetMenu = view.findViewById<LinearLayout>(R.id.bottom_sheet_menu)
+        val overlay = view.findViewById<View>(R.id.overlay)
 
 
         val viewHolder = view.findViewById<ConstraintLayout>(R.id.view_holder)
@@ -77,6 +79,22 @@ class PlayListFragment : Fragment() {
 
         val bottomSheetMenuBehavior = BottomSheetBehavior.from(bottomSheetMenu)
         bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        bottomSheetMenuBehavior.addBottomSheetCallback(
+            object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            overlay.visibility = View.GONE
+                        }
+
+                        else -> {
+                            overlay.visibility = View.VISIBLE
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+            })
 
         (imageViewHolder.layoutParams as ConstraintLayout.LayoutParams).leftMargin = 0
 
@@ -108,6 +126,7 @@ class PlayListFragment : Fragment() {
             tracksInfo.text = "${state.second} минут"
             countTrack.text = "${it.trackSize} треков"
             infoViewHolder.text = "${it.trackSize} треков"
+            if ((it.trackSize ?: 0) == 0) noTracks.visibility = View.VISIBLE
         }
 
         viewModel.stateTracks.observe(viewLifecycleOwner) {
@@ -125,13 +144,13 @@ class PlayListFragment : Fragment() {
             showDeleteTrackDialog(it)
         }
 
-        share.setOnClickListener { share() }
+        share.setOnClickListener { share(bottomSheetMenuBehavior) }
 
         menu.setOnClickListener {
             bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        menuShare.setOnClickListener { share() }
+        menuShare.setOnClickListener { share(bottomSheetMenuBehavior) }
         menuEdit.setOnClickListener {
             findNavController().navigate(
                 R.id.action_playListFragment_to_creatingNewPlaylist,
@@ -177,7 +196,8 @@ class PlayListFragment : Fragment() {
         }
     }
 
-    fun share() {
+    fun share(bottomSheetMenuBehavior: BottomSheetBehavior<LinearLayout>) {
+        bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         if (viewModel.isNotEmptyTracks()) {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"

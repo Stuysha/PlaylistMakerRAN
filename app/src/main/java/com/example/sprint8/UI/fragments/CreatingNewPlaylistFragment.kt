@@ -44,7 +44,8 @@ class CreatingNewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val idPlaylist = arguments?.getLong(PlayListFragment.ID_PLAY_LIST)
-        viewModel = KoinJavaComponent.getKoin().get(parameters = { parametersOf(idPlaylist) })
+        viewModel = KoinJavaComponent.getKoin()
+            .get(parameters = { parametersOf(idPlaylist ?: Long.MIN_VALUE) })
 
         val namePlayList = view.findViewById<TextInputEditText>(R.id.namePlayList)
         val createButton = view.findViewById<Button>(R.id.button_apd)

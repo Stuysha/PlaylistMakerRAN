@@ -42,7 +42,7 @@ interface NewPlaylistDao {
     @Query("SELECT * FROM NewPlaylistEntity WHERE id == :id")
     suspend fun getPlayList(id: Long): NewPlaylistEntity
 
-    @Query("SELECT * FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist")
+    @Query("SELECT * FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist ORDER BY addTime DESC")
     suspend fun getTracksAndListId(idPlaylist: Long): List<TracksAndListIdEntity>
 
     @Query("SELECT * FROM TracksAndListIdEntity WHERE idTrack == :idTrack")

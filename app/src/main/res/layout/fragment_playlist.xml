@@ -27,21 +27,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/placeholder" />
 
-        <androidx.appcompat.widget.Toolbar
+        <ImageView
             android:id="@+id/arrow"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@color/transparent"
-            android:textColor="?attr/colorPrimaryVariant"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="16dp"
+            android:textColor="@color/black_button_font"
+            android:tint="@color/black_button_font"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/arrow" />
+            app:srcCompat="@drawable/arrow" />
 
 
         <TextView
             android:id="@+id/playlist_name"
-            style="@style/TextSongPlug"
+            style="@style/PlayListTextTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -54,7 +55,7 @@
 
         <TextView
             android:id="@+id/info"
-            style="@style/TextPlayList"
+            style="@style/PlayListText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -80,7 +81,7 @@
 
             <TextView
                 android:id="@+id/time"
-                style="@style/TextPlayList"
+                style="@style/PlayListText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -97,7 +98,7 @@
 
             <TextView
                 android:id="@+id/count_track"
-                style="@style/TextPlayList"
+                style="@style/PlayListText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_5"
@@ -156,6 +157,19 @@
             android:layout_marginTop="10dp"
             app:cornerRadius="44dp" />
 
+        <TextView
+            android:id="@+id/no_tracks"
+            style="@style/TextSongPlug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:text="@string/no_tracks"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/track_list"
             android:layout_width="match_parent"
@@ -177,7 +191,7 @@
         app:behavior_hideable="true"
         app:behavior_peekHeight="270dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <View
             style="@style/Stick"

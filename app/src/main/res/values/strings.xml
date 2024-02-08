@@ -37,4 +37,5 @@
     <string name="menu_share">Поделиться</string>
     <string name="menu_edit">Редактировать информацию</string>
     <string name="menu_delete">Удалить плейлист</string>
+    <string name="no_tracks">В этом плейлисте нет треков</string>
 </resources>

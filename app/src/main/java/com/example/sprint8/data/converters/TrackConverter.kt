@@ -23,7 +23,8 @@ class  TrackConverter {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            addTime = null
+            addTime = null,
+            artworkUrl60 = track.artworkUrl60
         )
     }
 
@@ -39,6 +40,7 @@ class  TrackConverter {
             primaryGenreName = track.primaryGenreName ?: "",
             country = track.country ?: "",
             previewUrl = track.previewUrl ?: "",
+            artworkUrl60 = track.artworkUrl60 ?: ""
         )
     }
 
@@ -54,7 +56,8 @@ class  TrackConverter {
             primaryGenreName = track.primaryGenreName ?: "",
             country = track.country ?: "",
             previewUrl = track.previewUrl ?: "",
-            addTime = time
+            addTime = time,
+            artworkUrl60 = track.artworkUrl60
         )
     }
 }

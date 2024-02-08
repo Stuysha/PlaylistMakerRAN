@@ -10,5 +10,6 @@ data class Track(
     val releaseDate: String, // год релиза
     val primaryGenreName: String, // жанр трека
     val country: String, // страна
-    val previewUrl : String // ссылка на песню
+    val previewUrl: String, // ссылка на песню
+    val artworkUrl60: String
 )

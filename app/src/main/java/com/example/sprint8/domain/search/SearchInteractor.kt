@@ -35,6 +35,7 @@ class SearchInteractor(val searchRepository: SearchRepositoryInterface) :
                     primaryGenreName = it.primaryGenreName ?: "",
                     country = it.country ?: "",
                     previewUrl = it.previewUrl ?: "",
+                    artworkUrl60 = it.artworkUrl60 ?: ""
                 )
             )
         }

@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import com.example.sprint8.data.converters.TrackConverter
 import com.example.sprint8.data.db.AppDatabase
 import com.example.sprint8.data.db.entity.NewPlaylistEntity
+import com.example.sprint8.data.db.entity.TrackEntity
 import com.example.sprint8.data.db.entity.TracksAndListIdEntity
 import com.example.sprint8.domain.interfaces.CreatingNewPlaylistRepositoryInterface
 import com.example.sprint8.domain.models.Track
@@ -61,7 +62,11 @@ class CreatingNewPlaylistRepository(
             .getTracksAndListId(idPlayList, idTrack)
         return if (result.isEmpty()) {
             appDatabase.newPlayListDao().insertTracksAndListId(
-                TracksAndListIdEntity(idPlayList = idPlayList, idTrack = idTrack)
+                TracksAndListIdEntity(
+                    idPlayList = idPlayList,
+                    idTrack = idTrack,
+                    addTime = System.currentTimeMillis()
+                )
             )
             true
         } else {
@@ -91,8 +96,13 @@ class CreatingNewPlaylistRepository(
     override suspend fun getPlaylistAndTracks(id: Long): Pair<NewPlaylistEntity, List<Track>> {
         val playList = appDatabase.newPlayListDao().getPlayList(id)
         val idTrack = appDatabase.newPlayListDao().getTracksAndListId(id).map { it.idTrack }
-        return playList to appDatabase.trackDao().getTracks(idTrack)
-            .map { movieDbConvertor.map(it) }
+
+        val tracks = mutableListOf<TrackEntity>()
+        idTrack.forEach {
+            appDatabase.trackDao().getTrack(it)?.let { it1 -> tracks.add(it1) }
+        }
+
+        return playList to tracks.map { movieDbConvertor.map(it) }
     }
 
     override suspend fun getPlaylist(id: Long): NewPlaylistEntity {

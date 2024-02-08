@@ -4,9 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-public class TracksAndListIdEntity (
+public class TracksAndListIdEntity(
     @PrimaryKey(autoGenerate = true)
-    val id : Long = 0,
-    val idPlayList : Long,
-    val idTrack : Long
+    val id: Long = 0,
+    val idPlayList: Long,
+    val idTrack: Long,
+    val addTime: Long
 )

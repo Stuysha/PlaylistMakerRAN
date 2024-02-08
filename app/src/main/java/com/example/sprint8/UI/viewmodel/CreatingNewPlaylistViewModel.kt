@@ -12,13 +12,17 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class CreatingNewPlaylistViewModel(
-    private val idPlaylist: Long?,
+    private var idPlaylist: Long? = null,
     private val creatingNewPlaylistInteractor: CreatingNewPlaylistInteractorInterface
 ) : ViewModel() {
     var statePlayList = MutableLiveData<NewPlaylist>()
 
     init {
         idPlaylist?.let { id ->
+            if (id == Long.MIN_VALUE){
+                idPlaylist = null
+                return@let
+            }
             viewModelScope.launch(Dispatchers.IO) {
                 val playList = creatingNewPlaylistInteractor.getPlaylist(id)
                 statePlayList.postValue(playList)
@@ -32,7 +36,6 @@ class CreatingNewPlaylistViewModel(
                 idPlaylist, name, description, picture
             )
         }
-
     }
 
     suspend fun saveImageToPrivateStorage(uRi: Uri, context: Context?): File? {
