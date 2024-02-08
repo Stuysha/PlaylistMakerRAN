@@ -133,7 +133,10 @@ class PlayListFragment : Fragment() {
 
         menuShare.setOnClickListener { share() }
         menuEdit.setOnClickListener {
-            findNavController().navigate(R.id.action_playListFragment_to_creatingNewPlaylist)
+            findNavController().navigate(
+                R.id.action_playListFragment_to_creatingNewPlaylist,
+                bundleOf(ID_PLAY_LIST to idPlaylist)
+            )
         }
         menuDelete.setOnClickListener {
             bottomSheetMenuBehavior.state = BottomSheetBehavior.STATE_HIDDEN

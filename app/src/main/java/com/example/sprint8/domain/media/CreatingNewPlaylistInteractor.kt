@@ -13,8 +13,25 @@ class CreatingNewPlaylistInteractor(
     private val creatingNewPlaylistRepository: CreatingNewPlaylistRepositoryInterface,
     private val trackRepository: TrackRepositoryInterface
 ) : CreatingNewPlaylistInteractorInterface {
-    override suspend fun insertNewPlaylist(name: String, description: String?, picture: String?) {
-        creatingNewPlaylistRepository.insertNewPlaylist(name, description, picture)
+
+    override suspend fun getPlaylist(id: Long) =
+        creatingNewPlaylistRepository.getPlaylist(id).let {
+            NewPlaylist(
+                id = it.id,
+                name = it.name,
+                description = it.description,
+                picture = it.picture,
+                trackSize = null
+            )
+        }
+
+    override suspend fun insertNewPlaylist(
+        idPlaylist: Long?,
+        name: String,
+        description: String?,
+        picture: String?
+    ) {
+        creatingNewPlaylistRepository.insertNewPlaylist(idPlaylist, name, description, picture)
     }
 
     override suspend fun getNewPlaylist(): List<NewPlaylist> {
@@ -30,7 +47,7 @@ class CreatingNewPlaylistInteractor(
     }
 
     override suspend fun getPlaylistAndTracks(id: Long): Triple<NewPlaylist, List<Track>, String> {
-        val it = creatingNewPlaylistRepository.getPlaylist(id)
+        val it = creatingNewPlaylistRepository.getPlaylistAndTracks(id)
 
         val summ = it.second.sumOf {
             SimpleDateFormat("mm:ss", Locale.getDefault()).parse(it.trackTime)?.time ?: 0
@@ -72,7 +89,12 @@ class CreatingNewPlaylistInteractor(
 }
 
 interface CreatingNewPlaylistInteractorInterface {
-    suspend fun insertNewPlaylist(name: String, description: String?, picture: String?)
+    suspend fun insertNewPlaylist(
+        idPlaylist: Long?,
+        name: String,
+        description: String?,
+        picture: String?
+    )
 
     suspend fun getNewPlaylist(): List<NewPlaylist>
 
@@ -83,4 +105,5 @@ interface CreatingNewPlaylistInteractorInterface {
     suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long)
 
     suspend fun deletePlayList(idPlayList: Long)
+    suspend fun getPlaylist(id: Long): NewPlaylist
 }

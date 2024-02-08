@@ -2,20 +2,34 @@ package com.example.sprint8.UI.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
+import com.example.sprint8.domain.models.NewPlaylist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
 class CreatingNewPlaylistViewModel(
+    private val idPlaylist: Long?,
     private val creatingNewPlaylistInteractor: CreatingNewPlaylistInteractorInterface
 ) : ViewModel() {
+    var statePlayList = MutableLiveData<NewPlaylist>()
+
+    init {
+        idPlaylist?.let { id ->
+            viewModelScope.launch(Dispatchers.IO) {
+                val playList = creatingNewPlaylistInteractor.getPlaylist(id)
+                statePlayList.postValue(playList)
+            }
+        }
+    }
+
     fun insertNewPlaylist(name: String, description: String?, picture: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             creatingNewPlaylistInteractor.insertNewPlaylist(
-                name, description, picture
+                idPlaylist, name, description, picture
             )
         }
 

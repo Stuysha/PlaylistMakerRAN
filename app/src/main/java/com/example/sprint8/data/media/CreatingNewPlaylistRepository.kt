@@ -16,9 +16,21 @@ class CreatingNewPlaylistRepository(
     private val appDatabase: AppDatabase,
     private val movieDbConvertor: TrackConverter,
 ) : CreatingNewPlaylistRepositoryInterface {
-    override suspend fun insertNewPlaylist(name: String, description: String?, picture: String?) {
+    override suspend fun insertNewPlaylist(
+        idPlayList: Long?,
+        name: String,
+        description: String?,
+        picture: String?
+    ) {
         appDatabase.newPlayListDao().insertNewPlaylist(
-            listOf(NewPlaylistEntity(name = name, description = description, picture = picture))
+            listOf(
+                NewPlaylistEntity(
+                    id = idPlayList ?: 0,
+                    name = name,
+                    description = description,
+                    picture = picture
+                )
+            )
         )
     }
 
@@ -76,11 +88,15 @@ class CreatingNewPlaylistRepository(
         return file
     }
 
-    override suspend fun getPlaylist(id: Long): Pair<NewPlaylistEntity, List<Track>> {
+    override suspend fun getPlaylistAndTracks(id: Long): Pair<NewPlaylistEntity, List<Track>> {
         val playList = appDatabase.newPlayListDao().getPlayList(id)
         val idTrack = appDatabase.newPlayListDao().getTracksAndListId(id).map { it.idTrack }
         return playList to appDatabase.trackDao().getTracks(idTrack)
             .map { movieDbConvertor.map(it) }
+    }
+
+    override suspend fun getPlaylist(id: Long): NewPlaylistEntity {
+        return appDatabase.newPlayListDao().getPlayList(id)
     }
 
     override suspend fun deleteTrackFromPlaylist(idPlayList: Long, idTrack: Long) {
