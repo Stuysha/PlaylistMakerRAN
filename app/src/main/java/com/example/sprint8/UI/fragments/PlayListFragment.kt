@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -61,7 +60,7 @@ class PlayListFragment : Fragment() {
         val countTrack = view.findViewById<TextView>(R.id.count_track)
         val share = view.findViewById<ImageView>(R.id.share)
         val menu = view.findViewById<ImageView>(R.id.menu)
-        val toolbar = view.findViewById<Toolbar>(R.id.arrow)
+        val toolbar = view.findViewById<ImageView>(R.id.arrow)
         val listTracks = view.findViewById<RecyclerView>(R.id.track_list)
         val noTracks = view.findViewById<TextView>(R.id.no_tracks)
         val menuShare = view.findViewById<TextView>(R.id.menu_share)
@@ -98,7 +97,7 @@ class PlayListFragment : Fragment() {
 
         (imageViewHolder.layoutParams as ConstraintLayout.LayoutParams).leftMargin = 0
 
-        toolbar.setNavigationOnClickListener {
+        toolbar.setOnClickListener {
             findNavController().popBackStack()
         }
 
