@@ -21,7 +21,7 @@ class PlayListViewModel(
         loadData()
     }
 
-    fun loadData() {
+    private fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             val (playList, tracks, time) = newPlaylistInteractor.getPlaylistAndTracks(idPlaylist)
             statePlayList.postValue(playList to time)

@@ -10,7 +10,7 @@ import com.example.sprint8.domain.models.Track
 
 class SearchMediaAdapter(
     private var tracks: List<Track> = listOf(),
-    val useArt60: Boolean = false
+    private val useArt60: Boolean = false
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {

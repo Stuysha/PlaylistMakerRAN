@@ -24,15 +24,18 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 import java.io.File
 
 class CreatingNewPlaylistFragment : Fragment() {
-    private lateinit var viewModel: CreatingNewPlaylistViewModel
+    private val viewModel: CreatingNewPlaylistViewModel by viewModel {
+        parametersOf(arguments?.getLong(PlayListFragment.ID_PLAY_LIST) ?: Long.MIN_VALUE)
+    }
+//    private lateinit var viewModel: CreatingNewPlaylistViewModel
 
-    var uRi: Uri? = null
-    lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+    private var uRi: Uri? = null
+    private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +47,8 @@ class CreatingNewPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val idPlaylist = arguments?.getLong(PlayListFragment.ID_PLAY_LIST)
-        viewModel = KoinJavaComponent.getKoin()
-            .get(parameters = { parametersOf(idPlaylist ?: Long.MIN_VALUE) })
+//        viewModel = KoinJavaComponent.getKoin()
+//            .get(parameters = { parametersOf(idPlaylist ?: Long.MIN_VALUE) })
 
         val namePlayList = view.findViewById<TextInputEditText>(R.id.namePlayList)
         val createButton = view.findViewById<Button>(R.id.button_apd)
@@ -73,7 +76,10 @@ class CreatingNewPlaylistFragment : Fragment() {
         createButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val picture = uRi?.let { it1 ->
-                    viewModel.saveImageToPrivateStorage(it1, context)?.absolutePath
+                    viewModel.saveImageToPrivateStorage(
+                        context?.filesDir?.absolutePath,
+                        context?.contentResolver?.openInputStream(it1)
+                    )?.absolutePath
                 }
                 viewModel.insertNewPlaylist(
                     name = namePlayList.text.toString(),

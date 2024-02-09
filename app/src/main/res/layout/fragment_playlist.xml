@@ -29,12 +29,11 @@
 
         <ImageView
             android:id="@+id/arrow"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/margin_48"
+            android:layout_height="@dimen/margin_48"
             android:background="@color/transparent"
-            android:padding="16dp"
-            android:textColor="@color/black_button_font"
-            android:tint="@color/black_button_font"
+            android:padding="@dimen/string_star_2_screen"
+            app:tint="@color/black_button_font"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/arrow" />
@@ -45,9 +44,9 @@
             style="@style/PlayListTextTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/margin_24"
+            android:layout_marginEnd="@dimen/string_star_2_screen"
             android:text="TextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,9 +57,9 @@
             style="@style/PlayListText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginEnd="@dimen/string_star_2_screen"
             android:text="TextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,9 +69,9 @@
             android:id="@+id/tracks_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginEnd="@dimen/string_star_2_screen"
             app:layout_constrainedWidth="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -107,10 +106,10 @@
 
         <ImageView
             android:id="@+id/share"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="@dimen/margin_24"
+            android:layout_height="@dimen/margin_24"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/string_star_2_screen"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tracks_info"
             app:srcCompat="@drawable/share_black"
@@ -118,10 +117,10 @@
 
         <ImageView
             android:id="@+id/menu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_width="@dimen/margin_24"
+            android:layout_height="@dimen/margin_24"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/string_star_2_screen"
             app:layout_constraintStart_toEndOf="@+id/share"
             app:layout_constraintTop_toBottomOf="@+id/tracks_info"
             app:srcCompat="@drawable/light_mode" />
@@ -143,7 +142,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_bottom_sheet"
         android:orientation="vertical"
-        android:paddingHorizontal="13dp"
+        android:paddingHorizontal="@dimen/margin_start_13"
         app:behavior_hideable="false"
         app:behavior_peekHeight="160dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
@@ -151,11 +150,11 @@
 
         <View
             style="@style/Stick"
-            android:layout_width="50dp"
-            android:layout_height="4dp"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_4"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            app:cornerRadius="44dp" />
+            app:cornerRadius="@dimen/string_end_2_screen" />
 
         <TextView
             android:id="@+id/no_tracks"
@@ -163,7 +162,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_8"
             android:layout_marginEnd="0dp"
             android:layout_marginBottom="0dp"
             android:text="@string/no_tracks"
@@ -174,7 +173,7 @@
             android:id="@+id/track_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/margin_12">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -187,7 +186,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/background_bottom_sheet"
         android:orientation="vertical"
-        android:paddingHorizontal="13dp"
+        android:paddingHorizontal="@dimen/margin_start_13"
         app:behavior_hideable="true"
         app:behavior_peekHeight="270dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
@@ -195,11 +194,11 @@
 
         <View
             style="@style/Stick"
-            android:layout_width="50dp"
-            android:layout_height="4dp"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_4"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            app:cornerRadius="44dp" />
+            app:cornerRadius="@dimen/string_end_2_screen" />
 
         <include
             android:id="@+id/view_holder"
@@ -210,9 +209,9 @@
             style="@style/TextViewInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="3dp"
+            android:paddingStart="@dimen/margin_3"
             android:paddingTop="@dimen/button_interval21"
-            android:paddingEnd="3dp"
+            android:paddingEnd="@dimen/margin_3"
             android:paddingBottom="@dimen/button_interval21"
             android:text="@string/menu_share" />
 
@@ -221,9 +220,9 @@
             style="@style/TextViewInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="3dp"
+            android:paddingStart="@dimen/margin_3"
             android:paddingTop="@dimen/button_interval21"
-            android:paddingEnd="3dp"
+            android:paddingEnd="@dimen/margin_3"
             android:paddingBottom="@dimen/button_interval21"
             android:text="@string/menu_edit" />
 
@@ -232,9 +231,9 @@
             style="@style/TextViewInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="3dp"
+            android:paddingStart="@dimen/margin_3"
             android:paddingTop="@dimen/button_interval21"
-            android:paddingEnd="3dp"
+            android:paddingEnd="@dimen/margin_3"
             android:paddingBottom="@dimen/button_interval21"
             android:text="@string/menu_delete" />
 

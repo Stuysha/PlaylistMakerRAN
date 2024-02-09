@@ -114,7 +114,7 @@ class CreatingNewPlaylistRepository(
         checkAndDeleteTrack(idTrack)
     }
 
-    suspend fun checkAndDeleteTrack(idTrack: Long) {
+    private suspend fun checkAndDeleteTrack(idTrack: Long) {
         if (appDatabase.favoritesTracksDao().getFavoritesTracks(idTrack).isEmpty())
             if (appDatabase.newPlayListDao().getTracksAndListIdByTrack(idTrack).isEmpty())
                 appDatabase.trackDao().deleteTrack(idTrack)

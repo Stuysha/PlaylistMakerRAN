@@ -28,18 +28,21 @@ import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import org.koin.java.KoinJavaComponent
 import java.io.File
 
 class PlayListFragment : Fragment() {
-    private lateinit var viewModel: PlayListViewModel
+    //    private lateinit var viewModel: PlayListViewModel
+    private val viewModel: PlayListViewModel by viewModel {
+        parametersOf(arguments?.getLong(ID_PLAY_LIST) ?: Long.MIN_VALUE)
+    }
 
     companion object {
         const val ID_PLAY_LIST = "ID_PLAY_LIST"
     }
 
-    val adapter = SearchMediaAdapter()
+    private val adapter = SearchMediaAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +55,8 @@ class PlayListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val idPlaylist = arguments?.getLong(ID_PLAY_LIST)
-        viewModel = KoinJavaComponent.getKoin().get(parameters = { parametersOf(idPlaylist) })
+//        viewModel = KoinJavaComponent.getKoin().get(parameters = { parametersOf(idPlaylist) })
+
         val image = view.findViewById<ImageView>(R.id.imageCover)
         val playlistName = view.findViewById<TextView>(R.id.playlist_name)
         val info = view.findViewById<TextView>(R.id.info)
@@ -95,7 +99,7 @@ class PlayListFragment : Fragment() {
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {}
             })
 
-        (imageViewHolder.layoutParams as ConstraintLayout.LayoutParams).leftMargin = 0
+        (imageViewHolder.layoutParams as? ConstraintLayout.LayoutParams)?.leftMargin = 0
 
         toolbar.setOnClickListener {
             findNavController().popBackStack()
