@@ -17,11 +17,8 @@ class PlayListViewModel(
     var statePlayList = MutableLiveData<Pair<NewPlaylist, String>>()
     var stateTracks = MutableLiveData<List<Track>>()
 
-    init {
-        loadData()
-    }
 
-    private fun loadData() {
+    fun loadData() {
         viewModelScope.launch(Dispatchers.IO) {
             val (playList, tracks, time) = newPlaylistInteractor.getPlaylistAndTracks(idPlaylist)
             statePlayList.postValue(playList to time)

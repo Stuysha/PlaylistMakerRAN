@@ -125,11 +125,14 @@ class PlayListFragment : Fragment() {
             playlistName.text = it.name
             titleViewHolder.text = it.name
 
+            if (it.description.isNullOrEmpty()) info.visibility = View.GONE
+            else info.visibility = View.VISIBLE
             info.text = it.description
             tracksInfo.text = "${state.second} минут"
             countTrack.text = "${it.trackSize} треков"
             infoViewHolder.text = "${it.trackSize} треков"
             if ((it.trackSize ?: 0) == 0) noTracks.visibility = View.VISIBLE
+            else noTracks.visibility = View.GONE
         }
 
         viewModel.stateTracks.observe(viewLifecycleOwner) {
@@ -178,6 +181,11 @@ class PlayListFragment : Fragment() {
                 }
                 .show()
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadData()
     }
 
     fun showDeletePlayListDialog() {

@@ -32,7 +32,7 @@ class CreatingNewPlaylistViewModel(
     fun insertNewPlaylist(name: String, description: String?, picture: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             creatingNewPlaylistInteractor.insertNewPlaylist(
-                idPlaylist, name, description, picture
+                idPlaylist, name.trim(), description?.trim(), picture
             )
         }
     }
