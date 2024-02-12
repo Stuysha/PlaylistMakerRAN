@@ -46,7 +46,5 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/whiteToolbar</item>
         <item name="android:textSize">24sp</item>
-
-
     </style>
 </resources>

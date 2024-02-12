@@ -28,11 +28,11 @@ class MediaViewModel(
         stateMessageAddPlayList.value = null
     }
 
-    fun newTracksToPlayList(idPlaylist: Long, idTrack: Long, playlistName: String) {
+    fun newTracksToPlayList(idPlaylist: Long, playlistName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val result = newPlaylistInteractor.insertTracksAndListId(
                 idPlayList = idPlaylist,
-                idTrack = idTrack
+                track = track
             )
             if (result) {
                 stateMessageAddPlayList.postValue("Добавлено в плейлист $playlistName" to true)

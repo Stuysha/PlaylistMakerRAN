@@ -1,30 +1,46 @@
 package com.example.sprint8.UI.viewmodel
 
-import android.content.Context
-import android.net.Uri
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sprint8.domain.media.CreatingNewPlaylistInteractorInterface
+import com.example.sprint8.domain.models.NewPlaylist
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
+import java.io.InputStream
 
 class CreatingNewPlaylistViewModel(
-    val creatingNewPlaylistInteractor: CreatingNewPlaylistInteractorInterface
+    private var idPlaylist: Long? = null,
+    private val creatingNewPlaylistInteractor: CreatingNewPlaylistInteractorInterface
 ) : ViewModel() {
+    val statePlayList = MutableLiveData<NewPlaylist>()
+
+    init {
+        idPlaylist?.let { id ->
+            if (id == Long.MIN_VALUE){
+                idPlaylist = null
+                return@let
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                val playList = creatingNewPlaylistInteractor.getPlaylist(id)
+                statePlayList.postValue(playList)
+            }
+        }
+    }
+
     fun insertNewPlaylist(name: String, description: String?, picture: String?) {
         viewModelScope.launch(Dispatchers.IO) {
             creatingNewPlaylistInteractor.insertNewPlaylist(
-                name, description, picture
+                idPlaylist, name.trim(), description?.trim(), picture
             )
         }
-
     }
 
-    suspend fun saveImageToPrivateStorage(uRi: Uri, context: Context?): File? {
+    suspend fun saveImageToPrivateStorage(absolutePath: String?, inputStream: InputStream?): File? {
         return creatingNewPlaylistInteractor.saveImageToPrivateStorage(
-            context?.filesDir?.absolutePath ?: return null,
-            context.contentResolver?.openInputStream(uRi) ?: return null
+            absolutePath ?: return null,
+            inputStream ?: return null
         )
     }
 }

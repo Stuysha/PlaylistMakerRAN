@@ -6,7 +6,7 @@ import com.example.sprint8.domain.models.TrackResult
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackConverter {
+class  TrackConverter {
 
     fun map(track: TrackResult): TrackEntity {
         return TrackEntity(
@@ -23,7 +23,8 @@ class TrackConverter {
             primaryGenreName = track.primaryGenreName,
             country = track.country,
             previewUrl = track.previewUrl,
-            addTime = null
+            addTime = null,
+            artworkUrl60 = track.artworkUrl60
         )
     }
 
@@ -39,6 +40,7 @@ class TrackConverter {
             primaryGenreName = track.primaryGenreName ?: "",
             country = track.country ?: "",
             previewUrl = track.previewUrl ?: "",
+            artworkUrl60 = track.artworkUrl60 ?: ""
         )
     }
 
@@ -54,7 +56,8 @@ class TrackConverter {
             primaryGenreName = track.primaryGenreName ?: "",
             country = track.country ?: "",
             previewUrl = track.previewUrl ?: "",
-            addTime = time
+            addTime = time,
+            artworkUrl60 = track.artworkUrl60
         )
     }
 }

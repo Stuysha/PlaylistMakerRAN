@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/serch_grey"
+    android:orientation="vertical">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".UI.fragments.MediaFragment">
+
+
+        <ImageView
+            android:id="@+id/imageCover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            android:scaleType="fitXY"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/placeholder" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="@dimen/margin_48"
+            android:layout_height="@dimen/margin_48"
+            android:background="@color/transparent"
+            android:padding="@dimen/string_star_2_screen"
+            app:tint="@color/black_button_font"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/arrow" />
+
+
+        <TextView
+            android:id="@+id/playlist_name"
+            style="@style/PlayListTextTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/margin_24"
+            android:layout_marginEnd="@dimen/string_star_2_screen"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageCover" />
+
+        <TextView
+            android:id="@+id/info"
+            style="@style/PlayListText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginEnd="@dimen/string_star_2_screen"
+            android:maxLines="1"
+            android:text="TextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playlist_name" />
+
+        <LinearLayout
+            android:id="@+id/tracks_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginEnd="@dimen/string_star_2_screen"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/info">
+
+            <TextView
+                android:id="@+id/time"
+                style="@style/PlayListText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                tools:text=" View TextView TextView" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="@dimen/size_image_point"
+                android:layout_height="@dimen/size_image_point"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/margin_5"
+                app:srcCompat="@drawable/ellipse_black" />
+
+            <TextView
+                android:id="@+id/count_track"
+                style="@style/PlayListText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_5"
+                android:maxLines="1"
+                tools:text="4 : 20" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="@dimen/margin_24"
+            android:layout_height="@dimen/margin_24"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/string_star_2_screen"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tracks_info"
+            app:srcCompat="@drawable/share_black"
+            app:tint="@color/black_blue_background" />
+
+        <ImageView
+            android:id="@+id/menu"
+            android:layout_width="@dimen/margin_24"
+            android:layout_height="@dimen/margin_24"
+            android:layout_marginStart="@dimen/string_star_2_screen"
+            android:layout_marginTop="@dimen/string_star_2_screen"
+            app:layout_constraintStart_toEndOf="@+id/share"
+            app:layout_constraintTop_toBottomOf="@+id/tracks_info"
+            app:srcCompat="@drawable/light_mode" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#99000000"
+        android:visibility="gone"
+        tools:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/standard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_bottom_sheet"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/margin_start_13"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="130dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="visible">
+
+        <View
+            style="@style/Stick"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_4"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            app:cornerRadius="@dimen/string_end_2_screen" />
+
+        <TextView
+            android:id="@+id/no_tracks"
+            style="@style/TextSongPlug"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="@dimen/margin_8"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:text="@string/no_tracks"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_12">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background_bottom_sheet"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/margin_start_13"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="270dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
+
+        <View
+            style="@style/Stick"
+            android:layout_width="@dimen/margin_50"
+            android:layout_height="@dimen/margin_4"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            app:cornerRadius="@dimen/string_end_2_screen" />
+
+        <include
+            android:id="@+id/view_holder"
+            layout="@layout/media_play_list" />
+
+        <TextView
+            android:id="@+id/menu_share"
+            style="@style/TextViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_3"
+            android:paddingTop="@dimen/button_interval21"
+            android:paddingEnd="@dimen/margin_3"
+            android:paddingBottom="@dimen/button_interval21"
+            android:text="@string/menu_share" />
+
+        <TextView
+            android:id="@+id/menu_edit"
+            style="@style/TextViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_3"
+            android:paddingTop="@dimen/button_interval21"
+            android:paddingEnd="@dimen/margin_3"
+            android:paddingBottom="@dimen/button_interval21"
+            android:text="@string/menu_edit" />
+
+        <TextView
+            android:id="@+id/menu_delete"
+            style="@style/TextViewInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_3"
+            android:paddingTop="@dimen/button_interval21"
+            android:paddingEnd="@dimen/margin_3"
+            android:paddingBottom="@dimen/button_interval21"
+            android:text="@string/menu_delete" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -25,10 +25,26 @@ interface NewPlaylistDao {
     @Delete
     suspend fun deleteTracksAndListId(newPlaylist: List<TracksAndListIdEntity>)
 
+    @Query("DELETE FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist AND idTrack == :idTrack")
+    suspend fun deleteTracksAndListId(idPlaylist: Long, idTrack: Long)
+
+
+    @Query("DELETE FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist")
+    suspend fun deleteTracksAndListId(idPlaylist: Long)
+
     @Query("SELECT * FROM TracksAndListIdEntity")
     suspend fun getTracksAndListId(): List<TracksAndListIdEntity>
 
 
     @Query("SELECT * FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist AND idTrack == :idTrack")
     suspend fun getTracksAndListId(idPlaylist: Long, idTrack: Long): List<TracksAndListIdEntity>
+
+    @Query("SELECT * FROM NewPlaylistEntity WHERE id == :id")
+    suspend fun getPlayList(id: Long): NewPlaylistEntity
+
+    @Query("SELECT * FROM TracksAndListIdEntity WHERE idPlayList == :idPlaylist ORDER BY addTime DESC")
+    suspend fun getTracksAndListId(idPlaylist: Long): List<TracksAndListIdEntity>
+
+    @Query("SELECT * FROM TracksAndListIdEntity WHERE idTrack == :idTrack")
+    suspend fun getTracksAndListIdByTrack(idTrack: Long): List<TracksAndListIdEntity>
 }

@@ -16,6 +16,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.sprint8.R
 import com.example.sprint8.UI.viewmodel.CreatingNewPlaylistViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,10 +24,18 @@ import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import java.io.File
 
 class CreatingNewPlaylistFragment : Fragment() {
-    private val viewModel: CreatingNewPlaylistViewModel by inject()
+    private val viewModel: CreatingNewPlaylistViewModel by viewModel {
+        parametersOf(arguments?.getLong(PlayListFragment.ID_PLAY_LIST) ?: Long.MIN_VALUE)
+    }
+//    private lateinit var viewModel: CreatingNewPlaylistViewModel
+
+    private var uRi: Uri? = null
+    private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,18 +46,24 @@ class CreatingNewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val idPlaylist = arguments?.getLong(PlayListFragment.ID_PLAY_LIST)
+//        viewModel = KoinJavaComponent.getKoin()
+//            .get(parameters = { parametersOf(idPlaylist ?: Long.MIN_VALUE) })
+
         val namePlayList = view.findViewById<TextInputEditText>(R.id.namePlayList)
         val createButton = view.findViewById<Button>(R.id.button_apd)
         val toolbar = view.findViewById<androidx.appcompat.widget.Toolbar>(R.id.arrow)
         val description = view.findViewById<TextInputEditText>(R.id.description)
-        toolbar.setNavigationOnClickListener {
 
-            if (!namePlayList.text.isNullOrEmpty() || !description.text.isNullOrEmpty() || uRi != null) {
+        toolbar.setNavigationOnClickListener {
+            if (
+                (!namePlayList.text.isNullOrEmpty() || !description.text.isNullOrEmpty() || uRi != null) &&
+                idPlaylist == null
+            ) {
                 dialogue()
             } else {
                 findNavController().popBackStack()
             }
-
         }
 
         namePlayList.doOnTextChanged { text, start, before, count ->
@@ -61,8 +76,11 @@ class CreatingNewPlaylistFragment : Fragment() {
         createButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 val picture = uRi?.let { it1 ->
-                    viewModel.saveImageToPrivateStorage(it1, context)?.absolutePath
-                } ?: return@launch
+                    viewModel.saveImageToPrivateStorage(
+                        context?.filesDir?.absolutePath,
+                        context?.contentResolver?.openInputStream(it1)
+                    )?.absolutePath
+                }
                 viewModel.insertNewPlaylist(
                     name = namePlayList.text.toString(),
                     description = description.text.toString(),
@@ -70,20 +88,33 @@ class CreatingNewPlaylistFragment : Fragment() {
                 )
                 withContext(Dispatchers.Main) {
                     findNavController().popBackStack()
-                    Toast.makeText(
-                        context, "Плейлист ${
-                            namePlayList.text.toString()
-                        } создан", Toast.LENGTH_LONG
-                    )
-                        .show()
+                    if (idPlaylist == null)
+                        Toast.makeText(
+                            context, "Плейлист ${
+                                namePlayList.text.toString()
+                            } создан", Toast.LENGTH_LONG
+                        ).show()
                 }
             }
         }
-
+        if (idPlaylist != null) {
+            toolbar.title = "Редактировать"
+            createButton.text = "Сохранить"
+            viewModel.statePlayList.observe(viewLifecycleOwner) {
+                it.picture?.let {
+                    val file = File(it)
+                    uRi = Uri.fromFile(file)
+                    Glide.with(this)
+                        .load(file)
+                        .placeholder(R.drawable.placeholder)
+                        .into(picture)
+                    picture?.scaleType = ImageView.ScaleType.FIT_XY
+                }
+                namePlayList.setText(it.name)
+                description.setText(it.description)
+            }
+        }
     }
-
-    var uRi: Uri? = null
-    lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,7 +136,6 @@ class CreatingNewPlaylistFragment : Fragment() {
     }
 
     fun accessingRepository() {
-
         pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 

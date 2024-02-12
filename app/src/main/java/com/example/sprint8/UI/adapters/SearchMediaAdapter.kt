@@ -9,7 +9,8 @@ import com.example.sprint8.UI.viewholders.MediaViewHolder
 import com.example.sprint8.domain.models.Track
 
 class SearchMediaAdapter(
-    private var tracks: List<Track> = listOf()
+    private var tracks: List<Track> = listOf(),
+    private val useArt60: Boolean = false
 ) : RecyclerView.Adapter<MediaViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -19,9 +20,13 @@ class SearchMediaAdapter(
     }
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        holder.bind(tracks[position], useArt60)
         holder.itemView.setOnClickListener {
             click?.invoke(tracks[position])
+        }
+        holder.itemView.setOnLongClickListener {
+            longClick?.invoke(tracks[position])
+            true
         }
     }
 
@@ -36,4 +41,5 @@ class SearchMediaAdapter(
     }
 
     var click: ((Track) -> Unit)? = null
+    var longClick: ((Track) -> Unit)? = null
 }

@@ -1,17 +1,17 @@
 package com.example.sprint8.UI.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint8.R
-import com.example.sprint8.UI.activity.MediaFragment
 import com.example.sprint8.UI.adapters.SearchMediaAdapter
 import com.example.sprint8.UI.fragments.SearchFragment.Companion.TRACK
 import com.example.sprint8.UI.viewmodel.FavoritesTracksViewModel
@@ -70,9 +70,10 @@ class FavoritesTracksFragment : Fragment() {
     fun clickToItem(track: Track) {
         adapter.click = null
         if (clickDebounce()) {
-            val intent = Intent(context, MediaFragment::class.java)
-            intent.putExtra(TRACK, Gson().toJson(track))
-            startActivity(intent)
+            findNavController().navigate(
+                R.id.action_mediaLibraryFragment_to_mediaFragment,
+                bundleOf(TRACK to Gson().toJson(track))
+            )
         }
     }
 

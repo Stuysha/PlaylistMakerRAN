@@ -26,4 +26,7 @@ data class TrackResult(
     @SerializedName("previewUrl")
     val previewUrl: String?,
 
+    @SerializedName("artworkUrl60")
+    val artworkUrl60: String?,
+
 )
